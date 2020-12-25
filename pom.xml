@@ -24,9 +24,15 @@
             <id>github</id>
             <repositories>
                 <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+                <repository>
                     <id>github</id>
-                    <name>GitHub Bastiaan Jansen Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/BastiaanJansen</url>
+                    <name>GitHub BastiaanJansen Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/BastiaanJansen/OTP-Java</url>
                 </repository>
             </repositories>
         </profile>

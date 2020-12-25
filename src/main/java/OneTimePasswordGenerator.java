@@ -52,6 +52,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs generator with default values
+     *
      * @param secret used to generate hash
      */
     protected OneTimePasswordGenerator(final String secret) {
@@ -60,8 +61,9 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with a custom password length and default hashing algorithm
+     *
      * @param passwordLength Number of digits for generated code in range 6...8
-     * @param secret used to generate hash
+     * @param secret         used to generate hash
      */
     protected OneTimePasswordGenerator(final int passwordLength, final String secret) {
         this(passwordLength, DEFAULT_HMAC_ALGORITHM, secret);
@@ -69,8 +71,9 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with a custom hashing algorithm and default password length
+     *
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
+     * @param secret    used to generate hash
      */
     protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
@@ -78,9 +81,10 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with custom password length and hashing algorithm
+     *
      * @param passwordLength number of digits for generated code in range 6...8
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
+     * @param algorithm      HMAC hash algorithm used to hash data
+     * @param secret         used to generate hash
      */
     protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
         if (!validatePasswordLength(passwordLength)) {
@@ -105,7 +109,21 @@ public class OneTimePasswordGenerator {
     }
 
     /**
+     * Checks wheter a code is valid for a specific counter
+     *
+     * @param code    an OTP code
+     * @param counter how many times time interval has passed since 1970
+     * @return a boolean, true if code is valid, otherwise false
+     */
+    public boolean verify(String code, long counter) {
+        if (code.length() != passwordLength) return false;
+        String currentCode = generate(counter);
+        return code.equals(currentCode);
+    }
+
+    /**
      * Generate a code
+     *
      * @param counter how many times time interval has passed since 1970
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
@@ -121,9 +139,10 @@ public class OneTimePasswordGenerator {
 
     /**
      * Helper method to easily generate a hash based on a secret and counter
+     *
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     * @param counter how many times time interval has passed since 1970
+     * @param secret    used to generate hash
+     * @param counter   how many times time interval has passed since 1970
      * @return generated hash
      * @throws IllegalStateException when code could not be generated
      */
@@ -139,12 +158,13 @@ public class OneTimePasswordGenerator {
 
     /**
      * Generate a hash based on an HMAC algorithm and secret
+     *
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     * @param data to hash
+     * @param secret    used to generate hash
+     * @param data      to hash
      * @return generated hash
      * @throws NoSuchAlgorithmException when algorithm does not exist
-     * @throws InvalidKeyException when secret is invalid
+     * @throws InvalidKeyException      when secret is invalid
      */
     private byte[] generateHash(HMACAlgorithm algorithm, byte[] secret, byte[] data) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance(algorithm.toString());
@@ -156,6 +176,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Check if password is in range 6...8
+     *
      * @param passwordLength number of digits for generated code in range 6...8
      * @return whether password is valid
      */

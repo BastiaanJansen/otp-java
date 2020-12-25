@@ -135,6 +135,10 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         return super.generate(counter);
     }
 
+    public boolean verify(String code) {
+        return super.verify(code, calculateCounter(new Date(), timeInterval));
+    }
+
     /**
      * Calculate the counter for a specific date
      * @param date specific date
