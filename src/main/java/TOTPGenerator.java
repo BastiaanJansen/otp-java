@@ -135,6 +135,11 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         return super.generate(counter);
     }
 
+    /**
+     * Checks wheter a code is valid for a specific counter
+     * @param code an OTP code
+     * @return a boolean, true if code is valid, otherwise false
+     */
     public boolean verify(String code) {
         return super.verify(code, calculateCounter(new Date(), timeInterval));
     }
