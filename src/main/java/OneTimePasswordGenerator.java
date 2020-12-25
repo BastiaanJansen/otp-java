@@ -100,7 +100,7 @@ public class OneTimePasswordGenerator {
         return algorithm;
     }
 
-    protected String getSecret() {
+    public String getSecret() {
         return secret;
     }
 
