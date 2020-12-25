@@ -1,5 +1,5 @@
 # OTP-Java
-A small and easy-to-use one-time password (HOTP/TOTP) generator for Java.
+A small and easy-to-use one-time password generator for Java according to [RFC 4226](https://tools.ietf.org/html/rfc4226) (HOTP) and [RFC 6238](https://tools.ietf.org/html/rfc6238) (TOTP).
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
@@ -34,9 +34,9 @@ TOTPGenerator can accept more paramaters: `passwordLength`, `timeInterval`, `alg
 
 ```java
 String secret = "ABCDEFGHIJKLMNOP";
-int passwordLength = 6;
-Duration timeInterval = Duration.ofSeconds(30);
-HMACAlgorithm algorithm = HMACAlgorithm.SHA1;
+int passwordLength = 6; // Password length must be between 6 and 8
+Duration timeInterval = Duration.ofSeconds(30); // This can of course be any number
+HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
 
 TOTPGenerator totp = new TOTPGenerator(passwordLength, timeInterval, algorithm, secret);
 ```
