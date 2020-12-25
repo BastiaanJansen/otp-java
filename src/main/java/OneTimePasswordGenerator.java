@@ -1,13 +1,27 @@
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Generates one-time passwords
+ * @author Bastiaan Jansen
+ */
 public class OneTimePasswordGenerator {
+    /**
+     * Number of digits for generated code in range 6...8, defaults to 6
+     */
     private final int passwordLength;
+
+    /**
+     * Hashing algorithm used to generate code, defaults to SHA1
+     */
     private final HMACAlgorithm algorithm;
+
+    /**
+     * Secret key
+     */
     private final String secret;
 
     private static final long[] DIGITS_POWER = {
@@ -26,22 +40,49 @@ public class OneTimePasswordGenerator {
             1_000_000_000_000L // 12
     };
 
+    /**
+     * Default value for password length
+     */
     public static final int DEFAULT_PASSWORD_LENGTH = 6;
+
+    /**
+     * Default value for HMAC Algorithm
+     */
     public static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
 
-    public OneTimePasswordGenerator(final String secret) {
+    /**
+     * Constructs generator with default values
+     * @param secret secret key
+     */
+    protected OneTimePasswordGenerator(final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, DEFAULT_HMAC_ALGORITHM, secret);
     }
 
-    public OneTimePasswordGenerator(final int passwordLength, final String secret) {
+    /**
+     * Constructs the generator with a custom password length and default hashing algorithm
+     * @param passwordLength
+     * @param secret
+     */
+    protected OneTimePasswordGenerator(final int passwordLength, final String secret) {
         this(passwordLength, DEFAULT_HMAC_ALGORITHM, secret);
     }
 
-    public OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
+    /**
+     * Constructs the generator with a custom hashing algorithm and default password length
+     * @param algorithm
+     * @param secret
+     */
+    protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
     }
 
-    public OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) throws IllegalArgumentException {
+    /**
+     * Constructs the generator with custom password length and hashing algorithm
+     * @param passwordLength
+     * @param algorithm
+     * @param secret
+     */
+    protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
         if (!validatePasswordLength(passwordLength)) {
             throw new IllegalArgumentException("Password length must be between 6 and 8 digits");
         }
@@ -63,7 +104,13 @@ public class OneTimePasswordGenerator {
         return secret;
     }
 
-    protected String generate(long counter) throws NoSuchAlgorithmException, InvalidKeyException {
+    /**
+     * Generate a code
+     * @param counter
+     * @return otp code
+     * @throws IllegalStateException when hashing algorithm throws an error
+     */
+    protected String generate(long counter) throws IllegalStateException {
         byte[] hash = generateHash(algorithm, secret, counter);
 
         int offset = hash[hash.length - 1] & 0xf;
@@ -72,12 +119,33 @@ public class OneTimePasswordGenerator {
         return String.format("%0" + passwordLength + "d", otp);
     }
 
-    private byte[] generateHash(HMACAlgorithm algorithm, String secret, long counter) throws InvalidKeyException, NoSuchAlgorithmException {
+    /**
+     * Helper method to easily generate a hash based on a secret and counter
+     * @param algorithm
+     * @param secret
+     * @param counter
+     * @return generated hash
+     * @throws IllegalStateException
+     */
+    private byte[] generateHash(HMACAlgorithm algorithm, String secret, long counter) throws IllegalStateException {
         byte[] secretBytes = secret.getBytes();
         byte[] counterBytes = ByteBuffer.allocate(Long.BYTES).putLong(counter).array();
-        return generateHash(algorithm, secretBytes, counterBytes);
+        try {
+            return generateHash(algorithm, secretBytes, counterBytes);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new IllegalStateException();
+        }
     }
 
+    /**
+     * Generate a hash based on an HMAC algorithm and secret
+     * @param algorithm hash algorithm used to hash data
+     * @param secret used to generate hash
+     * @param data to hash
+     * @return generated hash
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
     private byte[] generateHash(HMACAlgorithm algorithm, byte[] secret, byte[] data) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance(algorithm.toString());
         SecretKeySpec macKey = new SecretKeySpec(secret, "RAW");
@@ -86,6 +154,11 @@ public class OneTimePasswordGenerator {
         return mac.doFinal(data);
     }
 
+    /**
+     * Check if password is in range 6...8
+     * @param passwordLength
+     * @return whether password is valid
+     */
     private boolean validatePasswordLength(final int passwordLength) {
         return (passwordLength >= 6 || passwordLength <= 8);
     }

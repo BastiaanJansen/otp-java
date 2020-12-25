@@ -38,17 +38,17 @@ public class TimeBasedOneTimePasswordGenerator extends OneTimePasswordGenerator 
         this.timeInterval = timeInterval;
     }
 
-    public String generate() throws InvalidKeyException, NoSuchAlgorithmException {
+    public String generate() throws IllegalStateException {
         long counter = calculateCounter(timeInterval);
         return super.generate(counter);
     }
 
-    public String generate(Date date) throws NoSuchAlgorithmException, InvalidKeyException {
+    public String generate(Date date) throws IllegalStateException {
         long timeSince1970 = date.getTime();
         return generate(timeSince1970);
     }
 
-    public String generate(long secondsPast1970) throws IllegalArgumentException, InvalidKeyException, NoSuchAlgorithmException {
+    public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException();
         }

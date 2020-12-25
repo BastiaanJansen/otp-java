@@ -19,7 +19,7 @@ public class CounterBasedOneTimePasswordGenerator extends OneTimePasswordGenerat
         super(algorithm, secret);
     }
 
-    public String generate(long counter) throws IllegalArgumentException, InvalidKeyException, NoSuchAlgorithmException {
+    public String generate(long counter) throws IllegalArgumentException {
         return super.generate(counter);
     }
 
