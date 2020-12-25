@@ -1,5 +1,5 @@
 # OTP-Java
-A small and easy-to-use one-time password (HOTP/TOTP) generator for Java.
+A small and easy-to-use one-time password generator for Java according to [RFC 4226](https://tools.ietf.org/html/rfc4226) (HOTP) and [RFC 6238](https://tools.ietf.org/html/rfc6238) (TOTP).
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
