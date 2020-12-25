@@ -27,6 +27,16 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
+     * Constructs generator with custom password length
+     * @param passwordLength number of digits for generated code in range 6...8
+     * @param secret used to generate hash
+     */
+    public TOTPGenerator(final int passwordLength, final String secret) {
+        super(passwordLength, secret);
+        this.timeInterval = DEFAULT_TIME_INTERVAL;
+    }
+
+    /**
      * Constructs generator with custom time interval
      * @param timeInterval time interval between new codes
      * @param secret used to generate hash
