@@ -60,7 +60,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with a custom password length and default hashing algorithm
-     * @param passwordLength
+     * @param passwordLength Number of digits for generated code in range 6...8
      * @param secret
      */
     protected OneTimePasswordGenerator(final int passwordLength, final String secret) {
@@ -69,7 +69,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with a custom hashing algorithm and default password length
-     * @param algorithm
+     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret
      */
     protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
@@ -78,8 +78,8 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs the generator with custom password length and hashing algorithm
-     * @param passwordLength
-     * @param algorithm
+     * @param passwordLength number of digits for generated code in range 6...8
+     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret
      */
     protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
@@ -107,7 +107,7 @@ public class OneTimePasswordGenerator {
     /**
      * Generate a code
      * @param counter
-     * @return otp code
+     * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
     protected String generate(long counter) throws IllegalStateException {
@@ -121,7 +121,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Helper method to easily generate a hash based on a secret and counter
-     * @param algorithm
+     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret
      * @param counter
      * @return generated hash
@@ -139,7 +139,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Generate a hash based on an HMAC algorithm and secret
-     * @param algorithm hash algorithm used to hash data
+     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      * @param data to hash
      * @return generated hash
