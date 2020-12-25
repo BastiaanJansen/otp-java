@@ -1,4 +1,5 @@
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +20,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     /**
      * Constructs generator
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final String secret) {
         this(DEFAULT_TIME_INTERVAL, secret);
@@ -28,7 +29,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     /**
      * Constructs generator with custom time interval
      * @param timeInterval time interval between new codes
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final Duration timeInterval, final String secret) {
         super(secret);
@@ -39,7 +40,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * Constructs generator with custom time interval and hashing algorithm
      * @param timeInterval time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final Duration timeInterval, HMACAlgorithm algorithm, final String secret) {
         super(algorithm, secret);
@@ -49,7 +50,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     /**
      * Constructs generator with custom hashing algorithm and default time interval
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final HMACAlgorithm algorithm, final String secret) {
         super(algorithm, secret);
@@ -60,7 +61,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * Constructs generator with custom password length and time interval
      * @param passwordLength number of digits for generated code in range 6...8
      * @param timeInterval time interval between new codes
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final int passwordLength, final Duration timeInterval, final String secret) {
         super(passwordLength, secret);
@@ -72,7 +73,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param passwordLength number of digits for generated code in range 6...8
      * @param timeInterval time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
+     * @param secret used to generate hash
      */
     public TOTPGenerator(final int passwordLength, final Duration timeInterval, final HMACAlgorithm algorithm, final String secret) {
         super(passwordLength, algorithm, secret);
@@ -82,7 +83,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     /**
      * Generate a time-based one-time password for current time interval instant
      * @return generated TOTP code
-     * @throws IllegalStateException
+     * @throws IllegalStateException when code could not be generated
      */
     public String generate() throws IllegalStateException {
         long counter = calculateCounter(timeInterval);
@@ -90,10 +91,20 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
-     * Generate a time-based one-time password for a specific date
-     * @param date
+     * Generate a time-based one-time password for a Java instant
+     * @param instant an instant
      * @return generated TOTP code
-     * @throws IllegalStateException
+     * @throws IllegalStateException when code could not be generated
+     */
+    public String generate(Instant instant) throws IllegalStateException {
+        return generate(instant.toEpochMilli());
+    }
+
+    /**
+     * Generate a time-based one-time password for a specific date
+     * @param date specific date
+     * @return generated TOTP code
+     * @throws IllegalStateException when code could not be generated
      */
     public String generate(Date date) throws IllegalStateException {
         long timeSince1970 = date.getTime();
@@ -102,9 +113,9 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     /**
      * Generate a time-based one-time password for a specific time based on seconds past 1970
-     * @param secondsPast1970
+     * @param secondsPast1970 seconds past 1970
      * @return generated TOTP code
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException when code could not be generated
      */
     public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
@@ -116,8 +127,8 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     /**
      * Calculate the counter for a specific date
-     * @param date
-     * @param timeInterval
+     * @param date specific date
+     * @param timeInterval time interval between new codes
      * @return counter based on a specific date and time interval
      */
     private long calculateCounter(Date date, Duration timeInterval) {
@@ -126,7 +137,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     /**
      * Calculate counter for a specific time in seconds past 1970 and time interval
-     * @param secondsPast1970
+     * @param secondsPast1970 seconds past 1970
      * @param timeInterval time interval between new codes
      * @return counter based on seconds past 1970 and time interval
      */
@@ -145,7 +156,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     /**
      * Check if time is above zero
-     * @param time
+     * @param time time value to check against
      * @return whether time is above zero
      */
     private boolean validateTime(long time) {

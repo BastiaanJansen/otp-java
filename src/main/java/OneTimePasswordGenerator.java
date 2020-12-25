@@ -20,7 +20,7 @@ public class OneTimePasswordGenerator {
     private final HMACAlgorithm algorithm;
 
     /**
-     * Secret key
+     * Secret key used to generate the code
      */
     private final String secret;
 
@@ -52,7 +52,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs generator with default values
-     * @param secret secret key
+     * @param secret used to generate hash
      */
     protected OneTimePasswordGenerator(final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, DEFAULT_HMAC_ALGORITHM, secret);
@@ -61,7 +61,7 @@ public class OneTimePasswordGenerator {
     /**
      * Constructs the generator with a custom password length and default hashing algorithm
      * @param passwordLength Number of digits for generated code in range 6...8
-     * @param secret
+     * @param secret used to generate hash
      */
     protected OneTimePasswordGenerator(final int passwordLength, final String secret) {
         this(passwordLength, DEFAULT_HMAC_ALGORITHM, secret);
@@ -70,7 +70,7 @@ public class OneTimePasswordGenerator {
     /**
      * Constructs the generator with a custom hashing algorithm and default password length
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
+     * @param secret used to generate hash
      */
     protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
@@ -80,7 +80,7 @@ public class OneTimePasswordGenerator {
      * Constructs the generator with custom password length and hashing algorithm
      * @param passwordLength number of digits for generated code in range 6...8
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
+     * @param secret used to generate hash
      */
     protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
         if (!validatePasswordLength(passwordLength)) {
@@ -106,7 +106,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Generate a code
-     * @param counter
+     * @param counter how many times time interval has passed since 1970
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
@@ -122,10 +122,10 @@ public class OneTimePasswordGenerator {
     /**
      * Helper method to easily generate a hash based on a secret and counter
      * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret
-     * @param counter
+     * @param secret used to generate hash
+     * @param counter how many times time interval has passed since 1970
      * @return generated hash
-     * @throws IllegalStateException
+     * @throws IllegalStateException when code could not be generated
      */
     private byte[] generateHash(HMACAlgorithm algorithm, String secret, long counter) throws IllegalStateException {
         byte[] secretBytes = secret.getBytes();
@@ -143,8 +143,8 @@ public class OneTimePasswordGenerator {
      * @param secret used to generate hash
      * @param data to hash
      * @return generated hash
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException when algorithm does not exist
+     * @throws InvalidKeyException when secret is invalid
      */
     private byte[] generateHash(HMACAlgorithm algorithm, byte[] secret, byte[] data) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance(algorithm.toString());
@@ -156,10 +156,10 @@ public class OneTimePasswordGenerator {
 
     /**
      * Check if password is in range 6...8
-     * @param passwordLength
+     * @param passwordLength number of digits for generated code in range 6...8
      * @return whether password is valid
      */
     private boolean validatePasswordLength(final int passwordLength) {
-        return (passwordLength >= 6 || passwordLength <= 8);
+        return passwordLength >= 6 && passwordLength <= 8;
     }
 }
