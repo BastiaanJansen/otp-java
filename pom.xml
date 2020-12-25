@@ -19,6 +19,19 @@
         </repository>
     </distributionManagement>
 
+    <profiles>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Bastiaan Jansen Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/BastiaanJansen</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
