@@ -119,7 +119,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      */
     public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Time must be above zero");
         }
         long counter = calculateCounter(secondsPast1970, timeInterval);
         return super.generate(counter);
