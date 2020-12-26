@@ -28,6 +28,9 @@ After creating an instance of the HOTPGenerator class, a code can be generated b
 try {
     int counter = 5;
     String code = hotp.generate(counter);
+    
+    // To verify a token:
+    boolean isValid = hotp.verify(code, counter);
 } catch (IllegalStateException e) {
     // Handle error
 }
@@ -51,6 +54,9 @@ After creating an instance of the TOTPGenerator class, a code can be generated b
 ```java
 try {
     String code = totp.generate();
+    
+    // To verify a token:
+    boolean isValid = totp.verify(code);
 } catch (IllegalStateException e) {
     // Handle error
 }
