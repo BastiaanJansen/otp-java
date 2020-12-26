@@ -17,9 +17,9 @@ int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
 
 // Get information about the generator
-String secret = hotp.getSecret();
-int passwordLength = hotp.getPasswordLength();
-HMACAlgorithm algorithm = hotp.getAlgorithm();
+String secret = hotp.getSecret(); // ABCDEFGHIJKLMNOP
+int passwordLength = hotp.getPasswordLength(); // 6
+HMACAlgorithm algorithm = hotp.getAlgorithm(); // HMACAlgorithm.SHA1
 ```
 
 ##### Generation of HOTP code:
@@ -47,6 +47,12 @@ Duration period = Duration.ofSeconds(30); // This can of course be any number
 HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
 
 TOTPGenerator totp = new TOTPGenerator(passwordLength, period, algorithm, secret);
+
+// Get information about the generator
+String secret = totp.getSecret(); // ABCDEFGHIJKLMNOP
+int passwordLength = totp.getPasswordLength(); // 6
+HMACAlgorithm algorithm = totp.getAlgorithm(); // HMACAlgorithm.SHA1
+Duration period = totp.getPeriod(); // Duration.ofSeconds(30)
 ```
 
 ##### Generation of TOTP code:
@@ -54,7 +60,7 @@ After creating an instance of the TOTPGenerator class, a code can be generated b
 ```java
 try {
     String code = totp.generate();
-    
+     
     // To verify a token:
     boolean isValid = totp.verify(code);
 } catch (IllegalStateException e) {
