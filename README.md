@@ -35,15 +35,15 @@ try {
 
 ### TOTP (Time-based one-time passwords)
 ##### Generation of TOTP object:
-TOTPGenerator can accept more paramaters: `passwordLength`, `timeInterval`, `algorithm` and `secret`. The default values for passwordLength = 6, timeInterval = 30, algorithm = SHA1.
+TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values for passwordLength = 6, period = 30, algorithm = SHA1.
 
 ```java
 String secret = "ABCDEFGHIJKLMNOP";
 int passwordLength = 8; // Password length must be between 6 and 8
-Duration timeInterval = Duration.ofSeconds(30); // This can of course be any number
+Duration period = Duration.ofSeconds(30); // This can of course be any number
 HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
 
-TOTPGenerator totp = new TOTPGenerator(passwordLength, timeInterval, algorithm, secret);
+TOTPGenerator totp = new TOTPGenerator(passwordLength, period, algorithm, secret);
 ```
 
 ##### Generation of TOTP code:
