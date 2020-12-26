@@ -170,7 +170,7 @@ public class OneTimePasswordGenerator {
      */
     private byte[] generateHash(String secret, long counter) {
         // Convert long type to bytes array
-        // In Java, long takes 64 bits sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
+        // In Java, long takes 64 bits. sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
         byte[] counterBytes = ByteBuffer.allocate(Long.BYTES).putLong(counter).array();
 
         // OTP secret must be a Base32 string
