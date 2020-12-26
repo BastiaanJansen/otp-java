@@ -1,8 +1,10 @@
 public class ExampleApp {
     public static void main(String[] args) {
 
-        TOTPGenerator totp = new TOTPGenerator("DREERRRR");
-        HOTPGenerator hotp = new HOTPGenerator("DREERRRR");
+        String secret = "ABCDEFGHIJKLMNOP";
+
+        TOTPGenerator totp = new TOTPGenerator(secret);
+        HOTPGenerator hotp = new HOTPGenerator(secret);
 
         try {
             String code = totp.generate();
