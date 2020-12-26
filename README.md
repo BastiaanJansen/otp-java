@@ -15,6 +15,9 @@ The default length of a generated code is six digits. You can change the default
 String secret = "ABCDEFGHIJKLMNOP";
 int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
+
+// It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
+new HOTPGenerator("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
 ```
 
 Get information about the generator:
@@ -76,11 +79,20 @@ The above code will generate a time-based one-time password based on the current
 
 ```java
 try {
-    String codeBasedOnCurrentTime = totp.generate();
-    String codeBasedOnDate = totp.generate(new Date());
-    String codeBasedOnSecondsSince1970 = totp.generate(9238346823);
-    String codeBasedOnAnInstant = totp.generate(Instant.now());
-    String codeBasedOnURI = totp.generate(new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30"));
+    // Based on current time
+    totp.generate();
+    
+    // Based on specific date
+    totp.generate(new Date());
+    
+    // Based on milliseconds past 1970
+    totp.generate(9238346823);
+    
+    // Based on an instant
+    totp.generate(Instant.now());
+    
+    // Based on an OTPAuth URI. When algorithm, period or digits are not specified, the default values will be used
+    totp.generate(new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30"));
 } catch (IllegalStateException e) {
     // Handle error
 }
