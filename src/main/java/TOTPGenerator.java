@@ -16,7 +16,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     /**
      * Time interval between new codes
      */
-    private final Duration timeInterval;
+    private final Duration period;
 
     /**
      * Default time interval for a time-based one-time password
@@ -38,28 +38,28 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      */
     public TOTPGenerator(final int passwordLength, final String secret) {
         super(passwordLength, secret);
-        this.timeInterval = DEFAULT_TIME_INTERVAL;
+        this.period = DEFAULT_TIME_INTERVAL;
     }
 
     /**
      * Constructs generator with custom time interval
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final Duration timeInterval, final String secret) {
+    public TOTPGenerator(final Duration period, final String secret) {
         super(secret);
-        this.timeInterval = timeInterval;
+        this.period = period;
     }
 
     /**
      * Constructs generator with custom time interval and hashing algorithm
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final Duration timeInterval, HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final Duration period, HMACAlgorithm algorithm, final String secret) {
         super(algorithm, secret);
-        this.timeInterval = timeInterval;
+        this.period = period;
     }
 
     /**
@@ -69,30 +69,30 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      */
     public TOTPGenerator(final HMACAlgorithm algorithm, final String secret) {
         super(algorithm, secret);
-        this.timeInterval = DEFAULT_TIME_INTERVAL;
+        this.period = DEFAULT_TIME_INTERVAL;
     }
 
     /**
      * Constructs generator with custom password length and time interval
      * @param passwordLength number of digits for generated code in range 6...8
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final Duration timeInterval, final String secret) {
+    public TOTPGenerator(final int passwordLength, final Duration period, final String secret) {
         super(passwordLength, secret);
-        this.timeInterval = timeInterval;
+        this.period = period;
     }
 
     /**
      * Constructs generator with custom password length, time interval and hashing algorithm
      * @param passwordLength number of digits for generated code in range 6...8
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final Duration timeInterval, final HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final String secret) {
         super(passwordLength, algorithm, secret);
-        this.timeInterval = timeInterval;
+        this.period = period;
     }
 
     /**
@@ -103,11 +103,11 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     public TOTPGenerator(URI uri) throws UnsupportedEncodingException {
         super(uri);
         Map<String, String> query = URIHelper.queryItems(uri);
-        String timeInterval = query.get("period");
+        String period = query.get("period");
 
-        if (timeInterval == null) throw new IllegalArgumentException("Period query parameter must be set");
+        if (period == null) throw new IllegalArgumentException("Period query parameter must be set");
 
-        this.timeInterval = Duration.ofSeconds(Integer.valueOf(timeInterval));
+        this.period = Duration.ofSeconds(Integer.valueOf(period));
     }
 
     /**
@@ -116,7 +116,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @throws IllegalStateException when code could not be generated
      */
     public String generate() throws IllegalStateException {
-        long counter = calculateCounter(timeInterval);
+        long counter = calculateCounter(period);
         return super.generate(counter);
     }
 
@@ -151,7 +151,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
         }
-        long counter = calculateCounter(secondsPast1970, timeInterval);
+        long counter = calculateCounter(secondsPast1970, period);
         return super.generate(counter);
     }
 
@@ -161,41 +161,41 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return a boolean, true if code is valid, otherwise false
      */
     public boolean verify(String code) {
-        long counter = calculateCounter(timeInterval);
+        long counter = calculateCounter(period);
         return super.verify(code, counter);
     }
 
-    public Duration getTimeInterval() {
-        return timeInterval;
+    public Duration getPeriod() {
+        return period;
     }
 
     /**
      * Calculate the counter for a specific date
      * @param date specific date
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @return counter based on a specific date and time interval
      */
-    private long calculateCounter(Date date, Duration timeInterval) {
-        return calculateCounter(date.getTime(), timeInterval);
+    private long calculateCounter(Date date, Duration period) {
+        return calculateCounter(date.getTime(), period);
     }
 
     /**
      * Calculate counter for a specific time in seconds past 1970 and time interval
      * @param secondsPast1970 seconds past 1970
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @return counter based on seconds past 1970 and time interval
      */
-    private long calculateCounter(long secondsPast1970, Duration timeInterval) {
-        return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(timeInterval.getSeconds());
+    private long calculateCounter(long secondsPast1970, Duration period) {
+        return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(period.getSeconds());
     }
 
     /**
      * Calculate counter based on current time and a specific time interval
-     * @param timeInterval time interval between new codes
+     * @param period time interval between new codes
      * @return counter based on current time and a specific time interval
      */
-    private long calculateCounter(Duration timeInterval) {
-        return System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(timeInterval.getSeconds());
+    private long calculateCounter(Duration period) {
+        return System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(period.getSeconds());
     }
 
     /**
