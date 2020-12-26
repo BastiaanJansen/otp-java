@@ -19,17 +19,17 @@ public class OneTimePasswordGenerator {
     /**
      * Number of digits for generated code in range 6...8, defaults to 6
      */
-    private final int passwordLength;
+    protected final int passwordLength;
 
     /**
      * Hashing algorithm used to generate code, defaults to SHA1
      */
-    private final HMACAlgorithm algorithm;
+    protected final HMACAlgorithm algorithm;
 
     /**
      * Secret key used to generate the code
      */
-    private final String secret;
+    protected final String secret;
 
     /**
      * Default value for password length
@@ -143,7 +143,7 @@ public class OneTimePasswordGenerator {
      */
     public boolean verify(String code, long counter) {
         if (code.length() != passwordLength) return false;
-        String currentCode = this.generate(counter);
+        String currentCode = generate(counter);
         return code.equals(currentCode);
     }
 

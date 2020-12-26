@@ -11,7 +11,7 @@ public class ExampleApp {
             System.out.println(code);
 
             boolean isValid = totp.verify(code);
-            System.out.println(isValid);
+            System.out.println("Code is valid: " + isValid);
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
