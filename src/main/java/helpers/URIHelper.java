@@ -6,7 +6,7 @@ import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class URLHelper {
+public class URIHelper {
     public static Map<String, String> queryItems(URI url) throws UnsupportedEncodingException {
         Map<String, String> items = new LinkedHashMap<String, String>();
         String query = url.getQuery();
