@@ -133,7 +133,7 @@ public class OneTimePasswordGenerator {
     }
 
     /**
-     * Checks wheter a code is valid for a specific counter
+     * Checks whether a code is valid for a specific counter
      * @param code    an OTP code
      * @param counter how many times time interval has passed since 1970
      * @return a boolean, true if code is valid, otherwise false

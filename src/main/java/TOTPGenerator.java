@@ -161,7 +161,8 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return a boolean, true if code is valid, otherwise false
      */
     public boolean verify(String code) {
-        return super.verify(code, calculateCounter(new Date(), timeInterval));
+        long counter = calculateCounter(timeInterval);
+        return super.verify(code, counter);
     }
 
     public Duration getTimeInterval() {
