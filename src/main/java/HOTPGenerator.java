@@ -1,3 +1,5 @@
+import interfaces.IHOTPGenerator;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
@@ -5,7 +7,7 @@ import java.net.URI;
  * Generates counter-based one-time passwords
  * @author Bastiaan Jansen
  */
-public class HOTPGenerator extends OneTimePasswordGenerator {
+public class HOTPGenerator extends OneTimePasswordGenerator implements IHOTPGenerator {
 
     /**
      * Constructs generator with default values
@@ -39,6 +41,7 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      * @return generated HOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
+    @Override
     public String generate(long counter) throws IllegalArgumentException {
         return super.generate(counter);
     }
