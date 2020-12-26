@@ -121,7 +121,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     @Override
     public String generate() throws IllegalStateException {
         long counter = calculateCounter(period);
-        return super.generate(counter);
+        return super.generate(BigInteger.valueOf(counter));
     }
 
     /**
@@ -154,12 +154,12 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @throws IllegalArgumentException when code could not be generated
      */
     @Override
-    public String generate(BigInteger secondsPast1970) throws IllegalArgumentException {
+    public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
         }
         long counter = calculateCounter(secondsPast1970, period);
-        return super.generate(counter);
+        return super.generate(BigInteger.valueOf(counter));
     }
 
     /**
@@ -185,7 +185,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @return counter based on a specific date and time interval
      */
     private long calculateCounter(Date date, Duration period) {
-        return calculateCounter(BigInteger.valueOf(date.getTime()), period);
+        return calculateCounter(date.getTime(), period);
     }
 
     /**
@@ -194,8 +194,8 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @param period time interval between new codes
      * @return counter based on seconds past 1970 and time interval
      */
-    private long calculateCounter(BigInteger secondsPast1970, Duration period) {
-        return TimeUnit.SECONDS.toMillis(secondsPast1970.intValue()) / TimeUnit.SECONDS.toMillis(period.getSeconds());
+    private long calculateCounter(long secondsPast1970, Duration period) {
+        return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(period.getSeconds());
     }
 
     /**
@@ -212,7 +212,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @param time time value to check against
      * @return whether time is above zero
      */
-    private boolean validateTime(BigInteger time) {
-        return time.intValue() > 0;
+    private boolean validateTime(long time) {
+        return time > 0;
     }
 }

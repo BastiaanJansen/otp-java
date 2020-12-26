@@ -3,6 +3,7 @@ import helpers.URIHelper;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
@@ -143,7 +144,7 @@ public class OneTimePasswordGenerator {
      */
     public boolean verify(String code, long counter) {
         if (code.length() != passwordLength) return false;
-        String currentCode = generate(counter);
+        String currentCode = generate(BigInteger.valueOf(counter));
         return code.equals(currentCode);
     }
 
@@ -154,8 +155,8 @@ public class OneTimePasswordGenerator {
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
-    protected String generate(long counter) throws IllegalStateException {
-        byte[] hash = generateHash(secret, counter);
+    protected String generate(BigInteger counter) throws IllegalStateException {
+        byte[] hash = generateHash(secret, counter.longValue());
         return getPasswordFromHash(hash);
     }
 
