@@ -60,6 +60,12 @@
             <artifactId>mockito-core</artifactId>
             <version>3.6.28</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.eatthepath</groupId>
+            <artifactId>java-otp</artifactId>
+            <version>0.2.0</version>
+        </dependency>
     </dependencies>
 
 </project>
