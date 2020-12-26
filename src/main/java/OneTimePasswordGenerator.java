@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
 import org.apache.commons.codec.binary.Base32;
 
 /**
@@ -71,6 +72,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Constructs generator from a OTPAuth URI
+     *
      * @param uri OTPAuth URI
      * @throws UnsupportedEncodingException when URI query items can't be encoded
      */
@@ -134,13 +136,14 @@ public class OneTimePasswordGenerator {
 
     /**
      * Checks whether a code is valid for a specific counter
+     *
      * @param code    an OTP code
      * @param counter how many times time interval has passed since 1970
      * @return a boolean, true if code is valid, otherwise false
      */
     public boolean verify(String code, long counter) {
         if (code.length() != passwordLength) return false;
-        String currentCode = generate(counter);
+        String currentCode = this.generate(counter);
         return code.equals(currentCode);
     }
 
@@ -202,6 +205,7 @@ public class OneTimePasswordGenerator {
 
     /**
      * Get code from hash with specified password length
+     *
      * @param hash
      * @return OTP code
      */
