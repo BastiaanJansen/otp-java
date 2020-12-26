@@ -1,4 +1,5 @@
 import helpers.URIHelper;
+import interfaces.ITOTPGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * Generates time-based one-time passwords
  * @author Bastiaan Jansen
  */
-public class TOTPGenerator extends OneTimePasswordGenerator {
+public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGenerator {
     /**
      * Time interval between new codes
      */
@@ -115,6 +116,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
+    @Override
     public String generate() throws IllegalStateException {
         long counter = calculateCounter(period);
         return super.generate(counter);
@@ -126,6 +128,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
+    @Override
     public String generate(Instant instant) throws IllegalStateException {
         return generate(instant.toEpochMilli());
     }
@@ -136,6 +139,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
+    @Override
     public String generate(Date date) throws IllegalStateException {
         long timeSince1970 = date.getTime();
         return generate(timeSince1970);
@@ -147,6 +151,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
+    @Override
     public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
@@ -160,11 +165,13 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param code an OTP code
      * @return a boolean, true if code is valid, otherwise false
      */
+    @Override
     public boolean verify(String code) {
         long counter = calculateCounter(period);
         return super.verify(code, counter);
     }
 
+    @Override
     public Duration getPeriod() {
         return period;
     }
@@ -206,5 +213,4 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     private boolean validateTime(long time) {
         return time > 0;
     }
-
 }
