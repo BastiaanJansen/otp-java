@@ -34,7 +34,7 @@ TOTPGenerator can accept more paramaters: `passwordLength`, `timeInterval`, `alg
 
 ```java
 String secret = "ABCDEFGHIJKLMNOP";
-int passwordLength = 6; // Password length must be between 6 and 8
+int passwordLength = 8; // Password length must be between 6 and 8
 Duration timeInterval = Duration.ofSeconds(30); // This can of course be any number
 HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
 
@@ -58,6 +58,7 @@ try {
     String codeBasedOnDate = totp.generate(new Date());
     String codeBasedOnSecondsSince1970 = totp.generate(9238346823);
     String codeBasedOnAnInstant = totp.generate(Instant.now());
+    String codeBasedOnURI = totp.generate(new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30"));
 } catch (IllegalStateException e) {
     // Handle error
 }
