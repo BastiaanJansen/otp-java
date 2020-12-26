@@ -9,18 +9,18 @@ class OneTimePasswordGeneratorTest {
     @Test
     void generateWithSHA1() {
         OneTimePasswordGenerator generator = new OneTimePasswordGenerator(HMACAlgorithm.SHA1, secret);
-        assertEquals("250711", generator.generate(1));
+        assertEquals("317963", generator.generate(1));
     }
 
     @Test
     void generateWithSHA256() {
         OneTimePasswordGenerator generator = new OneTimePasswordGenerator(HMACAlgorithm.SHA256, secret);
-        assertEquals("159317", generator.generate(1));
+        assertEquals("604514", generator.generate(1));
     }
 
     @Test
     void generateWithSHA512() {
         OneTimePasswordGenerator generator = new OneTimePasswordGenerator(HMACAlgorithm.SHA512, secret);
-        assertEquals("997350", generator.generate(1));
+        assertEquals("597655", generator.generate(1));
     }
 }

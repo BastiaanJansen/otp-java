@@ -5,7 +5,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -208,9 +207,7 @@ public class OneTimePasswordGenerator {
      */
     private String getPasswordFromHash(byte[] hash) {
         int offset = hash[hash.length - 1] & 0xF;
-
         long truncatedHash = 0;
-
         for (int i = 0; i < 4; ++i) {
             truncatedHash <<= 8;
             truncatedHash |= (hash[offset + i] & 0xFF);
