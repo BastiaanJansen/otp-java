@@ -5,9 +5,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import org.apache.commons.codec.binary.Base32;
 
 /**
  * Generates one-time passwords
@@ -28,22 +30,6 @@ public class OneTimePasswordGenerator {
      * Secret key used to generate the code
      */
     private final String secret;
-
-    private static final long[] DIGITS_POWER = {
-            1L,                // 0
-            10L,               // 1
-            100L,              // 2
-            1_000L,            // 3
-            10_000L,           // 4
-            100_000L,          // 5
-            1_000_000L,        // 6
-            10_000_000L,       // 7
-            100_000_000L,      // 8
-            1_000_000_000L,    // 9
-            10_000_000_000L,   // 10
-            100_000_000_000L,  // 11
-            1_000_000_000_000L // 12
-    };
 
     /**
      * Default value for password length
@@ -167,29 +153,31 @@ public class OneTimePasswordGenerator {
      * @throws IllegalStateException when hashing algorithm throws an error
      */
     protected String generate(long counter) throws IllegalStateException {
-        byte[] hash = generateHash(algorithm, secret, counter);
-
-        int offset = hash[hash.length - 1] & 0xf;
-        int binary = ((hash[offset] & 0x7f) << 24) | ((hash[offset + 1] & 0xff) << 16) | ((hash[offset + 2] & 0xff) << 8) | (hash[offset + 3] & 0xff);
-        long otp = binary % DIGITS_POWER[passwordLength];
-        return String.format("%0" + passwordLength + "d", otp);
+        byte[] hash = generateHash(secret, counter);
+        return getPasswordFromHash(hash);
     }
 
     /**
      * Helper method to easily generate a hash based on a secret and counter
      *
-     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret    used to generate hash
      * @param counter   how many times time interval has passed since 1970
      * @return generated hash
      * @throws IllegalStateException when code could not be generated
      */
-    private byte[] generateHash(HMACAlgorithm algorithm, String secret, long counter) throws IllegalStateException {
-        byte[] secretBytes = secret.getBytes();
+    private byte[] generateHash(String secret, long counter) {
+        // Convert long type to bytes array
+        // In Java, long takes 64 bits sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
         byte[] counterBytes = ByteBuffer.allocate(Long.BYTES).putLong(counter).array();
+
+        // OTP secret must be a Base32 string
+        // Create a HMAC signing key from the secret key
+        Base32 codec = new Base32();
+        byte[] decodedSecret = codec.decode(secret);
+
         try {
-            return generateHash(algorithm, secretBytes, counterBytes);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            return generateHash(decodedSecret, counterBytes);
+        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
             throw new IllegalStateException();
         }
     }
@@ -197,19 +185,42 @@ public class OneTimePasswordGenerator {
     /**
      * Generate a hash based on an HMAC algorithm and secret
      *
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret    used to generate hash
+     * @param secret    Base32 string converted to byte array used to generate hash
      * @param data      to hash
      * @return generated hash
      * @throws NoSuchAlgorithmException when algorithm does not exist
      * @throws InvalidKeyException      when secret is invalid
      */
-    private byte[] generateHash(HMACAlgorithm algorithm, byte[] secret, byte[] data) throws NoSuchAlgorithmException, InvalidKeyException {
+    private byte[] generateHash(byte[] secret, byte[] data) throws InvalidKeyException, NoSuchAlgorithmException {
+        // Create a secret key with correct SHA algorithm
+        SecretKeySpec signKey = new SecretKeySpec(secret, algorithm.toString());
+        // Mac is 'message authentication code' algorithm (RFC 2104)
         Mac mac = Mac.getInstance(algorithm.toString());
-        SecretKeySpec macKey = new SecretKeySpec(secret, "RAW");
-        mac.init(macKey);
-
+        mac.init(signKey);
+        // Hash data with generated sign key
         return mac.doFinal(data);
+    }
+
+    /**
+     * Get code from hash with specified password length
+     * @param hash
+     * @return OTP code
+     */
+    private String getPasswordFromHash(byte[] hash) {
+        int offset = hash[hash.length - 1] & 0xF;
+
+        long truncatedHash = 0;
+
+        for (int i = 0; i < 4; ++i) {
+            truncatedHash <<= 8;
+            truncatedHash |= (hash[offset + i] & 0xFF);
+        }
+
+        truncatedHash &= 0x7FFFFFFF;
+        truncatedHash %= Math.pow(10, passwordLength);
+
+        // Left pad with 0s for a n-digit code
+        return String.format("%0" + passwordLength + "d", truncatedHash);
     }
 
     /**

@@ -1,5 +1,3 @@
-import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
-
 import javax.crypto.KeyGenerator;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -14,7 +12,7 @@ public class Main {
         HOTPGenerator hotp = new HOTPGenerator("DREERRRR");
 
         try {
-            String code = totp.generate(2000);
+            String code = totp.generate();
             System.out.println(code);
         } catch (IllegalStateException e) {
             e.printStackTrace();
