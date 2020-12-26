@@ -2,7 +2,9 @@ import helpers.URIHelper;
 import interfaces.ITOTPGenerator;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -119,7 +121,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     @Override
     public String generate() throws IllegalStateException {
         long counter = calculateCounter(period);
-        return super.generate(counter);
+        return super.generate(BigInteger.valueOf(counter));
     }
 
     /**
@@ -157,7 +159,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
             throw new IllegalArgumentException("Time must be above zero");
         }
         long counter = calculateCounter(secondsPast1970, period);
-        return super.generate(counter);
+        return super.generate(BigInteger.valueOf(counter));
     }
 
     /**

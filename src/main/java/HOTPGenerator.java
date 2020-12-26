@@ -1,7 +1,9 @@
 import interfaces.IHOTPGenerator;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Generates counter-based one-time passwords
@@ -43,7 +45,6 @@ public class HOTPGenerator extends OneTimePasswordGenerator implements IHOTPGene
      */
     @Override
     public String generate(long counter) throws IllegalArgumentException {
-        return super.generate(counter);
+        return super.generate(BigInteger.valueOf(counter));
     }
-
 }

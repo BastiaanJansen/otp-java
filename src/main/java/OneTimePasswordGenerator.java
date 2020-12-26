@@ -3,6 +3,7 @@ import helpers.URIHelper;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
@@ -19,17 +20,17 @@ public class OneTimePasswordGenerator {
     /**
      * Number of digits for generated code in range 6...8, defaults to 6
      */
-    private final int passwordLength;
+    protected final int passwordLength;
 
     /**
      * Hashing algorithm used to generate code, defaults to SHA1
      */
-    private final HMACAlgorithm algorithm;
+    protected final HMACAlgorithm algorithm;
 
     /**
      * Secret key used to generate the code
      */
-    private final String secret;
+    protected final String secret;
 
     /**
      * Default value for password length
@@ -143,7 +144,7 @@ public class OneTimePasswordGenerator {
      */
     public boolean verify(String code, long counter) {
         if (code.length() != passwordLength) return false;
-        String currentCode = this.generate(counter);
+        String currentCode = generate(BigInteger.valueOf(counter));
         return code.equals(currentCode);
     }
 
@@ -154,8 +155,8 @@ public class OneTimePasswordGenerator {
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
-    protected String generate(long counter) throws IllegalStateException {
-        byte[] hash = generateHash(secret, counter);
+    protected String generate(BigInteger counter) throws IllegalStateException {
+        byte[] hash = generateHash(secret, counter.longValue());
         return getPasswordFromHash(hash);
     }
 
@@ -169,7 +170,7 @@ public class OneTimePasswordGenerator {
      */
     private byte[] generateHash(String secret, long counter) {
         // Convert long type to bytes array
-        // In Java, long takes 64 bits sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
+        // In Java, long takes 64 bits. sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
         byte[] counterBytes = ByteBuffer.allocate(Long.BYTES).putLong(counter).array();
 
         // OTP secret must be a Base32 string
