@@ -15,6 +15,11 @@ The default length of a generated code is six digits. You can change the default
 String secret = "ABCDEFGHIJKLMNOP";
 int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
+
+// Get information about the generator
+String secret = hotp.getSecret();
+int passwordLength = hotp.getPasswordLength();
+HMACAlgorithm algorithm = hotp.getAlgorithm();
 ```
 
 ##### Generation of HOTP code:
