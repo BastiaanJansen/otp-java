@@ -1,6 +1,11 @@
+import helpers.URIHelper;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -91,6 +96,21 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
+     * Constructs generator from a OTPAuth URI
+     * @param uri OTPAuth URI
+     * @throws UnsupportedEncodingException when URI query can't be encoded
+     */
+    public TOTPGenerator(URI uri) throws UnsupportedEncodingException {
+        super(uri);
+        Map<String, String> query = URIHelper.queryItems(uri);
+        String timeInterval = query.get("period");
+
+        if (timeInterval == null) throw new IllegalArgumentException("Period query parameter must be set");
+
+        this.timeInterval = Duration.ofSeconds(Integer.valueOf(timeInterval));
+    }
+
+    /**
      * Generate a time-based one-time password for current time interval instant
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
@@ -144,6 +164,10 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         return super.verify(code, calculateCounter(new Date(), timeInterval));
     }
 
+    public Duration getTimeInterval() {
+        return timeInterval;
+    }
+
     /**
      * Calculate the counter for a specific date
      * @param date specific date
@@ -161,7 +185,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return counter based on seconds past 1970 and time interval
      */
     private long calculateCounter(long secondsPast1970, Duration timeInterval) {
-        return secondsPast1970 / TimeUnit.SECONDS.toMillis(timeInterval.getSeconds());
+        return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(timeInterval.getSeconds());
     }
 
     /**

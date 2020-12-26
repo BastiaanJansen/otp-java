@@ -1,10 +1,13 @@
+import helpers.URIHelper;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Map;
 
 /**
  * Generates one-time passwords
@@ -62,7 +65,7 @@ public class OneTimePasswordGenerator {
     }
 
     /**
-     * Constructs the generator with a custom password length and default hashing algorithm
+     * Constructs generator with a custom password length and default hashing algorithm
      *
      * @param passwordLength Number of digits for generated code in range 6...8
      * @param secret         used to generate hash
@@ -72,13 +75,47 @@ public class OneTimePasswordGenerator {
     }
 
     /**
-     * Constructs the generator with a custom hashing algorithm and default password length
+     * Constructs generator with a custom hashing algorithm and default password length
      *
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret    used to generate hash
      */
     protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
         this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
+    }
+
+    /**
+     * Constructs generator from a OTPAuth URI
+     * @param uri OTPAuth URI
+     * @throws UnsupportedEncodingException when URI query items can't be encoded
+     */
+    protected OneTimePasswordGenerator(URI uri) throws UnsupportedEncodingException {
+        Map<String, String> query = URIHelper.queryItems(uri);
+
+        String secret = query.get("secret");
+        String passwordLength = query.get("digits");
+        String algorithm = query.get("algorithm");
+        HMACAlgorithm HMACAlgorithm = null;
+
+        if (algorithm != null) {
+            switch (algorithm) {
+                case "SHA1":
+                    HMACAlgorithm = HMACAlgorithm.SHA1;
+                    break;
+                case "SHA256":
+                    HMACAlgorithm = HMACAlgorithm.SHA256;
+                    break;
+                case "SHA512":
+                    HMACAlgorithm = HMACAlgorithm.SHA512;
+                    break;
+            }
+        }
+
+        if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
+
+        this.passwordLength = passwordLength == null ? DEFAULT_PASSWORD_LENGTH : Integer.valueOf(passwordLength);
+        this.algorithm = algorithm == null ? DEFAULT_HMAC_ALGORITHM : HMACAlgorithm;
+        this.secret = secret;
     }
 
     /**

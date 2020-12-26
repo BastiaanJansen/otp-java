@@ -1,3 +1,6 @@
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+
 /**
  * Generates counter-based one-time passwords
  * @author Bastiaan Jansen
@@ -22,8 +25,17 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
+     * Constructs generator from a OTPAuth URI
+     * @param uri OTPAuth URI
+     * @throws UnsupportedEncodingException when URI query can't be encodede
+     */
+    public HOTPGenerator(URI uri) throws UnsupportedEncodingException {
+        super(uri);
+    }
+
+    /**
      * Generate a counter-based one-time password
-     * @param counter
+     * @param counter how many times time interval has passed since 1970
      * @return generated HOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
