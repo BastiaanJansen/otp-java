@@ -1,9 +1,8 @@
-import java.math.BigInteger;
-
 public class ExampleApp {
     public static void main(String[] args) {
 
-        String secret = "ABCDEFGHIJKLMNOP";
+        String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
+//        String secret = "DREERRRR";
 
         TOTPGenerator totp = new TOTPGenerator(secret);
 
