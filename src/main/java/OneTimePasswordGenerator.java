@@ -137,16 +137,38 @@ public class OneTimePasswordGenerator {
     }
 
     /**
-     * Checks whether a code is valid for a specific counter
+     * Checks whether a code is valid for a specific counter with a delay window of 0
      *
      * @param code    an OTP code
      * @param counter how many times time interval has passed since 1970
      * @return a boolean, true if code is valid, otherwise false
      */
     public boolean verify(String code, long counter) {
+        return verify(code, counter, 0);
+    }
+
+    /**
+     * Checks whether a code is valid for a specific counter taking a delay window into account
+     *
+     * @param code an OTP codee
+     * @param counter how many times time interval has passed since 1970
+     * @param delayWindow window in which a code can still be deemed valid
+     * @return a boolean, true if code is valid, otherwise false
+     */
+    public boolean verify(String code, long counter, int delayWindow) {
         if (code.length() != passwordLength) return false;
-        String currentCode = generate(BigInteger.valueOf(counter));
-        return code.equals(currentCode);
+
+        if (delayWindow == 0) {
+            String currentCode = generate(BigInteger.valueOf(counter));
+            return code.equals(currentCode);
+        }
+
+        for (int i = -delayWindow; i <= delayWindow; i++) {
+            String currentCode = generate(BigInteger.valueOf(counter + i));
+            if (code.equals(currentCode)) return true;
+        }
+
+        return false;
     }
 
     /**

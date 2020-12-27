@@ -168,6 +168,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Checks wheter a code is valid for a specific counter
+     *
      * @param code an OTP code
      * @return a boolean, true if code is valid, otherwise false
      */
@@ -175,6 +176,19 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     public boolean verify(String code) {
         long counter = calculateCounter(period);
         return super.verify(code, counter);
+    }
+
+    /**
+     * Checks wheter a code is valid for a specific counter taking a delay window into account
+     *
+     * @param code an OTP code
+     * @param delayWindow window in which a code can still be deemed valid
+     * @return a boolean, true if code is valid, otherwise false
+     */
+    @Override
+    public boolean verify(String code, int delayWindow) {
+        long counter = calculateCounter(period);
+        return super.verify(code, counter, delayWindow);
     }
 
     @Override

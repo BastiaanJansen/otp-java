@@ -10,5 +10,6 @@ public interface ITOTPGenerator {
     String generate(Date date);
     String generate(long secondsPast1970);
     boolean verify(String code);
+    boolean verify(String code, int delayWindow);
     Duration getPeriod();
 }

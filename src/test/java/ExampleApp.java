@@ -2,15 +2,16 @@ public class ExampleApp {
     public static void main(String[] args) {
 
         String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
-//        String secret = "DREERRRR";
 
         TOTPGenerator totp = new TOTPGenerator(secret);
+        HOTPGenerator hotp = new HOTPGenerator(secret);
 
         try {
-            String code = totp.generate();
+            String code = hotp.generate(10);
             System.out.println(code);
 
-            boolean isValid = totp.verify(code); // true
+            boolean isValid = hotp.verify(code, 8, 2);
+            System.out.println(isValid);
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
