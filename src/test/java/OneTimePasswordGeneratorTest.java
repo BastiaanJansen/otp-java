@@ -25,4 +25,16 @@ class OneTimePasswordGeneratorTest {
         OneTimePasswordGenerator generator = new OneTimePasswordGenerator(HMACAlgorithm.SHA512, secret);
         assertEquals("016738", generator.generate(BigInteger.valueOf(1)));
     }
+
+    @Test
+    void verifyCode() {
+        OneTimePasswordGenerator generator = new OneTimePasswordGenerator(secret);
+        String code = generator.generate(BigInteger.valueOf(10));
+        assertTrue(generator.verify(code, 10));
+        assertFalse(generator.verify(code, 9));
+        assertTrue(generator.verify(code, 9, 1));
+        assertTrue(generator.verify(code, 11, 1));
+        assertTrue(generator.verify(code, 8, 2));
+        assertFalse(generator.verify(code, 20, 2));
+    }
 }
