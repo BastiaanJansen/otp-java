@@ -12,7 +12,7 @@ A small and easy-to-use one-time password generator for Java according to [RFC 4
 ##### Generation of HOTP object:
 
 ```java
-String secret = "ABCDEFGHIJKLMNOP";
+String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
 HOTPGenerator hotp = new HOTPGenerator(secret);
 ```
 
@@ -29,7 +29,7 @@ new HOTPGenerator("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&
 Get information about the generator:
 
 ```java
-String secret = hotp.getSecret(); // ABCDEFGHIJKLMNOP
+String secret = hotp.getSecret(); // VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q
 int passwordLength = hotp.getPasswordLength(); // 6
 HMACAlgorithm algorithm = hotp.getAlgorithm(); // HMACAlgorithm.SHA1
 ```
@@ -56,7 +56,7 @@ try {
 TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values are: passwordLength = 6, period = 30, algorithm = SHA1.
 
 ```java
-String secret = "ABCDEFGHIJKLMNOP";
+String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
 int passwordLength = 8; // Password length must be between 6 and 8
 Duration period = Duration.ofSeconds(30); // This can of course be any period
 HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
@@ -66,7 +66,7 @@ TOTPGenerator totp = new TOTPGenerator(passwordLength, period, algorithm, secret
 
 Get information about the generator:
 ```java
-String secret = totp.getSecret(); // ABCDEFGHIJKLMNOP
+String secret = totp.getSecret(); // VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q
 int passwordLength = totp.getPasswordLength(); // 6
 HMACAlgorithm algorithm = totp.getAlgorithm(); // HMACAlgorithm.SHA1
 Duration period = totp.getPeriod(); // Duration.ofSeconds(30)
