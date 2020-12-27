@@ -3,6 +3,8 @@ A small and easy-to-use one-time password generator for Java according to [RFC 4
 
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Test/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
+![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
+![](https://img.shields.io/github/issues/BastiaanJansen/OTP-Java)
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
