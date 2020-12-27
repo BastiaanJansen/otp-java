@@ -4,7 +4,6 @@ import interfaces.ITOTPGenerator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -24,14 +23,14 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     /**
      * Default time interval for a time-based one-time password
      */
-    public static final Duration DEFAULT_TIME_INTERVAL = Duration.ofSeconds(30);
+    public static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
 
     /**
      * Constructs generator
      * @param secret used to generate hash
      */
     public TOTPGenerator(final String secret) {
-        this(DEFAULT_TIME_INTERVAL, secret);
+        this(DEFAULT_PERIOD, secret);
     }
 
     /**
@@ -41,7 +40,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      */
     public TOTPGenerator(final int passwordLength, final String secret) {
         super(passwordLength, secret);
-        this.period = DEFAULT_TIME_INTERVAL;
+        this.period = DEFAULT_PERIOD;
     }
 
     /**
@@ -72,7 +71,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      */
     public TOTPGenerator(final HMACAlgorithm algorithm, final String secret) {
         super(algorithm, secret);
-        this.period = DEFAULT_TIME_INTERVAL;
+        this.period = DEFAULT_PERIOD;
     }
 
     /**
@@ -84,6 +83,11 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     public TOTPGenerator(final int passwordLength, final Duration period, final String secret) {
         super(passwordLength, secret);
         this.period = period;
+    }
+
+    public TOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
+        super(passwordLength, algorithm, secret);
+        this.period = DEFAULT_PERIOD;
     }
 
     /**

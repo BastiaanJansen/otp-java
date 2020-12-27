@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * Generates one-time passwords
@@ -234,15 +235,15 @@ public class OneTimePasswordGenerator {
         // Get 4 bytes from hash from offset to offset + 3
         byte[] truncatedHashInBytes = { hash[offset], hash[offset + 1], hash[offset + 2], hash[offset + 3] };
 
-        // Wrap in ByteBuffer to convert bytes to integer
+        // Wrap in ByteBuffer to convert bytes to long
         ByteBuffer byteBuffer = ByteBuffer.wrap(truncatedHashInBytes);
-        int truncatedHash = byteBuffer.getInt();
+        long truncatedHash = byteBuffer.getInt();
+
+        // Mask most significant bit
+        truncatedHash &= 0x7FFFFFFF;
 
         // Modulo (%) truncatedHash by 10^passwordLength
         truncatedHash %= Math.pow(10, passwordLength);
-
-        // Mask most significant bit
-        truncatedHash &= 0x7fffffff;
 
         // Left pad with 0s for a n-digit code
         return String.format("%0" + passwordLength + "d", truncatedHash);

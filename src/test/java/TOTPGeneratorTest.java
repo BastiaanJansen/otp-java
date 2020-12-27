@@ -10,36 +10,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TOTPGeneratorTest {
 
-    private String secret = "ABCDEFGHIJKLMNOP";
+    private String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
 
     @Test
     void generateBasedOnSecondsPast1970() {
         TOTPGenerator generator = new TOTPGenerator(secret);
-        assertEquals("827178", generator.generate(1));
+        assertEquals("455216", generator.generate(1));
     }
 
     @Test
     void generateWithEightDigits() {
         TOTPGenerator generator = new TOTPGenerator(8, secret);
-        assertEquals("40827178", generator.generate(1));
+        assertEquals("17455216", generator.generate(1));
     }
 
     @Test
     void generateWithInstant() {
         TOTPGenerator generator = new TOTPGenerator(secret);
-        assertEquals("827178", generator.generate(Instant.ofEpochMilli(1)));
+        assertEquals("455216", generator.generate(Instant.ofEpochMilli(1)));
     }
 
     @Test
     void generateWithDate() {
         TOTPGenerator generator = new TOTPGenerator(secret);
         Date date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
-        assertEquals("033699", generator.generate(date));
+        assertEquals("793858", generator.generate(date));
     }
 
     @Test
     void generateWithCustomTimeInterval() {
         TOTPGenerator generator = new TOTPGenerator(Duration.ofSeconds(60), secret);
-        assertEquals("827178", generator.generate(1));
+        assertEquals("455216", generator.generate(1));
     }
 }
