@@ -27,6 +27,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator
+     *
      * @param secret used to generate hash
      */
     public TOTPGenerator(final String secret) {
@@ -35,6 +36,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom password length
+     *
      * @param passwordLength number of digits for generated code in range 6...8
      * @param secret used to generate hash
      */
@@ -45,6 +47,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom time interval
+     *
      * @param period time interval between new codes
      * @param secret used to generate hash
      */
@@ -55,6 +58,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom time interval and hashing algorithm
+     *
      * @param period time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
@@ -66,6 +70,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom hashing algorithm and default time interval
+     *
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
@@ -76,6 +81,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom password length and time interval
+     *
      * @param passwordLength number of digits for generated code in range 6...8
      * @param period time interval between new codes
      * @param secret used to generate hash
@@ -92,6 +98,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator with custom password length, time interval and hashing algorithm
+     *
      * @param passwordLength number of digits for generated code in range 6...8
      * @param period time interval between new codes
      * @param algorithm HMAC hash algorithm used to hash data
@@ -104,6 +111,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Constructs generator from a OTPAuth URI
+     *
      * @param uri OTPAuth URI
      * @throws UnsupportedEncodingException when URI query can't be encoded
      */
@@ -119,6 +127,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Generate a time-based one-time password for current time interval instant
+     *
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
@@ -130,6 +139,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Generate a time-based one-time password for a Java instant
+     *
      * @param instant an instant
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
@@ -141,6 +151,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Generate a time-based one-time password for a specific date
+     *
      * @param date specific date
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
@@ -153,6 +164,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Generate a time-based one-time password for a specific time based on seconds past 1970
+     *
      * @param secondsPast1970 seconds past 1970
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
@@ -198,6 +210,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Calculate the counter for a specific date
+     *
      * @param date specific date
      * @param period time interval between new codes
      * @return counter based on a specific date and time interval
@@ -208,6 +221,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Calculate counter for a specific time in seconds past 1970 and time interval
+     *
      * @param secondsPast1970 seconds past 1970
      * @param period time interval between new codes
      * @return counter based on seconds past 1970 and time interval
@@ -218,6 +232,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Calculate counter based on current time and a specific time interval
+     *
      * @param period time interval between new codes
      * @return counter based on current time and a specific time interval
      */
@@ -227,6 +242,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
     /**
      * Check if time is above zero
+     *
      * @param time time value to check against
      * @return whether time is above zero
      */

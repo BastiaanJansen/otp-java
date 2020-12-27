@@ -158,11 +158,6 @@ public class OneTimePasswordGenerator {
     public boolean verify(String code, long counter, int delayWindow) {
         if (code.length() != passwordLength) return false;
 
-        if (delayWindow == 0) {
-            String currentCode = generate(BigInteger.valueOf(counter));
-            return code.equals(currentCode);
-        }
-
         for (int i = -delayWindow; i <= delayWindow; i++) {
             String currentCode = generate(BigInteger.valueOf(counter + i));
             if (code.equals(currentCode)) return true;
