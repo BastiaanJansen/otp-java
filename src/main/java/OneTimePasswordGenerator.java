@@ -157,7 +157,7 @@ public class OneTimePasswordGenerator {
      */
     protected String generate(BigInteger counter) throws IllegalStateException {
         byte[] hash = generateHash(secret, counter.longValue());
-        return getPasswordFromHash(hash);
+        return getCodeFromHash(hash);
     }
 
     /**
@@ -210,7 +210,7 @@ public class OneTimePasswordGenerator {
      * @param hash
      * @return OTP code
      */
-    private String getPasswordFromHash(byte[] hash) {
+    private String getCodeFromHash(byte[] hash) {
         /* Find mask for the last 4 digits:
         1. Set all bits to 1: ~0 -> 11111111 -> 255 decimal -> 0xFF
         2. Shift n (in this case 4, because we want the last 4 bits) bits to left with <<
