@@ -211,7 +211,7 @@ public class OneTimePasswordGenerator {
      * @return OTP code
      */
     private String getCodeFromHash(byte[] hash) {
-        /* Find mask for the last 4 digits:
+        /* Find mask to get last 4 digits:
         1. Set all bits to 1: ~0 -> 11111111 -> 255 decimal -> 0xFF
         2. Shift n (in this case 4, because we want the last 4 bits) bits to left with <<
         3. Negate the result: 1111 1100 -> 0000 0011
