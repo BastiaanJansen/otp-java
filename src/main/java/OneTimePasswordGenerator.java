@@ -157,7 +157,7 @@ public class OneTimePasswordGenerator {
      */
     protected String generate(BigInteger counter) throws IllegalStateException {
         byte[] hash = generateHash(secret, counter.longValue());
-        return getPasswordFromHash(hash);
+        return getCodeFromHash(hash);
     }
 
     /**
@@ -196,9 +196,9 @@ public class OneTimePasswordGenerator {
      */
     private byte[] generateHash(byte[] secret, byte[] data) throws InvalidKeyException, NoSuchAlgorithmException {
         // Create a secret key with correct SHA algorithm
-        SecretKeySpec signKey = new SecretKeySpec(secret, algorithm.toString());
+        SecretKeySpec signKey = new SecretKeySpec(secret, algorithm.getHMACName());
         // Mac is 'message authentication code' algorithm (RFC 2104)
-        Mac mac = Mac.getInstance(algorithm.toString());
+        Mac mac = Mac.getInstance(algorithm.getHMACName());
         mac.init(signKey);
         // Hash data with generated sign key
         return mac.doFinal(data);
@@ -210,16 +210,39 @@ public class OneTimePasswordGenerator {
      * @param hash
      * @return OTP code
      */
-    private String getPasswordFromHash(byte[] hash) {
-        int offset = hash[hash.length - 1] & 0xF;
-        long truncatedHash = 0;
-        for (int i = 0; i < 4; ++i) {
-            truncatedHash <<= 8;
-            truncatedHash |= (hash[offset + i] & 0xFF);
-        }
+    private String getCodeFromHash(byte[] hash) {
+        /* Find mask for the last 4 digits:
+        1. Set all bits to 1: ~0 -> 11111111 -> 255 decimal -> 0xFF
+        2. Shift n (in this case 4, because we want the last 4 bits) bits to left with <<
+        3. Negate the result: 1111 1100 -> 0000 0011
+         */
+        int mask = ~(~0 << 4);
 
-        truncatedHash &= 0x7FFFFFFF;
+        /* Get last 4 bits of hash as offset:
+        Use the bitwise AND (&) operator to select last 4 bits
+        Mask should be 00001111 = 15 = 0xF
+        Last byte of hash & 0xF = last 4 bits:
+        Example:
+        Input: decimal 219 as binary: 11011011 &
+        Mask: decimal 15 as binary:   00001111
+        -----------------------------------------
+        Output: decimal 11 as binary: 00001011
+         */
+        byte lastByte = hash[hash.length - 1];
+        int offset = lastByte & mask;
+
+        // Get 4 bytes from hash from offset to offset + 3
+        byte[] truncatedHashInBytes = { hash[offset], hash[offset + 1], hash[offset + 2], hash[offset + 3] };
+
+        // Wrap in ByteBuffer to convert bytes to integer
+        ByteBuffer byteBuffer = ByteBuffer.wrap(truncatedHashInBytes);
+        int truncatedHash = byteBuffer.getInt();
+
+        // Modulo (%) truncatedHash by 10^passwordLength
         truncatedHash %= Math.pow(10, passwordLength);
+
+        // Mask most significant bit
+        truncatedHash &= 0x7fffffff;
 
         // Left pad with 0s for a n-digit code
         return String.format("%0" + passwordLength + "d", truncatedHash);

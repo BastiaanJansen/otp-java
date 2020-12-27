@@ -7,12 +7,11 @@ public enum HMACAlgorithm {
 
     private String name;
 
-    private HMACAlgorithm(String name) {
+    HMACAlgorithm(String name) {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
+    public String getHMACName() {
         return name;
     }
 }
