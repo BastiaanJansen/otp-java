@@ -37,6 +37,9 @@ try {
     
     // To verify a token:
     boolean isValid = hotp.verify(code, counter);
+    
+    // Or verify with a delay window
+    boolean isValid = hotp.verify(code, counter, 2);
 } catch (IllegalStateException e) {
     // Handle error
 }
