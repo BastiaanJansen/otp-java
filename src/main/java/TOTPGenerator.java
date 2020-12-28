@@ -158,8 +158,8 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      */
     @Override
     public String generate(Date date) throws IllegalStateException {
-        long timeSince1970 = date.getTime();
-        return generate(timeSince1970);
+        long secondsSince1970 = TimeUnit.MILLISECONDS.toSeconds(date.getTime());
+        return generate(secondsSince1970);
     }
 
     /**

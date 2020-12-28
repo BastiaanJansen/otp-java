@@ -34,7 +34,7 @@ class TOTPGeneratorTest {
     void generateWithDate() {
         TOTPGenerator generator = new TOTPGenerator(secret);
         Date date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
-        assertEquals("793858", generator.generate(date));
+        assertEquals("019287", generator.generate(date));
     }
 
     @Test
