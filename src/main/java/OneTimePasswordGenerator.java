@@ -214,7 +214,7 @@ public class OneTimePasswordGenerator {
      */
     private byte[] generateHash(byte[] secret, byte[] data) throws InvalidKeyException, NoSuchAlgorithmException {
         // Create a secret key with correct SHA algorithm
-        SecretKeySpec signKey = new SecretKeySpec(secret, algorithm.getHMACName());
+        SecretKeySpec signKey = new SecretKeySpec(secret, "RAW");
         // Mac is 'message authentication code' algorithm (RFC 2104)
         Mac mac = Mac.getInstance(algorithm.getHMACName());
         mac.init(signKey);
