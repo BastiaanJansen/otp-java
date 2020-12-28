@@ -95,7 +95,7 @@ try {
     // Based on specific date
     totp.generate(new Date());
     
-    // Based on milliseconds past 1970
+    // Based on seconds past 1970
     totp.generate(9238346823);
     
     // Based on an instant
