@@ -3,6 +3,7 @@
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/build/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/test/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/maven%20package/badge.svg)
+![](https://github.com/BastiaanJansen/OTP-Java/workflows/CodeQL/badge.svg)
 ![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
 ![](https://img.shields.io/github/issues/BastiaanJansen/OTP-Java)
 
