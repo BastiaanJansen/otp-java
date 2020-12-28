@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * Generates one-time passwords
@@ -96,6 +95,9 @@ public class OneTimePasswordGenerator {
                     break;
                 case "SHA512":
                     HMACAlgorithm = HMACAlgorithm.SHA512;
+                    break;
+                default:
+                    HMACAlgorithm = null;
                     break;
             }
         }

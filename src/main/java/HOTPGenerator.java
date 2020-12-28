@@ -3,7 +3,6 @@ import interfaces.IHOTPGenerator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Generates counter-based one-time passwords
