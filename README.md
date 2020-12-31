@@ -2,7 +2,6 @@
 
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Test/badge.svg)
-![](https://github.com/BastiaanJansen/OTP-Java/workflows/Maven%20Package/badge.svg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/91d3addee9e94a0cad9436601d4a4e1e)](https://www.codacy.com/gh/BastiaanJansen/OTP-Java/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BastiaanJansen/OTP-Java&amp;utm_campaign=Badge_Grade)
 ![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
 ![](https://img.shields.io/github/issues/BastiaanJansen/OTP-Java)
@@ -15,6 +14,7 @@ The following features are supported:
 2. Time-based one-time password (TOTP, RFC 6238) generation based on current time, specific time, OTPAuth URI and more for different HMAC algorithms.
 3. HMAC-based one-time password (HOTP, RFC 4226) generation based on counter and OTPAuth URI.
 4. Verification of one-time passwords
+5. Generation of OTP Auth URI's
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
@@ -124,6 +124,15 @@ String secret = SecretGenerator.generate();
 
 // To generate a secret with a custom amount of bits
 String secret = SecretGenerator.generate(512);
+```
+
+### Generation of OTPAuth URI's
+To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method for both `HOTPGenerator` and `TOTPGenerator`. Example for `TOTPGenerator`:
+```java
+TOTPGenerator totp = new TOTPGenerator(secret);
+
+URI uri = totp.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
+
 ```
 
 ## Licence
