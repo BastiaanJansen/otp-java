@@ -3,9 +3,11 @@ import helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -123,7 +125,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param uri OTPAuth URI
      * @throws UnsupportedEncodingException when URI query can't be encoded
      */
-    public TOTPGenerator(URI uri) throws UnsupportedEncodingException {
+    public TOTPGenerator(final URI uri) throws UnsupportedEncodingException {
         super(uri);
         Map<String, String> query = URIHelper.queryItems(uri);
         String period = query.get("period");
@@ -151,7 +153,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    public String generate(Instant instant) throws IllegalStateException {
+    public String generate(final Instant instant) throws IllegalStateException {
         return generate(instant.toEpochMilli());
     }
 
@@ -162,7 +164,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    public String generate(Date date) throws IllegalStateException {
+    public String generate(final Date date) throws IllegalStateException {
         long secondsSince1970 = TimeUnit.MILLISECONDS.toSeconds(date.getTime());
         return generate(secondsSince1970);
     }
@@ -174,7 +176,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    public String generate(long secondsPast1970) throws IllegalArgumentException {
+    public String generate(final long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
         }
@@ -188,7 +190,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param code an OTP code
      * @return a boolean, true if code is valid, otherwise false
      */
-    public boolean verify(String code) {
+    public boolean verify(final String code) {
         long counter = calculateCounter(period);
         return super.verify(code, counter);
     }
@@ -200,7 +202,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param delayWindow window in which a code can still be deemed valid
      * @return a boolean, true if code is valid, otherwise false
      */
-    public boolean verify(String code, int delayWindow) {
+    public boolean verify(final String code, final int delayWindow) {
         long counter = calculateCounter(period);
         return super.verify(code, counter, delayWindow);
     }
@@ -210,13 +212,44 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
+     * Create a OTPAuth URI for easy onboarding with only an issuer
+     *
+     * @param issuer name
+     * @return generated OTPAuth URI
+     * @throws URISyntaxException
+     */
+    public URI getURI(final String issuer) throws URISyntaxException {
+        return getURI(issuer, "");
+    }
+
+    /**
+     * Create a OTPAuth URI for easy user on-boarding with an issuer and account name
+     *
+     * @param issuer name
+     * @param account name
+     * @return generated OTPAuth URI
+     * @throws URISyntaxException when URI cannot be created
+     */
+    public URI getURI(final String issuer, final String account) throws URISyntaxException {
+        Map<String, String> query = new HashMap<>();
+        query.put("period", String.valueOf(period.getSeconds()));
+        query.put("digits", String.valueOf(passwordLength));
+        query.put("algorithm", algorithm.name());
+        query.put("secret", secret);
+
+        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
+
+        return getURI("totp", path, query);
+    }
+
+    /**
      * Calculate the counter for a specific date
      *
      * @param date specific date
      * @param period time interval between new codes
      * @return counter based on a specific date and time interval
      */
-    private long calculateCounter(Date date, Duration period) {
+    private long calculateCounter(final Date date, final Duration period) {
         return calculateCounter(date.getTime(), period);
     }
 
@@ -227,7 +260,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param period time interval between new codes
      * @return counter based on seconds past 1970 and time interval
      */
-    private long calculateCounter(long secondsPast1970, Duration period) {
+    private long calculateCounter(final long secondsPast1970, final Duration period) {
         return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(period.getSeconds());
     }
 
@@ -237,7 +270,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param period time interval between new codes
      * @return counter based on current time and a specific time interval
      */
-    private long calculateCounter(Duration period) {
+    private long calculateCounter(final Duration period) {
         return System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(period.getSeconds());
     }
 
@@ -247,7 +280,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param time time value to check against
      * @return whether time is above zero
      */
-    private boolean validateTime(long time) {
+    private boolean validateTime(final long time) {
         return time > 0;
     }
 }

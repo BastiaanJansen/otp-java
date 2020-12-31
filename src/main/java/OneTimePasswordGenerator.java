@@ -5,6 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -123,7 +124,7 @@ public class OneTimePasswordGenerator {
 
         this.passwordLength = passwordLength;
         this.algorithm = algorithm;
-        this.secret = secret;
+        this.secret = secret.toUpperCase();
     }
 
     public int getPasswordLength() {
@@ -178,6 +179,19 @@ public class OneTimePasswordGenerator {
     protected String generate(BigInteger counter) throws IllegalStateException {
         byte[] hash = generateHash(secret, counter.longValue());
         return getCodeFromHash(hash);
+    }
+
+    /**
+     * Generate an OTPAuth URI
+     *
+     * @param type of OTPAuth URI: totp or hotp
+     * @param path contains issuer and account name
+     * @param query items of URI
+     * @return created OTPAuth URI
+     * @throws URISyntaxException when URI cannot be created
+     */
+    protected URI getURI(String type, String path, Map<String, String> query) throws URISyntaxException {
+        return URIHelper.createURI("otpauth", type, path, query);
     }
 
     /**
