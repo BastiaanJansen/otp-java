@@ -11,7 +11,7 @@ A small and easy-to-use one-time password generator for Java according to [RFC 4
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
-##### Generation of HOTP object:
+#### Initialization HOTP instance
 
 ```java
 String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
@@ -54,7 +54,7 @@ try {
 ```
 
 ### TOTP (Time-based one-time passwords)
-##### Generation of TOTP object:
+#### Initialization TOTP instance
 TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values are: passwordLength = 6, period = 30, algorithm = SHA1.
 
 ```java
