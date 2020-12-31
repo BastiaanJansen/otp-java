@@ -3,9 +3,11 @@ import helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -207,6 +209,37 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
 
     public Duration getPeriod() {
         return period;
+    }
+
+    /**
+     * Create a OTPAuth URI for easy onboarding with only an issuer
+     *
+     * @param issuer name
+     * @return generated OTPAuth URI
+     * @throws URISyntaxException
+     */
+    public URI getURI(String issuer) throws URISyntaxException {
+        return getURI(issuer, "");
+    }
+
+    /**
+     * Create a OTPAuth URI for easy user on-boarding with an issuer and account name
+     *
+     * @param issuer name
+     * @param account name
+     * @return generated OTPAuth URI
+     * @throws URISyntaxException when URI cannot be created
+     */
+    public URI getURI(String issuer, String account) throws URISyntaxException {
+        Map<String, String> query = new HashMap<>();
+        query.put("period", String.valueOf(period.getSeconds()));
+        query.put("digits", String.valueOf(passwordLength));
+        query.put("algorithm", algorithm.name());
+        query.put("secret", secret);
+
+        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
+
+        return getURI("totp", path, query);
     }
 
     /**

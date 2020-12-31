@@ -1,6 +1,11 @@
+import helpers.URIHelper;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generates counter-based one-time passwords
@@ -44,5 +49,38 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      */
     public String generate(long counter) throws IllegalArgumentException {
         return super.generate(BigInteger.valueOf(counter));
+    }
+
+    /**
+     * Create an OTPAuth URI for easy user on-boarding with only an issuer
+     *
+     * @param counter of URI
+     * @param issuer name for URI
+     * @return OTPAuth URI
+     * @throws URISyntaxException when URI cannot be created
+     */
+    public URI getURI(int counter, String issuer) throws URISyntaxException {
+        return getURI(counter, issuer, "");
+    }
+
+    /**
+     * Create an OTPAuth URI for easy user on-boarding with an issuer and account name
+     *
+     * @param counter of URI
+     * @param issuer name for URI
+     * @param account name for URI
+     * @return OTPAuth URI
+     * @throws URISyntaxException when URI cannot be created
+     */
+    public URI getURI(int counter, String issuer, String account) throws URISyntaxException {
+        Map<String, String> query = new HashMap<>();
+        query.put("counter", String.valueOf(counter));
+        query.put("digits", String.valueOf(passwordLength));
+        query.put("algorithm", algorithm.name());
+        query.put("secret", secret);
+
+        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
+
+        return getURI("hotp", path, query);
     }
 }
