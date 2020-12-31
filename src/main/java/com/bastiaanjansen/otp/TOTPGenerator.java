@@ -1,4 +1,6 @@
-import helpers.URIHelper;
+package com.bastiaanjansen.otp;
+
+import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -216,7 +218,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      *
      * @param issuer name
      * @return generated OTPAuth URI
-     * @throws URISyntaxException
+     * @throws URISyntaxException when URI cannot be created
      */
     public URI getURI(final String issuer) throws URISyntaxException {
         return getURI(issuer, "");

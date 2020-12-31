@@ -1,3 +1,7 @@
+package com.bastiaanjansen.otp;
+
+import com.bastiaanjansen.otp.HMACAlgorithm;
+import com.bastiaanjansen.otp.OneTimePasswordGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;

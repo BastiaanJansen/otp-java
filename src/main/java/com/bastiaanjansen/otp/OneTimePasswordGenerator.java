@@ -1,4 +1,6 @@
-import helpers.URIHelper;
+package com.bastiaanjansen.otp;
+
+import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
