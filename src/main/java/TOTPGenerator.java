@@ -1,5 +1,4 @@
 import helpers.URIHelper;
-import interfaces.ITOTPGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -12,9 +11,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Generates time-based one-time passwords
+ *
  * @author Bastiaan Jansen
+ * @see OneTimePasswordGenerator
  */
-public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGenerator {
+public class TOTPGenerator extends OneTimePasswordGenerator {
     /**
      * Time interval between new codes
      */
@@ -80,7 +81,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
     }
 
     /**
-     * Constructs generator with custom password length and time interval
+     * Constructs generator with custom password length and period
      *
      * @param passwordLength number of digits for generated code in range 6...8
      * @param period time interval between new codes
@@ -91,6 +92,13 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
         this.period = period;
     }
 
+    /**
+     * Constructs generator with custom password length and hashing algorithm
+     *
+     * @param passwordLength number of digits for generated code in range 6...8
+     * @param algorithm HMAC hash algorithm used to hash data
+     * @param secret used to generate hash
+     */
     public TOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
         super(passwordLength, algorithm, secret);
         this.period = DEFAULT_PERIOD;
@@ -122,7 +130,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
 
         if (period == null) throw new IllegalArgumentException("Period query parameter must be set");
 
-        this.period = Duration.ofSeconds(Integer.valueOf(period));
+        this.period = Duration.ofSeconds(Integer.parseInt(period));
     }
 
     /**
@@ -131,7 +139,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    @Override
     public String generate() throws IllegalStateException {
         long counter = calculateCounter(period);
         return super.generate(BigInteger.valueOf(counter));
@@ -144,7 +151,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    @Override
     public String generate(Instant instant) throws IllegalStateException {
         return generate(instant.toEpochMilli());
     }
@@ -156,7 +162,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    @Override
     public String generate(Date date) throws IllegalStateException {
         long secondsSince1970 = TimeUnit.MILLISECONDS.toSeconds(date.getTime());
         return generate(secondsSince1970);
@@ -169,7 +174,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    @Override
     public String generate(long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
@@ -184,7 +188,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @param code an OTP code
      * @return a boolean, true if code is valid, otherwise false
      */
-    @Override
     public boolean verify(String code) {
         long counter = calculateCounter(period);
         return super.verify(code, counter);
@@ -197,13 +200,11 @@ public class TOTPGenerator extends OneTimePasswordGenerator implements ITOTPGene
      * @param delayWindow window in which a code can still be deemed valid
      * @return a boolean, true if code is valid, otherwise false
      */
-    @Override
     public boolean verify(String code, int delayWindow) {
         long counter = calculateCounter(period);
         return super.verify(code, counter, delayWindow);
     }
 
-    @Override
     public Duration getPeriod() {
         return period;
     }
