@@ -8,9 +8,6 @@ public class ExampleApp {
 
         // Create a TOTPGenerate instance with default values
         TOTPGenerator totp = new TOTPGenerator(secret);
-        HOTPGenerator hotp = new HOTPGenerator(secret);
-
-        System.out.println(totp.getURI("issuer"));
 
         try {
             String code = totp.generate();
