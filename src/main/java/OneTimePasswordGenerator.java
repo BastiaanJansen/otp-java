@@ -28,7 +28,7 @@ public class OneTimePasswordGenerator {
     protected final HMACAlgorithm algorithm;
 
     /**
-     * Secret key used to generate the code
+     * Secret key used to generate the code, this should be a base32 string
      */
     protected final String secret;
 
@@ -104,7 +104,7 @@ public class OneTimePasswordGenerator {
 
         if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
 
-        this.passwordLength = passwordLength == null ? DEFAULT_PASSWORD_LENGTH : Integer.valueOf(passwordLength);
+        this.passwordLength = passwordLength == null ? DEFAULT_PASSWORD_LENGTH : Integer.parseInt(passwordLength);
         this.algorithm = algorithm == null ? DEFAULT_HMAC_ALGORITHM : HMACAlgorithm;
         this.secret = secret;
     }

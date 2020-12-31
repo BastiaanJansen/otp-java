@@ -183,7 +183,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
-     * Checks wheter a code is valid for a specific counter
+     * Checks whether a code is valid for a specific counter
      *
      * @param code an OTP code
      * @return a boolean, true if code is valid, otherwise false
@@ -194,7 +194,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     }
 
     /**
-     * Checks wheter a code is valid for a specific counter taking a delay window into account
+     * Checks whether a code is valid for a specific counter taking a delay window into account
      *
      * @param code an OTP code
      * @param delayWindow window in which a code can still be deemed valid
