@@ -1,2 +1,5 @@
 .idea
 target
+.m2
+pom.xml.releaseBackup
+release.properties

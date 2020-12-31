@@ -1,3 +1,5 @@
+package com.bastiaanjansen.otp;
+
 import java.net.URISyntaxException;
 
 public class ExampleApp {

@@ -1,4 +1,4 @@
-package helpers;
+package com.bastiaanjansen.otp.helpers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -7,6 +7,11 @@ import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * A URI utility class with helper methods
+ *
+ * @author Bastiaan Jansen
+ */
 public class URIHelper {
     /**
      * Get a map of query items from URI

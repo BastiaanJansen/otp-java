@@ -1,3 +1,5 @@
+package com.bastiaanjansen.otp;
+
 import org.apache.commons.codec.binary.Base32;
 
 import java.security.SecureRandom;
@@ -9,6 +11,9 @@ import java.security.SecureRandom;
  */
 public class SecretGenerator {
 
+    /**
+     * Default amount of bits for secret generation
+     */
     public final static int DEFAULT_BITS = 160;
 
     /**
