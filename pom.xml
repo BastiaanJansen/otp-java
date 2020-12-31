@@ -10,7 +10,7 @@
 
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>OTP-Java</artifactId>
-    <version>1.0.4.1</version>
+    <version>1.0.4.2-SNAPSHOT</version>
 
     <name>OTP-Java</name>
     <description>A small and easy-to-use one-time password (HOTP/TOTP) generator for Java.</description>
