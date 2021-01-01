@@ -157,8 +157,18 @@ public class OneTimePasswordGenerator {
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
-    protected String generate(BigInteger counter) throws IllegalStateException {
-        byte[] hash = generateHash(secret, counter.longValue());
+    protected String generate(final BigInteger counter) throws IllegalStateException {
+        byte[] secretBytes = decodeBase32(secret);
+        byte[] counterBytes = longToBytes(counter.longValue());
+
+        byte[] hash;
+
+        try {
+            hash = generateHash(secretBytes, counterBytes);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new IllegalStateException();
+        }
+
         return getCodeFromHash(hash);
     }
 
@@ -171,33 +181,29 @@ public class OneTimePasswordGenerator {
      * @return created OTPAuth URI
      * @throws URISyntaxException when URI cannot be created
      */
-    protected URI getURI(String type, String path, Map<String, String> query) throws URISyntaxException {
+    protected URI getURI(final String type, final String path, final Map<String, String> query) throws URISyntaxException {
         return URIHelper.createURI("otpauth", type, path, query);
     }
 
     /**
-     * Helper method to easily generate a hash based on a secret and counter
+     * Decode a base32 string to bytes array
      *
-     * @param secret    used to generate hash
-     * @param counter   how many times time interval has passed since 1970
-     * @return generated hash
-     * @throws IllegalStateException when code could not be generated
+     * @param value base32 string
+     * @return bytes array
      */
-    private byte[] generateHash(String secret, long counter) {
-        // Convert long type to bytes array
-        // In Java, long takes 64 bits. sqrt(64) = 8, so allocate 8 bytes to ByteBuffer
-        byte[] counterBytes = ByteBuffer.allocate(Long.BYTES).putLong(counter).array();
-
-        // OTP secret must be a Base32 string
-        // Create a HMAC signing key from the secret key
+    private byte[] decodeBase32(final String value) {
         Base32 codec = new Base32();
-        byte[] decodedSecret = codec.decode(secret);
+        return codec.decode(value);
+    }
 
-        try {
-            return generateHash(decodedSecret, counterBytes);
-        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException();
-        }
+    /**
+     * Convert a long value tp bytes array
+     *
+     * @param value long value
+     * @return bytes array
+     */
+    private byte[] longToBytes(final long value) {
+        return ByteBuffer.allocate(Long.BYTES).putLong(value).array();
     }
 
     /**
@@ -209,7 +215,7 @@ public class OneTimePasswordGenerator {
      * @throws NoSuchAlgorithmException when algorithm does not exist
      * @throws InvalidKeyException      when secret is invalid
      */
-    private byte[] generateHash(byte[] secret, byte[] data) throws InvalidKeyException, NoSuchAlgorithmException {
+    private byte[] generateHash(final byte[] secret, final byte[] data) throws InvalidKeyException, NoSuchAlgorithmException {
         // Create a secret key with correct SHA algorithm
         SecretKeySpec signKey = new SecretKeySpec(secret, "RAW");
         // Mac is 'message authentication code' algorithm (RFC 2104)
@@ -225,7 +231,7 @@ public class OneTimePasswordGenerator {
      * @param hash
      * @return OTP code
      */
-    private String getCodeFromHash(byte[] hash) {
+    private String getCodeFromHash(final byte[] hash) {
         /* Find mask to get last 4 digits:
         1. Set all bits to 1: ~0 -> 11111111 -> 255 decimal -> 0xFF
         2. Shift n (in this case 4, because we want the last 4 bits) bits to left with <<
