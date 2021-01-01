@@ -16,6 +16,18 @@ The following features are supported:
 4. Verification of one-time passwords
 5. Generation of OTP Auth URI's
 
+## Installation
+### Maven
+```xml
+<dependency>
+    <groupId>com.github.bastiaanjansen</groupId>
+    <artifactId>OTP-Java</artifactId>
+    <version>1.0.5</version>
+</dependency>
+```
+
+Or you can download the jar from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
+
 ## Usage
 ### HOTP (Counter-based one-time passwords)
 #### Initialization HOTP instance
