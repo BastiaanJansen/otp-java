@@ -47,8 +47,8 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      * @return generated HOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    public String generate(long counter) throws IllegalArgumentException {
-        return super.generate(BigInteger.valueOf(counter));
+    public String generateCode(long counter) throws IllegalArgumentException {
+        return super.generateCode(counter);
     }
 
     /**
