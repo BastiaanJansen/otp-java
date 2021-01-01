@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>com.github.bastiaanjansen</groupId>
-    <artifactId>OTP-Java</artifactId>
+    <artifactId>otp-java</artifactId>
     <version>1.0.4.2-SNAPSHOT</version>
 
     <name>OTP-Java</name>
