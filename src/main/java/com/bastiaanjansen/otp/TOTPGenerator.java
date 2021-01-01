@@ -130,11 +130,9 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     public TOTPGenerator(final URI uri) throws UnsupportedEncodingException {
         super(uri);
         Map<String, String> query = URIHelper.queryItems(uri);
-        String period = query.get("period");
+        int period = Integer.parseInt(query.getOrDefault("period", String.valueOf(DEFAULT_PERIOD.getSeconds())));
 
-        if (period == null) throw new IllegalArgumentException("Period query parameter must be set");
-
-        this.period = Duration.ofSeconds(Integer.parseInt(period));
+        this.period = Duration.ofSeconds(period);
     }
 
     /**

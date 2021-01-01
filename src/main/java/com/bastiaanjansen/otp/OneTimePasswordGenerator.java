@@ -80,35 +80,14 @@ public class OneTimePasswordGenerator {
      * @param uri OTPAuth URI
      * @throws UnsupportedEncodingException when URI query items can't be encoded
      */
-    protected OneTimePasswordGenerator(URI uri) throws UnsupportedEncodingException {
+    protected OneTimePasswordGenerator(final URI uri) throws UnsupportedEncodingException {
         Map<String, String> query = URIHelper.queryItems(uri);
 
         String secret = query.get("secret");
-        String passwordLength = query.get("digits");
-        String algorithm = query.get("algorithm");
-        HMACAlgorithm HMACAlgorithm = null;
-
-        if (algorithm != null) {
-            switch (algorithm) {
-                case "SHA1":
-                    HMACAlgorithm = HMACAlgorithm.SHA1;
-                    break;
-                case "SHA256":
-                    HMACAlgorithm = HMACAlgorithm.SHA256;
-                    break;
-                case "SHA512":
-                    HMACAlgorithm = HMACAlgorithm.SHA512;
-                    break;
-                default:
-                    HMACAlgorithm = null;
-                    break;
-            }
-        }
-
         if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
 
-        this.passwordLength = passwordLength == null ? DEFAULT_PASSWORD_LENGTH : Integer.parseInt(passwordLength);
-        this.algorithm = algorithm == null ? DEFAULT_HMAC_ALGORITHM : HMACAlgorithm;
+        this.passwordLength = Integer.parseInt(query.getOrDefault("digits", String.valueOf(DEFAULT_PASSWORD_LENGTH)));
+        this.algorithm = HMACAlgorithm.valueOf(query.getOrDefault("algorithm", DEFAULT_HMAC_ALGORITHM.name()));
         this.secret = secret;
     }
 
@@ -148,7 +127,7 @@ public class OneTimePasswordGenerator {
      * @param counter how many times time interval has passed since 1970
      * @return a boolean, true if code is valid, otherwise false
      */
-    public boolean verify(String code, long counter) {
+    public boolean verify(final String code, final long counter) {
         return verify(code, counter, 0);
     }
 
@@ -160,7 +139,7 @@ public class OneTimePasswordGenerator {
      * @param delayWindow window in which a code can still be deemed valid
      * @return a boolean, true if code is valid, otherwise false
      */
-    public boolean verify(String code, long counter, int delayWindow) {
+    public boolean verify(final String code, final long counter, final int delayWindow) {
         if (code.length() != passwordLength) return false;
 
         for (int i = -delayWindow; i <= delayWindow; i++) {

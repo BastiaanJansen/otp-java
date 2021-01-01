@@ -1,5 +1,7 @@
 package com.bastiaanjansen.otp;
 
+import java.util.NoSuchElementException;
+
 /**
  * HMAC algorithm enum
  * @author Bastiaan Jansen
