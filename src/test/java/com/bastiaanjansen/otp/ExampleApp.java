@@ -4,7 +4,7 @@ public class ExampleApp {
     public static void main(String[] args) {
 
         // Generate a secret, if you don't have one already
-        String secret = SecretGenerator.generate();
+        byte[] secret = SecretGenerator.generate();
 
         // Create a TOTPGenerate instance with default values
         TOTPGenerator totp = new TOTPGenerator(secret);

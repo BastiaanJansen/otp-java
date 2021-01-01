@@ -21,7 +21,7 @@ public class SecretGenerator {
      *
      * @return generated secret
      */
-    public static String generate() {
+    public static byte[] generate() {
         return generate(DEFAULT_BITS);
     }
 
@@ -34,7 +34,7 @@ public class SecretGenerator {
      *             SHA512: 512 bits
      * @return generated secret
      */
-    public static String generate(final int bits) {
+    public static byte[] generate(final int bits) {
         if (bits <= 0)
             throw new IllegalArgumentException("Bits must be higher than 0");
 
@@ -42,6 +42,7 @@ public class SecretGenerator {
         SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
 
-        return new Base32().encodeToString(bytes);
+        Base32 encoder = new Base32();
+        return encoder.encode(bytes);
     }
 }

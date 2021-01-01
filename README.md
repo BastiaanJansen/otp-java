@@ -48,7 +48,7 @@ Or you can download the source from the [GitHub releases page](https://github.co
 #### Initialization HOTP instance
 
 ```java
-String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
+byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
 HOTPGenerator hotp = new HOTPGenerator(secret);
 ```
 
