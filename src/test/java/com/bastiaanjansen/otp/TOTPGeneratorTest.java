@@ -16,32 +16,32 @@ class TOTPGeneratorTest {
 
     @Test
     void generateBasedOnSecondsPast1970() {
-        TOTPGenerator generator = new TOTPGenerator(secret);
+        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
         assertEquals("455216", generator.generateCode(1));
     }
 
     @Test
     void generateWithEightDigits() {
-        TOTPGenerator generator = new TOTPGenerator(8, secret);
+        TOTPGenerator generator = new TOTPGenerator(8, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret);
         assertEquals("17455216", generator.generateCode(1));
     }
 
     @Test
     void generateWithInstant() {
-        TOTPGenerator generator = new TOTPGenerator(secret);
+        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret);
         assertEquals("455216", generator.generate(Instant.ofEpochMilli(1)));
     }
 
     @Test
     void generateWithDate() {
-        TOTPGenerator generator = new TOTPGenerator(secret);
+        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret);
         Date date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
         assertEquals("019287", generator.generate(date));
     }
 
     @Test
     void generateWithCustomTimeInterval() {
-        TOTPGenerator generator = new TOTPGenerator(Duration.ofSeconds(60), secret);
+        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
         assertEquals("455216", generator.generateCode(1));
     }
 }

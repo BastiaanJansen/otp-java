@@ -10,7 +10,7 @@ class HOTPGeneratorTest {
 
     @Test
     void generateWithSixDigits() {
-        HOTPGenerator generator = new HOTPGenerator(secret);
+        HOTPGenerator generator = new HOTPGenerator(6, secret);
         assertEquals("560287", generator.generateCode(1));
     }
 

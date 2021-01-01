@@ -4,7 +4,6 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -16,6 +15,7 @@ import org.apache.commons.codec.binary.Base32;
 
 /**
  * Generates one-time passwords
+ *
  * @author Bastiaan Jansen
  */
 public class OneTimePasswordGenerator {
@@ -33,62 +33,6 @@ public class OneTimePasswordGenerator {
      * Secret key used to generate the code, this should be a base32 string
      */
     protected final byte[] secret;
-
-    /**
-     * Default value for password length
-     */
-    public static final int DEFAULT_PASSWORD_LENGTH = 6;
-
-    /**
-     * Default value for HMAC Algorithm
-     */
-    public static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
-
-    /**
-     * Constructs generator with default values
-     *
-     * @param secret used to generate hash
-     */
-    protected OneTimePasswordGenerator(final byte[] secret) {
-        this(DEFAULT_PASSWORD_LENGTH, DEFAULT_HMAC_ALGORITHM, secret);
-    }
-
-    /**
-     * Constructs generator with a custom password length and default hashing algorithm
-     *
-     * @param passwordLength Number of digits for generated code in range 6...8
-     * @param secret         used to generate hash
-     */
-    protected OneTimePasswordGenerator(final int passwordLength, final byte[] secret) {
-        this(passwordLength, DEFAULT_HMAC_ALGORITHM, secret);
-    }
-
-    /**
-     * Constructs generator with a custom hashing algorithm and default password length
-     *
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret    used to generate hash
-     */
-    protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final byte[] secret) {
-        this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
-    }
-
-    /**
-     * Constructs generator from a OTPAuth URI
-     *
-     * @param uri OTPAuth URI
-     * @throws UnsupportedEncodingException when URI query items can't be encoded
-     */
-    protected OneTimePasswordGenerator(final URI uri) throws UnsupportedEncodingException {
-        Map<String, String> query = URIHelper.queryItems(uri);
-
-        String secret = query.get("secret");
-        if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
-
-        this.passwordLength = Integer.parseInt(query.getOrDefault("digits", String.valueOf(DEFAULT_PASSWORD_LENGTH)));
-        this.algorithm = HMACAlgorithm.valueOf(query.getOrDefault("algorithm", DEFAULT_HMAC_ALGORITHM.name()));
-        this.secret = secret.getBytes();
-    }
 
     /**
      * Constructs the generator with custom password length and hashing algorithm

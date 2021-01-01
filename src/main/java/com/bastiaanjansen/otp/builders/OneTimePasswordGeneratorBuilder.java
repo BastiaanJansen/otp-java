@@ -1,8 +1,13 @@
 package com.bastiaanjansen.otp.builders;
 
 import com.bastiaanjansen.otp.HMACAlgorithm;
+import com.bastiaanjansen.otp.helpers.URIHelper;
 
-public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATOR> {
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.Map;
+
+public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder<GENERATOR> {
 
     protected byte[] secret;
     protected int passwordLength;
@@ -18,23 +23,46 @@ public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATO
      */
     public static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
 
-    public OneTimePasswordGeneratorBuilder(byte[] secret) {
+    public OneTimePasswordGeneratorBuilder(final byte[] secret) {
         this.secret = secret;
         this.passwordLength = DEFAULT_PASSWORD_LENGTH;
         this.algorithm = DEFAULT_HMAC_ALGORITHM;
     }
 
-    public CONCRETE_BUILDER withPasswordLength(int passwordLength) {
+    public CONCRETE_BUILDER withPasswordLength(final int passwordLength) {
         this.passwordLength = passwordLength;
         return getBuilder();
     }
 
-    public CONCRETE_BUILDER withAlgorithm(HMACAlgorithm algorithm) {
+    public CONCRETE_BUILDER withAlgorithm(final HMACAlgorithm algorithm) {
         this.algorithm = algorithm;
         return getBuilder();
     }
 
-    public abstract GENERATOR create();
+    public byte[] getSecret() {
+        return secret;
+    }
+
+    public int getPasswordLength() {
+        return passwordLength;
+    }
+
+    public HMACAlgorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public CONCRETE_BUILDER withOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+        Map<String, String> query = URIHelper.queryItems(uri);
+
+        String secret = query.get("secret");
+        if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
+
+        this.passwordLength = Integer.parseInt(query.getOrDefault("digits", String.valueOf(DEFAULT_PASSWORD_LENGTH)));
+        this.algorithm = HMACAlgorithm.valueOf(query.getOrDefault("algorithm", DEFAULT_HMAC_ALGORITHM.name()));
+        this.secret = secret.getBytes();
+
+        return getBuilder();
+    }
 
     public abstract CONCRETE_BUILDER getBuilder();
 }

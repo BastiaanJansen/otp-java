@@ -26,89 +26,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     private final Duration period;
 
     /**
-     * Default time interval for a time-based one-time password
-     */
-    public static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
-
-    /**
-     * Constructs generator
-     *
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final byte[] secret) {
-        this(DEFAULT_PERIOD, secret);
-    }
-
-    /**
-     * Constructs generator with custom password length
-     *
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final int passwordLength, final byte[] secret) {
-        super(passwordLength, secret);
-        this.period = DEFAULT_PERIOD;
-    }
-
-    /**
-     * Constructs generator with custom time interval
-     *
-     * @param period time interval between new codes
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final Duration period, final byte[] secret) {
-        super(secret);
-        this.period = period;
-    }
-
-    /**
-     * Constructs generator with custom time interval and hashing algorithm
-     *
-     * @param period time interval between new codes
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final Duration period, HMACAlgorithm algorithm, final byte[] secret) {
-        super(algorithm, secret);
-        this.period = period;
-    }
-
-    /**
-     * Constructs generator with custom hashing algorithm and default time interval
-     *
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final HMACAlgorithm algorithm, final byte[] secret) {
-        super(algorithm, secret);
-        this.period = DEFAULT_PERIOD;
-    }
-
-    /**
-     * Constructs generator with custom password length and period
-     *
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param period time interval between new codes
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final int passwordLength, final Duration period, final byte[] secret) {
-        super(passwordLength, secret);
-        this.period = period;
-    }
-
-    /**
-     * Constructs generator with custom password length and hashing algorithm
-     *
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
-        super(passwordLength, algorithm, secret);
-        this.period = DEFAULT_PERIOD;
-    }
-
-    /**
      * Constructs generator with custom password length, time interval and hashing algorithm
      *
      * @param passwordLength number of digits for generated code in range 6...8
@@ -119,20 +36,6 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
     public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final byte[] secret) {
         super(passwordLength, algorithm, secret);
         this.period = period;
-    }
-
-    /**
-     * Constructs generator from a OTPAuth URI
-     *
-     * @param uri OTPAuth URI
-     * @throws UnsupportedEncodingException when URI query can't be encoded
-     */
-    public TOTPGenerator(final URI uri) throws UnsupportedEncodingException {
-        super(uri);
-        Map<String, String> query = URIHelper.queryItems(uri);
-        int period = Integer.parseInt(query.getOrDefault("period", String.valueOf(DEFAULT_PERIOD.getSeconds())));
-
-        this.period = Duration.ofSeconds(period);
     }
 
     /**
