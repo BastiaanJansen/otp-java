@@ -48,13 +48,13 @@ Or you can download the source from the [GitHub releases page](https://github.co
 #### Initialization HOTP instance
 
 ```java
-byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
+byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
 HOTPGenerator hotp = new HOTPGenerator(secret);
 ```
 
 The default length of a generated code is six digits. You can change the default:
 ```java
-String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
+byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
 int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
 
@@ -65,7 +65,7 @@ new HOTPGenerator(new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorit
 Get information about the generator:
 
 ```java
-String secret = hotp.getSecret(); // VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q
+byte[] secret = hotp.getSecret();
 int passwordLength = hotp.getPasswordLength(); // 6
 HMACAlgorithm algorithm = hotp.getAlgorithm(); // HMACAlgorithm.SHA1
 ```
@@ -92,7 +92,7 @@ try {
 TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values are: passwordLength = 6, period = 30, algorithm = SHA1.
 
 ```java
-String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
+byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
 int passwordLength = 8; // Password length must be between 6 and 8
 Duration period = Duration.ofSeconds(30); // This can of course be any period
 HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
@@ -102,7 +102,7 @@ TOTPGenerator totp = new TOTPGenerator(passwordLength, period, algorithm, secret
 
 Get information about the generator:
 ```java
-String secret = totp.getSecret(); // VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q
+byte[] secret = totp.getSecret();
 int passwordLength = totp.getPasswordLength(); // 6
 HMACAlgorithm algorithm = totp.getAlgorithm(); // HMACAlgorithm.SHA1
 Duration period = totp.getPeriod(); // Duration.ofSeconds(30)
