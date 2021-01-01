@@ -44,7 +44,7 @@ int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
 
 // It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
-new HOTPGenerator("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
+new HOTPGenerator(new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237"));
 ```
 
 Get information about the generator:
