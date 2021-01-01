@@ -1,5 +1,7 @@
 package com.bastiaanjansen.otp;
 
+import com.bastiaanjansen.otp.builders.TOTPGeneratorBuilder;
+
 public class ExampleApp {
     public static void main(String[] args) {
 
@@ -7,7 +9,14 @@ public class ExampleApp {
         byte[] secret = SecretGenerator.generate();
 
         // Create a TOTPGenerate instance with default values
-        TOTPGenerator totp = new TOTPGenerator(secret);
+//        TOTPGenerator totp = new TOTPGenerator(secret);
+
+        TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder(secret);
+        TOTPGenerator totp = builder
+                .withPasswordLength(8)
+                .withAlgorithm(HMACAlgorithm.SHA256)
+                .create();
+
 
         try {
             String code = totp.generate();
