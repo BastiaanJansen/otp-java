@@ -105,7 +105,7 @@ try {
     // Handle error
 }
 ```
-The above code will generate a time-based one-time password based on the current time. The API supports, besides the current time, the creation of codes based on `timeSince1970` in milliseconds, `Date`, `Instant` and `URI` values:
+The above code will generate a time-based one-time password based on the current time. The API supports, besides the current time, the creation of codes based on `timeSince1970` in milliseconds, `Date`, and `Instant`:
 
 ```java
 try {
