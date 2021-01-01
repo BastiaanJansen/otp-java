@@ -143,7 +143,7 @@ public class OneTimePasswordGenerator {
         if (code.length() != passwordLength) return false;
 
         for (int i = -delayWindow; i <= delayWindow; i++) {
-            String currentCode = generate(BigInteger.valueOf(counter + i));
+            String currentCode = generateCode(counter + i);
             if (code.equals(currentCode)) return true;
         }
 
@@ -157,9 +157,9 @@ public class OneTimePasswordGenerator {
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
-    protected String generate(final BigInteger counter) throws IllegalStateException {
+    protected String generateCode(final long counter) throws IllegalStateException {
         byte[] secretBytes = decodeBase32(secret);
-        byte[] counterBytes = longToBytes(counter.longValue());
+        byte[] counterBytes = longToBytes(counter);
 
         byte[] hash;
 
