@@ -3,12 +3,11 @@ package com.bastiaanjansen.otp;
 import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -236,7 +235,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         query.put("period", String.valueOf(period.getSeconds()));
         query.put("digits", String.valueOf(passwordLength));
         query.put("algorithm", algorithm.name());
-        query.put("secret", Arrays.toString(secret));
+        query.put("secret", new String(secret, StandardCharsets.UTF_8));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 

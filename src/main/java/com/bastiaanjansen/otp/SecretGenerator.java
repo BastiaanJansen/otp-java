@@ -42,7 +42,7 @@ public class SecretGenerator {
         SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
 
-//        return new Base32().encodeToString(bytes);
-        return bytes;
+        Base32 encoder = new Base32();
+        return encoder.encode(bytes);
     }
 }
