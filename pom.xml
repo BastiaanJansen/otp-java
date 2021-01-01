@@ -9,11 +9,11 @@
     </parent>
 
     <groupId>com.github.bastiaanjansen</groupId>
-    <artifactId>OTP-Java</artifactId>
-    <version>1.0.4</version>
+    <artifactId>otp-java</artifactId>
+    <version>1.0.6-SNAPSHOT</version>
 
     <name>OTP-Java</name>
-    <description>A small and easy-to-use one-time password (HOTP/TOTP) generator for Java.</description>
+    <description>A small and easy-to-use one-time password generator for Java according to RFC 4226 (HOTP) and RFC 6238 (TOTP).</description>
 
     <distributionManagement>
         <snapshotRepository>
@@ -38,6 +38,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
+    <scm>
+        <connection>scm:git:https://github.com/BastiaanJansen/OTP-Java.git</connection>
+        <url>http://github.com/BastiaanJansen/OTP-Java</url>
+        <developerConnection>scm:git:https://github.com/BastiaanJansen/OTP-Java.git</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -122,9 +128,9 @@
         </plugins>
     </build>
 
-  <scm>
-    <connection>scm:svn:http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4</connection>
-    <developerConnection>scm:svn:https://svn.sonatype.org/spice/tags/OTP-Java-1.0.4</developerConnection>
-    <url>http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4</url>
-  </scm>
+<!--  <scm>-->
+<!--    <connection>scm:svn:http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</connection>-->
+<!--    <developerConnection>scm:svn:https://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</developerConnection>-->
+<!--    <url>http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</url>-->
+<!--  </scm>-->
 </project>
