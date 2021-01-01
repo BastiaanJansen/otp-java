@@ -17,13 +17,13 @@ class TOTPGeneratorTest {
     @Test
     void generateBasedOnSecondsPast1970() {
         TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
-        assertEquals("455216", generator.generateCode(1));
+        assertEquals("455216", generator.generate(1));
     }
 
     @Test
     void generateWithEightDigits() {
         TOTPGenerator generator = new TOTPGenerator(8, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret);
-        assertEquals("17455216", generator.generateCode(1));
+        assertEquals("17455216", generator.generate(1));
     }
 
     @Test
@@ -42,6 +42,6 @@ class TOTPGeneratorTest {
     @Test
     void generateWithCustomTimeInterval() {
         TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
-        assertEquals("455216", generator.generateCode(1));
+        assertEquals("455216", generator.generate(1));
     }
 }
