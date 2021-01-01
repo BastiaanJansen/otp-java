@@ -26,7 +26,7 @@ The following features are supported:
 </dependency>
 ```
 
-Or you can download the jar from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
+Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
 
 ## Usage
 ### HOTP (Counter-based one-time passwords)
