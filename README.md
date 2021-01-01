@@ -120,9 +120,6 @@ try {
     
     // Based on an instant
     totp.generate(Instant.now());
-    
-    // Based on an OTPAuth URI. When algorithm, period or digits are not specified, the default values will be used
-    totp.generate(new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30"));
 } catch (IllegalStateException e) {
     // Handle error
 }
