@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      * Constructs generator with default values
      * @param secret used to generate hash
      */
-    public HOTPGenerator(final String secret) {
+    public HOTPGenerator(final byte[] secret) {
         super(HMACAlgorithm.SHA1, secret);
     }
 
@@ -28,7 +29,7 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      * @param passwordLength number of digits for generated code in range 6...8
      * @param secret used to generate hash
      */
-    public HOTPGenerator(final int passwordLength, final String secret) {
+    public HOTPGenerator(final int passwordLength, final byte[] secret) {
         super(passwordLength, HMACAlgorithm.SHA1, secret);
     }
 
@@ -77,7 +78,7 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
         query.put("counter", String.valueOf(counter));
         query.put("digits", String.valueOf(passwordLength));
         query.put("algorithm", algorithm.name());
-        query.put("secret", secret);
+        query.put("secret", Arrays.toString(secret));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 

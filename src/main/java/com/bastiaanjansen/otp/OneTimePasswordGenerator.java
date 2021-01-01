@@ -33,7 +33,7 @@ public class OneTimePasswordGenerator {
     /**
      * Secret key used to generate the code, this should be a base32 string
      */
-    protected final String secret;
+    protected final byte[] secret;
 
     /**
      * Default value for password length
@@ -50,7 +50,7 @@ public class OneTimePasswordGenerator {
      *
      * @param secret used to generate hash
      */
-    protected OneTimePasswordGenerator(final String secret) {
+    protected OneTimePasswordGenerator(final byte[] secret) {
         this(DEFAULT_PASSWORD_LENGTH, DEFAULT_HMAC_ALGORITHM, secret);
     }
 
@@ -60,7 +60,7 @@ public class OneTimePasswordGenerator {
      * @param passwordLength Number of digits for generated code in range 6...8
      * @param secret         used to generate hash
      */
-    protected OneTimePasswordGenerator(final int passwordLength, final String secret) {
+    protected OneTimePasswordGenerator(final int passwordLength, final byte[] secret) {
         this(passwordLength, DEFAULT_HMAC_ALGORITHM, secret);
     }
 
@@ -70,7 +70,7 @@ public class OneTimePasswordGenerator {
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret    used to generate hash
      */
-    protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final String secret) {
+    protected OneTimePasswordGenerator(final HMACAlgorithm algorithm, final byte[] secret) {
         this(DEFAULT_PASSWORD_LENGTH, algorithm, secret);
     }
 
@@ -88,7 +88,7 @@ public class OneTimePasswordGenerator {
 
         this.passwordLength = Integer.parseInt(query.getOrDefault("digits", String.valueOf(DEFAULT_PASSWORD_LENGTH)));
         this.algorithm = HMACAlgorithm.valueOf(query.getOrDefault("algorithm", DEFAULT_HMAC_ALGORITHM.name()));
-        this.secret = secret;
+        this.secret = secret.getBytes();
     }
 
     /**
@@ -98,14 +98,14 @@ public class OneTimePasswordGenerator {
      * @param algorithm      HMAC hash algorithm used to hash data
      * @param secret         used to generate hash
      */
-    protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
+    protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
         if (!validatePasswordLength(passwordLength)) {
             throw new IllegalArgumentException("Password length must be between 6 and 8 digits");
         }
 
         this.passwordLength = passwordLength;
         this.algorithm = algorithm;
-        this.secret = secret.toUpperCase();
+        this.secret = secret;
     }
 
     public int getPasswordLength() {
@@ -116,7 +116,7 @@ public class OneTimePasswordGenerator {
         return algorithm;
     }
 
-    public String getSecret() {
+    public byte[] getSecret() {
         return secret;
     }
 
@@ -186,12 +186,12 @@ public class OneTimePasswordGenerator {
     }
 
     /**
-     * Decode a base32 string to bytes array
+     * Decode a base32 value to bytes array
      *
-     * @param value base32 string
+     * @param value base32 value
      * @return bytes array
      */
-    private byte[] decodeBase32(final String value) {
+    private byte[] decodeBase32(final byte[] value) {
         Base32 codec = new Base32();
         return codec.decode(value);
     }

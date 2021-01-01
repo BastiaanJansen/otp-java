@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      *
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final String secret) {
+    public TOTPGenerator(final byte[] secret) {
         this(DEFAULT_PERIOD, secret);
     }
 
@@ -45,7 +46,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param passwordLength number of digits for generated code in range 6...8
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final String secret) {
+    public TOTPGenerator(final int passwordLength, final byte[] secret) {
         super(passwordLength, secret);
         this.period = DEFAULT_PERIOD;
     }
@@ -56,7 +57,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param period time interval between new codes
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final Duration period, final String secret) {
+    public TOTPGenerator(final Duration period, final byte[] secret) {
         super(secret);
         this.period = period;
     }
@@ -68,7 +69,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final Duration period, HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final Duration period, HMACAlgorithm algorithm, final byte[] secret) {
         super(algorithm, secret);
         this.period = period;
     }
@@ -79,7 +80,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final HMACAlgorithm algorithm, final byte[] secret) {
         super(algorithm, secret);
         this.period = DEFAULT_PERIOD;
     }
@@ -91,7 +92,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param period time interval between new codes
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final Duration period, final String secret) {
+    public TOTPGenerator(final int passwordLength, final Duration period, final byte[] secret) {
         super(passwordLength, secret);
         this.period = period;
     }
@@ -103,7 +104,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
         super(passwordLength, algorithm, secret);
         this.period = DEFAULT_PERIOD;
     }
@@ -116,7 +117,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
-    public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final String secret) {
+    public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final byte[] secret) {
         super(passwordLength, algorithm, secret);
         this.period = period;
     }
@@ -235,7 +236,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
         query.put("period", String.valueOf(period.getSeconds()));
         query.put("digits", String.valueOf(passwordLength));
         query.put("algorithm", algorithm.name());
-        query.put("secret", secret);
+        query.put("secret", Arrays.toString(secret));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
