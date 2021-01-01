@@ -154,7 +154,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @throws IllegalStateException when code could not be generated
      */
     public String generate(final Instant instant) throws IllegalStateException {
-        return generateCode(instant.toEpochMilli());
+        return generate(instant.toEpochMilli());
     }
 
     /**
@@ -166,7 +166,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      */
     public String generate(final Date date) throws IllegalStateException {
         long secondsSince1970 = TimeUnit.MILLISECONDS.toSeconds(date.getTime());
-        return generateCode(secondsSince1970);
+        return generate(secondsSince1970);
     }
 
     /**
@@ -176,7 +176,7 @@ public class TOTPGenerator extends OneTimePasswordGenerator {
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    public String generateCode(final long secondsPast1970) throws IllegalArgumentException {
+    public String generate(final long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970)) {
             throw new IllegalArgumentException("Time must be above zero");
         }
