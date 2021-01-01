@@ -1,6 +1,6 @@
 # OTP-Java
 
-![](https://github.com/BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
+![](https://github./BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Test/badge.svg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/91d3addee9e94a0cad9436601d4a4e1e)](https://www.codacy.com/gh/BastiaanJansen/OTP-Java/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BastiaanJansen/OTP-Java&amp;utm_campaign=Badge_Grade)
 ![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
@@ -43,7 +43,7 @@ String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
 int passwordLength = 6;
 HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
 
-// It is also possible to create a com.bastiaanjansen.otp.HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
+// It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
 new HOTPGenerator("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
 ```
 
@@ -129,19 +129,19 @@ try {
 ```
 
 ### Generate secrets
-You can use your own secrets, or you can generate secrets with `com.bastiaanjansen.otp.SecretGenerator`:
+You can use your own secrets, or you can generate secrets with `SecretGenerator`:
 ```java
 // To generate a secret with 160 bits
-String secret = com.bastiaanjansen.otp.SecretGenerator.generate();
+String secret = SecretGenerator.generate();
 
 // To generate a secret with a custom amount of bits
-String secret = com.bastiaanjansen.otp.SecretGenerator.generate(512);
+String secret = SecretGenerator.generate(512);
 ```
 
 ### Generation of OTPAuth URI's
-To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method for both `com.bastiaanjansen.otp.HOTPGenerator` and `com.bastiaanjansen.otp.TOTPGenerator`. Example for `com.bastiaanjansen.otp.TOTPGenerator`:
+To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method for both `HOTPGenerator` and `TOTPGenerator`. Example for `TOTPGenerator`:
 ```java
-com.bastiaanjansen.otp.TOTPGenerator totp = new com.bastiaanjansen.otp.TOTPGenerator(secret);
+TOTPGenerator totp = new TOTPGenerator(secret);
 
 URI uri = totp.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
 
