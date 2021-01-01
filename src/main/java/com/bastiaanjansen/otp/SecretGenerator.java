@@ -2,7 +2,6 @@ package com.bastiaanjansen.otp;
 
 import org.apache.commons.codec.binary.Base32;
 
-import java.net.URI;
 import java.security.SecureRandom;
 
 /**
