@@ -21,9 +21,24 @@ The following features are supported:
 ```xml
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
-    <artifactId>OTP-Java</artifactId>
+    <artifactId>otp-java</artifactId>
     <version>1.0.5</version>
 </dependency>
+```
+
+### Gradle
+```gradle
+implementation 'com.github.bastiaanjansen:otp-java:1.0.5'
+```
+
+### Scala SBT
+```scala
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.0.5"
+```
+
+### Apache Ivy
+```xml
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.0.5" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
