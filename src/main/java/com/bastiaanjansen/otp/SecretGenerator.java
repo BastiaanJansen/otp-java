@@ -44,5 +44,4 @@ public class SecretGenerator {
 
         return new Base32().encodeToString(bytes);
     }
-
 }

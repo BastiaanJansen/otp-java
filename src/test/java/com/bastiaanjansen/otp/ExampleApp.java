@@ -1,9 +1,7 @@
 package com.bastiaanjansen.otp;
 
-import java.net.URISyntaxException;
-
 public class ExampleApp {
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) {
 
         // Generate a secret, if you don't have one already
         String secret = SecretGenerator.generate();
