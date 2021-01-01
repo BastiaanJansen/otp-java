@@ -1,7 +1,6 @@
 package com.bastiaanjansen.otp;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -48,7 +47,7 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      * @return generated HOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    public String generateCode(long counter) throws IllegalArgumentException {
+    public String generate(long counter) throws IllegalArgumentException {
         return super.generateCode(counter);
     }
 
