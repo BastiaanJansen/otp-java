@@ -7,11 +7,29 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Map;
 
-public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder<GENERATOR> {
+/**
+ * Abstract OTP builder
+ *
+ * @author Bastiaan Jansen
+ * @param <CONCRETE_BUILDER> concrete builder class
+ * @param <GENERATOR> OTP generater which should be build by concrete builder
+ */
+public abstract class OTPBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder<GENERATOR> {
 
-    protected byte[] secret;
+    /**
+     * Number of digits for generated code in range 6...8, defaults to 6
+     */
     protected int passwordLength;
+
+    /**
+     * Hashing algorithm used to generate code, defaults to SHA1
+     */
     protected HMACAlgorithm algorithm;
+
+    /**
+     * Secret key used to generate the code, this should be a base32 string
+     */
+    protected byte[] secret;
 
     /**
      * Default value for password length
@@ -23,17 +41,29 @@ public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATO
      */
     public static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
 
-    public OneTimePasswordGeneratorBuilder(final byte[] secret) {
+    public OTPBuilder(final byte[] secret) {
         this.secret = secret;
         this.passwordLength = DEFAULT_PASSWORD_LENGTH;
         this.algorithm = DEFAULT_HMAC_ALGORITHM;
     }
 
+    /**
+     * Change password length of code
+     *
+     * @param passwordLength number of digits for generated code in range 6...8
+     * @return concrete builder
+     */
     public CONCRETE_BUILDER withPasswordLength(final int passwordLength) {
         this.passwordLength = passwordLength;
         return getBuilder();
     }
 
+    /**
+     * Change hashing algorithm
+     *
+     * @param algorithm HMAC hashing algorithm
+     * @return concrete builder
+     */
     public CONCRETE_BUILDER withAlgorithm(final HMACAlgorithm algorithm) {
         this.algorithm = algorithm;
         return getBuilder();
@@ -49,19 +79,6 @@ public abstract class OneTimePasswordGeneratorBuilder<CONCRETE_BUILDER, GENERATO
 
     public HMACAlgorithm getAlgorithm() {
         return algorithm;
-    }
-
-    public CONCRETE_BUILDER withOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
-        Map<String, String> query = URIHelper.queryItems(uri);
-
-        String secret = query.get("secret");
-        if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
-
-        this.passwordLength = Integer.parseInt(query.getOrDefault("digits", String.valueOf(DEFAULT_PASSWORD_LENGTH)));
-        this.algorithm = HMACAlgorithm.valueOf(query.getOrDefault("algorithm", DEFAULT_HMAC_ALGORITHM.name()));
-        this.secret = secret.getBytes();
-
-        return getBuilder();
     }
 
     public abstract CONCRETE_BUILDER getBuilder();

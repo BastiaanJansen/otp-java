@@ -1,5 +1,6 @@
 package com.bastiaanjansen.otp;
 
+import com.bastiaanjansen.otp.builders.HOTPGeneratorBuilder;
 import com.bastiaanjansen.otp.builders.TOTPGeneratorBuilder;
 
 import java.io.UnsupportedEncodingException;
@@ -13,13 +14,11 @@ public class ExampleApp {
         byte[] secret = SecretGenerator.generate();
 
         // Create a TOTPGenerate instance
-        TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder(secret);
+        TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder("JBSWY3DPEHPK3PXP".getBytes());
         TOTPGenerator totp = builder
-                .withPasswordLength(8)
-                .withAlgorithm(HMACAlgorithm.SHA256)
-                // How to prevent:
-//                 .withOTPAuthURI(new URI("otpauth://totp/issuer?secret=ABCD&period=60"))
-                .create();
+                .withPasswordLength(6)
+                .withAlgorithm(HMACAlgorithm.SHA1)
+                .build();
 
         try {
             String code = totp.generate();

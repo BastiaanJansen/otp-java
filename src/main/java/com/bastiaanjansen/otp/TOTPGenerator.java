@@ -1,8 +1,5 @@
 package com.bastiaanjansen.otp;
 
-import com.bastiaanjansen.otp.helpers.URIHelper;
-
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -17,9 +14,9 @@ import java.util.concurrent.TimeUnit;
  * Generates time-based one-time passwords
  *
  * @author Bastiaan Jansen
- * @see OneTimePasswordGenerator
+ * @see OTPGenerator
  */
-public class TOTPGenerator extends OneTimePasswordGenerator {
+public class TOTPGenerator extends OTPGenerator {
     /**
      * Time interval between new codes
      */

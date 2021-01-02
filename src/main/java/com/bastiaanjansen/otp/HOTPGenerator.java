@@ -1,7 +1,5 @@
 package com.bastiaanjansen.otp;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -12,9 +10,9 @@ import java.util.Map;
  * Generates counter-based one-time passwords
  *
  * @author Bastiaan Jansen
- * @see OneTimePasswordGenerator
+ * @see OTPGenerator
  */
-public class HOTPGenerator extends OneTimePasswordGenerator {
+public class HOTPGenerator extends OTPGenerator {
 
     /**
      * Constructs generator with custom password length

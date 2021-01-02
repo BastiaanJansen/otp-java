@@ -18,7 +18,7 @@ import org.apache.commons.codec.binary.Base32;
  *
  * @author Bastiaan Jansen
  */
-public class OneTimePasswordGenerator {
+public class OTPGenerator {
     /**
      * Number of digits for generated code in range 6...8, defaults to 6
      */
@@ -41,7 +41,7 @@ public class OneTimePasswordGenerator {
      * @param algorithm      HMAC hash algorithm used to hash data
      * @param secret         used to generate hash
      */
-    protected OneTimePasswordGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
+    protected OTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
         if (!validatePasswordLength(passwordLength)) {
             throw new IllegalArgumentException("Password length must be between 6 and 8 digits");
         }
