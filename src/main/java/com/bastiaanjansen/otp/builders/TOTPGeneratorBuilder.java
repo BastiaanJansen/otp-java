@@ -75,7 +75,7 @@ public class TOTPGeneratorBuilder extends OTPBuilder<TOTPGeneratorBuilder, TOTPG
      * @return TOTPGenerator
      * @throws UnsupportedEncodingException when URI cannot be decoded
      */
-    public static TOTPGenerator withOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+    public static TOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
         Map<String, String> query = URIHelper.queryItems(uri);
 
         String secret = query.get("secret");

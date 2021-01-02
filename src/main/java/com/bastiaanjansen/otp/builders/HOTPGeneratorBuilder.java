@@ -40,7 +40,7 @@ public class HOTPGeneratorBuilder extends OTPBuilder<HOTPGeneratorBuilder, HOTPG
      * @return HOTPGenerator
      * @throws UnsupportedEncodingException when URI cannot be decoded
      */
-    public static HOTPGenerator withOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+    public static HOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
         Map<String, String> query = URIHelper.queryItems(uri);
 
         String secret = query.get("secret");
