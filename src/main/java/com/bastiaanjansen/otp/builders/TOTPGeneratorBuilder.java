@@ -7,8 +7,6 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -99,5 +97,15 @@ public class TOTPGeneratorBuilder extends OTPBuilder<TOTPGeneratorBuilder, TOTPG
         }
 
         return builder.build();
+    }
+
+    /**
+     * Create a TOTPGenerator with default values
+     *
+     * @param secret used to generate hash
+     * @return a TOTPGenerator with default values
+     */
+    public static TOTPGenerator withDefaultValues(final byte[] secret) {
+        return new TOTPGeneratorBuilder(secret).build();
     }
 }

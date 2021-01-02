@@ -1,20 +1,15 @@
 package com.bastiaanjansen.otp.builders;
 
 import com.bastiaanjansen.otp.HMACAlgorithm;
-import com.bastiaanjansen.otp.helpers.URIHelper;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.Map;
 
 /**
  * Abstract OTP builder
  *
  * @author Bastiaan Jansen
- * @param <CONCRETE_BUILDER> concrete builder class
- * @param <GENERATOR> OTP generater which should be build by concrete builder
+ * @param <B> concrete builder class
+ * @param <G> OTP generater which should be build by concrete builder
  */
-public abstract class OTPBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder<GENERATOR> {
+public abstract class OTPBuilder<B, G> implements Builder<G> {
 
     /**
      * Number of digits for generated code in range 6...8, defaults to 6
@@ -53,7 +48,7 @@ public abstract class OTPBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder
      * @param passwordLength number of digits for generated code in range 6...8
      * @return concrete builder
      */
-    public CONCRETE_BUILDER withPasswordLength(final int passwordLength) {
+    public B withPasswordLength(final int passwordLength) {
         this.passwordLength = passwordLength;
         return getBuilder();
     }
@@ -64,7 +59,7 @@ public abstract class OTPBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder
      * @param algorithm HMAC hashing algorithm
      * @return concrete builder
      */
-    public CONCRETE_BUILDER withAlgorithm(final HMACAlgorithm algorithm) {
+    public B withAlgorithm(final HMACAlgorithm algorithm) {
         this.algorithm = algorithm;
         return getBuilder();
     }
@@ -81,5 +76,5 @@ public abstract class OTPBuilder<CONCRETE_BUILDER, GENERATOR> implements Builder
         return algorithm;
     }
 
-    public abstract CONCRETE_BUILDER getBuilder();
+    public abstract B getBuilder();
 }
