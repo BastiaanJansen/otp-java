@@ -22,7 +22,7 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
