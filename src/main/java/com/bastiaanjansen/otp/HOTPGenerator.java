@@ -1,6 +1,5 @@
 package com.bastiaanjansen.otp;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -11,17 +10,9 @@ import java.util.Map;
  * Generates counter-based one-time passwords
  *
  * @author Bastiaan Jansen
- * @see OneTimePasswordGenerator
+ * @see OTPGenerator
  */
-public class HOTPGenerator extends OneTimePasswordGenerator {
-
-    /**
-     * Constructs generator with default values
-     * @param secret used to generate hash
-     */
-    public HOTPGenerator(final byte[] secret) {
-        super(HMACAlgorithm.SHA1, secret);
-    }
+public class HOTPGenerator extends OTPGenerator {
 
     /**
      * Constructs generator with custom password length
@@ -30,15 +21,6 @@ public class HOTPGenerator extends OneTimePasswordGenerator {
      */
     public HOTPGenerator(final int passwordLength, final byte[] secret) {
         super(passwordLength, HMACAlgorithm.SHA1, secret);
-    }
-
-    /**
-     * Constructs generator from a OTPAuth URI
-     * @param uri OTPAuth URI
-     * @throws UnsupportedEncodingException when URI query can't be encodede
-     */
-    public HOTPGenerator(URI uri) throws UnsupportedEncodingException {
-        super(uri);
     }
 
     /**
