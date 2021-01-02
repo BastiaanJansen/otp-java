@@ -1,10 +1,8 @@
 package com.bastiaanjansen.otp;
 
-import com.bastiaanjansen.otp.builders.HOTPGeneratorBuilder;
 import com.bastiaanjansen.otp.builders.TOTPGeneratorBuilder;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ExampleApp {
@@ -14,7 +12,7 @@ public class ExampleApp {
         byte[] secret = SecretGenerator.generate();
 
         // Create a TOTPGenerate instance
-        TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder("JBSWY3DPEHPK3PXP".getBytes());
+        TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder(secret);
         TOTPGenerator totp = builder
                 .withPasswordLength(6)
                 .withAlgorithm(HMACAlgorithm.SHA1)
