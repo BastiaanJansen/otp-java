@@ -2,11 +2,8 @@ package com.bastiaanjansen.otp;
 
 import com.bastiaanjansen.otp.builders.TOTPGeneratorBuilder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-
 public class ExampleApp {
-    public static void main(String[] args) throws URISyntaxException, UnsupportedEncodingException {
+    public static void main(String[] args) {
 
         // Generate a secret, if you don't have one already
         byte[] secret = SecretGenerator.generate();

@@ -56,7 +56,9 @@ HOTPGenerator hotp = builder.build();
 The above builder creates a HOTPGenerator instance with default values for passwordLength = 6 and algorithm = SHA1. Use the builder to change these defaults:
 ```java
 HOTPGeneratorBuilder builder = new HOTPGeneratorBuilder(secret);
-builder.withPasswordLength(8).withAlgorithm(HMACAlgorithm.SHA256);
+builder
+  .withPasswordLength(8)
+  .withAlgorithm(HMACAlgorithm.SHA256);
 HOTPGenerator hotp = builder.build();
 ```
 
@@ -114,7 +116,7 @@ builder
     .withPasswordLength(6)
     .withAlgorithm(HMACAlgorithm.SHA1) // SHA256 and SHA512 are also supported
     .withPeriod(30)
-
+    
 TOTPGenerator totp = builder.build();
 ```
 Or create a `TOTPGenerator` instance from an OTPAuth URI:
