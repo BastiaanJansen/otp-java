@@ -7,8 +7,6 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
