@@ -22,7 +22,7 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -46,20 +46,35 @@ Or you can download the source from the [GitHub releases page](https://github.co
 ## Usage
 ### HOTP (Counter-based one-time passwords)
 #### Initialization HOTP instance
+To create a `HOTPGenerator` use the `HOTPGeneratorBuilder` class as follows:
 
 ```java
 byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
-HOTPGenerator hotp = new HOTPGenerator(secret);
+HOTPGeneratorBuilder builder = new HOTPGeneratorBuilder(secret);
+HOTPGenerator hotp = builder.build();
+```
+The above builder creates a HOTPGenerator instance with default values for passwordLength = 6 and algorithm = SHA1. Use the builder to change these defaults:
+```java
+HOTPGeneratorBuilder builder = new HOTPGeneratorBuilder(secret);
+builder
+  .withPasswordLength(8)
+  .withAlgorithm(HMACAlgorithm.SHA256);
+HOTPGenerator hotp = builder.build();
 ```
 
-The default length of a generated code is six digits. You can change the default:
+When you don't already have a secret, you can let the library generate it:
 ```java
-byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
-int passwordLength = 6;
-HOTPGenerator hotp = new HOTPGenerator(passwordLength, secret);
+// To generate a secret with 160 bits
+byte[] secret = SecretGenerator.generate();
 
-// It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
-new HOTPGenerator(new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237"));
+// To generate a secret with a custom amount of bits
+byte[] secret = SecretGenerator.generate(512);
+```
+
+It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
+```java
+URI uri = new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
+HOTPGenerator hotp = HOTPGeneratorBuilder.fromOTPAuthURI(uri);
 ```
 
 Get information about the generator:
@@ -89,15 +104,25 @@ try {
 
 ### TOTP (Time-based one-time passwords)
 #### Initialization TOTP instance
-TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values are: passwordLength = 6, period = 30, algorithm = SHA1.
+TOTPGenerator can accept more paramaters: `passwordLength`, `period`, `algorithm` and `secret`. The default values are: passwordLength = 6, period = 30 and algorithm = SHA1.
 
 ```java
-byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
-int passwordLength = 8; // Password length must be between 6 and 8
-Duration period = Duration.ofSeconds(30); // This can of course be any period
-HMACAlgorithm algorithm = HMACAlgorithm.SHA1; // SHA256 and SHA512 are also supported
+// Generate a secret (or use your own secret)
+byte[] secret = SecretGenerator.generate();
 
-TOTPGenerator totp = new TOTPGenerator(passwordLength, period, algorithm, secret);
+TOTPGeneratorBuilder builder = new TOTPGeneratorBuilder(secret);
+
+builder
+    .withPasswordLength(6)
+    .withAlgorithm(HMACAlgorithm.SHA1) // SHA256 and SHA512 are also supported
+    .withPeriod(30)
+    
+TOTPGenerator totp = builder.build();
+```
+Or create a `TOTPGenerator` instance from an OTPAuth URI:
+```java
+URI uri = new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
+TOTPGenerator totp = TOTPGeneratorBuilder.fromOTPAuthURI(uri);
 ```
 
 Get information about the generator:
@@ -140,20 +165,10 @@ try {
 }
 ```
 
-### Generate secrets
-You can use your own secrets, or you can generate secrets with `SecretGenerator`:
-```java
-// To generate a secret with 160 bits
-String secret = SecretGenerator.generate();
-
-// To generate a secret with a custom amount of bits
-String secret = SecretGenerator.generate(512);
-```
-
 ### Generation of OTPAuth URI's
 To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method for both `HOTPGenerator` and `TOTPGenerator`. Example for `TOTPGenerator`:
 ```java
-TOTPGenerator totp = new TOTPGenerator(secret);
+TOTPGenerator totp = new TOTPGeneratorBuilder(secret).build();
 
 URI uri = totp.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
 
