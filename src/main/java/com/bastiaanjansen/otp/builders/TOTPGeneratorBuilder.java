@@ -98,4 +98,14 @@ public class TOTPGeneratorBuilder extends OTPBuilder<TOTPGeneratorBuilder, TOTPG
 
         return builder.build();
     }
+
+    /**
+     * Create a TOTPGenerator with default values
+     *
+     * @param secret used to generate hash
+     * @return a TOTPGenerator with default values
+     */
+    public static TOTPGenerator withDefaultValues(final byte[] secret) {
+        return new TOTPGeneratorBuilder(secret).build();
+    }
 }

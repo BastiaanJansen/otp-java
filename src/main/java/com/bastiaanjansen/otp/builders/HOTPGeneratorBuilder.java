@@ -50,4 +50,14 @@ public class HOTPGeneratorBuilder extends OTPBuilder<HOTPGeneratorBuilder, HOTPG
 
         return builder.build();
     }
+
+    /**
+     * Create a HOTPGenerator with default values
+     *
+     * @param secret used to generate hash
+     * @return a HOTPGenerator with default values
+     */
+    public static HOTPGenerator withDefaultValues(final byte[] secret) {
+        return new HOTPGeneratorBuilder(secret).build();
+    }
 }
