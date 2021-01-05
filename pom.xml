@@ -50,17 +50,13 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.8.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.6.28</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -127,10 +123,4 @@
             </plugin>
         </plugins>
     </build>
-
-<!--  <scm>-->
-<!--    <connection>scm:svn:http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</connection>-->
-<!--    <developerConnection>scm:svn:https://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</developerConnection>-->
-<!--    <url>http://svn.sonatype.org/spice/tags/OTP-Java-1.0.4.1</url>-->
-<!--  </scm>-->
 </project>

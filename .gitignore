@@ -3,3 +3,5 @@ target
 .m2
 pom.xml.releaseBackup
 release.properties
+.DS_Store
+*.iml
