@@ -176,3 +176,5 @@ URI uri = totp.getURI("issuer", "account"); // otpauth://totp/issuer:account?per
 
 ## Licence
 OTP-Java is available under the MIT licence. See the LICENCE for more info.
+
+[![Stargazers repo roster for @BastiaanJansen/OTP-Java](https://reporoster.com/stars/BastiaanJansen/OTP-Java)](https://github.com/BastiaanJansen/OTP-Java/stargazers)
