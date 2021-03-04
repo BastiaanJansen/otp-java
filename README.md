@@ -8,6 +8,14 @@
 
 A small and easy-to-use one-time password generator for Java according to [RFC 4226](https://tools.ietf.org/html/rfc4226) (HOTP) and [RFC 6238](https://tools.ietf.org/html/rfc6238) (TOTP).
 
+## Table of Contents
+
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+    * [HOTP (Counter-based one-time passwords)](#hotp-counter-based-one-time-passwords)
+    * [TOTP (Time-based one-time passwords)](#totp-time-based-one-time-passwords)
+
 ## Features
 The following features are supported:
 1. Generation of secrets
