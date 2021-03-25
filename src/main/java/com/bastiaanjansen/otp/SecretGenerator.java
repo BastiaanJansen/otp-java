@@ -38,7 +38,7 @@ public class SecretGenerator {
         if (bits <= 0)
             throw new IllegalArgumentException("Bits must be higher than 0");
 
-        byte[] bytes = new byte[bits * 8];
+        byte[] bytes = new byte[bits / 8];
         SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
 
