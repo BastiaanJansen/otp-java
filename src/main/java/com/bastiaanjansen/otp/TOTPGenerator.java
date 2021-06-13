@@ -1,5 +1,8 @@
 package com.bastiaanjansen.otp;
 
+import com.bastiaanjansen.otp.helpers.URIHelper;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +20,8 @@ import java.util.concurrent.TimeUnit;
  * @see OTPGenerator
  */
 public class TOTPGenerator extends OTPGenerator {
+    private final static String OTP_TYPE = "totp";
+
     /**
      * Time interval between new codes
      */
@@ -139,7 +144,7 @@ public class TOTPGenerator extends OTPGenerator {
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
-        return getURI("totp", path, query);
+        return getURI(OTP_TYPE, path, query);
     }
 
     /**
@@ -182,5 +187,105 @@ public class TOTPGenerator extends OTPGenerator {
      */
     private boolean validateTime(final long time) {
         return time > 0;
+    }
+
+
+    /**
+     * @author Bastiaan Jansen
+     * @see TOTPGenerator
+     */
+    public static class Builder extends OTPGenerator.Builder<Builder, TOTPGenerator>  {
+        /**
+         * Time interval between new codes
+         */
+        private Duration period;
+
+        /**
+         * Default time interval for a time-based one-time password
+         */
+        public static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
+
+        /**
+         * Constructs a TOTPGenerator builder
+         *
+         * @param secret used to generate hash
+         */
+        public Builder(byte[] secret) {
+            super(secret);
+            this.period = DEFAULT_PERIOD;
+        }
+
+        /**
+         * Change period
+         *
+         * @param period time interval between new codes
+         * @return builder
+         */
+        public Builder withPeriod(Duration period) {
+            this.period = period;
+            return this;
+        }
+
+        public Duration getPeriod() {
+            return period;
+        }
+
+        /**
+         * Build the generator with specified options
+         *
+         * @return TOTPGenerator
+         */
+        @Override
+        public TOTPGenerator build() {
+            return new TOTPGenerator(passwordLength, period, algorithm, secret);
+        }
+
+        @Override
+        public Builder getBuilder() {
+            return this;
+        }
+
+        /**
+         * Build a TOTPGenerator from an OTPAuth URI
+         *
+         * @param uri OTPAuth URI
+         * @return TOTPGenerator
+         * @throws UnsupportedEncodingException when URI cannot be decoded
+         */
+        public static TOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+            Map<String, String> query = URIHelper.queryItems(uri);
+
+            String secret = query.get("secret");
+            if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
+
+            TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret.getBytes());
+
+            if (query.containsKey("digits")) {
+                int passwordLength = Integer.parseInt(query.get("digits"));
+                builder.withPasswordLength(passwordLength);
+            }
+
+            if (query.containsKey("algorithm")) {
+                HMACAlgorithm algorithm = HMACAlgorithm.valueOf(query.get("algorithm"));
+                builder.withAlgorithm(algorithm);
+            }
+
+            if (query.containsKey("period")) {
+                Duration period = Duration.ofSeconds(Long.parseLong(query.get("period")));
+                builder.withPeriod(period);
+            }
+
+            return builder.build();
+        }
+
+        /**
+         * Create a TOTPGenerator with default values
+         *
+         * @param secret used to generate hash
+         * @return a TOTPGenerator with default values
+         */
+        public static TOTPGenerator withDefaultValues(final byte[] secret) {
+            return new TOTPGenerator.Builder(secret).build();
+        }
     }
 }
