@@ -148,17 +148,6 @@ public class TOTPGenerator extends OTPGenerator {
     }
 
     /**
-     * Calculate the counter for a specific date
-     *
-     * @param date specific date
-     * @param period time interval between new codes
-     * @return counter based on a specific date and time interval
-     */
-    private long calculateCounter(final Date date, final Duration period) {
-        return calculateCounter(date.getTime(), period);
-    }
-
-    /**
      * Calculate counter for a specific time in seconds past 1970 and time interval
      *
      * @param secondsPast1970 seconds past 1970
