@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Generates counter-based one-time passwords
@@ -24,8 +26,8 @@ public class HOTPGenerator extends OTPGenerator {
      * @param passwordLength number of digits for generated code in range 6...8
      * @param secret used to generate hash
      */
-    public HOTPGenerator(final int passwordLength, final byte[] secret) {
-        super(passwordLength, HMACAlgorithm.SHA1, secret);
+    public HOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
+        super(passwordLength, algorithm, secret);
     }
 
     /**
@@ -89,7 +91,7 @@ public class HOTPGenerator extends OTPGenerator {
          */
         @Override
         public HOTPGenerator build() {
-            return new HOTPGenerator(passwordLength, secret);
+            return new HOTPGenerator(passwordLength, algorithm, secret);
         }
 
         /**
@@ -102,10 +104,17 @@ public class HOTPGenerator extends OTPGenerator {
         public static HOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
             Map<String, String> query = URIHelper.queryItems(uri);
 
-            String secret = query.get("secret");
-            if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
+            String secret = Optional.ofNullable(query.get("secret")).orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
             HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret.getBytes());
+
+            Optional<Integer> passwordLength = Optional.ofNullable(query.get("digits"))
+                    .map(Integer::parseInt);
+            Optional<HMACAlgorithm> algorithm = Optional.ofNullable(query.get("algorithm"))
+                    .map(HMACAlgorithm::valueOf);
+
+            passwordLength.ifPresent(builder::withPasswordLength);
+            algorithm.ifPresent(builder::withAlgorithm);
 
             return builder.build();
         }
