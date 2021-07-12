@@ -5,6 +5,7 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,9 +62,6 @@ public class HOTPGenerator extends OTPGenerator {
     public URI getURI(int counter, String issuer, String account) throws URISyntaxException {
         Map<String, String> query = new HashMap<>();
         query.put("counter", String.valueOf(counter));
-        query.put("digits", String.valueOf(passwordLength));
-        query.put("algorithm", algorithm.name());
-        query.put("secret", Arrays.toString(secret));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 

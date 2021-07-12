@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -127,6 +128,9 @@ public class OTPGenerator {
      * @throws URISyntaxException when URI cannot be created
      */
     protected URI getURI(final String type, final String path, final Map<String, String> query) throws URISyntaxException {
+        query.put("digits", String.valueOf(passwordLength));
+        query.put("algorithm", algorithm.name());
+        query.put("secret", new String(secret, StandardCharsets.UTF_8));
         return URIHelper.createURI(URL_SCHEME, type, path, query);
     }
 
