@@ -104,17 +104,13 @@ public class HOTPGenerator extends OTPGenerator {
         public static HOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
             Map<String, String> query = URIHelper.queryItems(uri);
 
-            String secret = Optional.ofNullable(query.get("secret")).orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
+            String secret = Optional.ofNullable(query.get("secret"))
+                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
             HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret.getBytes());
 
-            Optional<Integer> passwordLength = Optional.ofNullable(query.get("digits"))
-                    .map(Integer::parseInt);
-            Optional<HMACAlgorithm> algorithm = Optional.ofNullable(query.get("algorithm"))
-                    .map(HMACAlgorithm::valueOf);
-
-            passwordLength.ifPresent(builder::withPasswordLength);
-            algorithm.ifPresent(builder::withAlgorithm);
+            Optional.ofNullable(query.get("digits")).map(Integer::parseInt).ifPresent(builder::withPasswordLength);
+            Optional.ofNullable(query.get("algorithm")).map(HMACAlgorithm::valueOf).ifPresent(builder::withAlgorithm);
 
             return builder.build();
         }

@@ -2,6 +2,7 @@ package com.bastiaanjansen.otp;
 
 import com.bastiaanjansen.otp.helpers.URIHelper;
 
+import javax.swing.text.html.Option;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,6 +12,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -241,25 +243,17 @@ public class TOTPGenerator extends OTPGenerator {
         public static TOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
             Map<String, String> query = URIHelper.queryItems(uri);
 
-            String secret = query.get("secret");
-            if (secret == null) throw new IllegalArgumentException("Secret query parameter must be set");
+            String secret = Optional.ofNullable(query.get("secret"))
+                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
             TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret.getBytes());
 
-            if (query.containsKey("digits")) {
-                int passwordLength = Integer.parseInt(query.get("digits"));
-                builder.withPasswordLength(passwordLength);
-            }
-
-            if (query.containsKey("algorithm")) {
-                HMACAlgorithm algorithm = HMACAlgorithm.valueOf(query.get("algorithm"));
-                builder.withAlgorithm(algorithm);
-            }
-
-            if (query.containsKey("period")) {
-                Duration period = Duration.ofSeconds(Long.parseLong(query.get("period")));
-                builder.withPeriod(period);
-            }
+            Optional.ofNullable(query.get("digits")).map(Integer::valueOf)
+                    .ifPresent(builder::withPasswordLength);
+            Optional.ofNullable(query.get("algorithm")).map(HMACAlgorithm::valueOf)
+                    .ifPresent(builder::withAlgorithm);
+            Optional.ofNullable(query.get("period")).map(Long::parseLong).map(Duration::ofSeconds)
+                    .ifPresent(builder::withPeriod);
 
             return builder.build();
         }

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class URIHelper {
      * @throws UnsupportedEncodingException when URI cannot be decoded
      */
     public static Map<String, String> queryItems(URI uri) throws UnsupportedEncodingException {
-        Map<String, String> items = new LinkedHashMap<String, String>();
+        Map<String, String> items = new LinkedHashMap<>();
         String query = uri.getQuery();
         String[] pairs = query.split("&");
         for (String pair: pairs) {
@@ -49,7 +50,6 @@ public class URIHelper {
             String sign = i == 0 ? "?" : "&";
             String key = queryKeys[i];
             uriString.append(String.format("%s%s=%s", sign, key, query.get(key)));
-
         }
 
         return new URI(uriString.toString());
