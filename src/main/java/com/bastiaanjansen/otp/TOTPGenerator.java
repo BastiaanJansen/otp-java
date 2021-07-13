@@ -2,11 +2,9 @@ package com.bastiaanjansen.otp;
 
 import com.bastiaanjansen.otp.helpers.URIHelper;
 
-import javax.swing.text.html.Option;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;

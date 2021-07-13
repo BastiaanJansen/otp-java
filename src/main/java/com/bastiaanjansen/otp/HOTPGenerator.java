@@ -5,12 +5,9 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Generates counter-based one-time passwords

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
