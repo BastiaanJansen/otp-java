@@ -128,9 +128,9 @@ public class OTPGenerator {
      * @throws URISyntaxException when URI cannot be created
      */
     protected URI getURI(final String type, final String path, final Map<String, String> query) throws URISyntaxException {
-        query.put("digits", String.valueOf(passwordLength));
-        query.put("algorithm", algorithm.name());
-        query.put("secret", new String(secret, StandardCharsets.UTF_8));
+        query.put(URIHelper.DIGITS, String.valueOf(passwordLength));
+        query.put(URIHelper.ALGORITHM, algorithm.name());
+        query.put(URIHelper.SECRET, new String(secret, StandardCharsets.UTF_8));
         return URIHelper.createURI(URL_SCHEME, type, path, query);
     }
 

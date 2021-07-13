@@ -13,20 +13,33 @@ import java.util.Map;
  * @author Bastiaan Jansen
  */
 public class URIHelper {
+
+    public static final String DIGITS = "digits";
+    public static final String SECRET = "secret";
+    public static final String ALGORITHM = "algorithm";
+    public static final String PERIOD = "period";
+
     /**
      * Get a map of query items from URI
      *
      * @param uri to get query items from
      * @return map of query items from URI
-     * @throws UnsupportedEncodingException when URI cannot be decoded
      */
-    public static Map<String, String> queryItems(URI uri) throws UnsupportedEncodingException {
+    public static Map<String, String> queryItems(URI uri) {
         Map<String, String> items = new LinkedHashMap<>();
         String query = uri.getQuery();
         String[] pairs = query.split("&");
+
         for (String pair: pairs) {
             int index = pair.indexOf("=");
-            items.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
+            try {
+                items.put(
+                        URLDecoder.decode(pair.substring(0, index), "UTF-8"),
+                        URLDecoder.decode(pair.substring(index + 1), "UTF-8")
+                );
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalStateException("Encoding should be supported");
+            }
         }
         return items;
     }

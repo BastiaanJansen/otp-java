@@ -94,4 +94,13 @@ class TOTPGeneratorTest {
             assertEquals(Duration.ofSeconds(60), generator.getPeriod());
         });
     }
+
+    @Test
+    void fromURIThrows() throws URISyntaxException {
+        URI uri = new URI("otpauth://totp/issuer:account?period=sdsd&digits=sd&secret=vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q&algorithm=SHA256");
+
+        assertThrows(URISyntaxException.class, () -> {
+            TOTPGenerator.Builder.fromOTPAuthURI(uri);
+        });
+    }
 }

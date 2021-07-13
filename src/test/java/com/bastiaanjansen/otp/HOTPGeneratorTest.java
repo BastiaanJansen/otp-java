@@ -81,4 +81,13 @@ class HOTPGeneratorTest {
             HOTPGenerator.Builder.fromOTPAuthURI(uri);
         });
     }
+
+    @Test
+    void fromURIThrows() throws URISyntaxException {
+        URI uri = new URI("otpauth://hotp/issuer?digits=sd&counter=10&secret=vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q&algorithm=SHA256");
+
+        assertThrows(URISyntaxException.class, () -> {
+            HOTPGenerator.Builder.fromOTPAuthURI(uri);
+        });
+    }
 }

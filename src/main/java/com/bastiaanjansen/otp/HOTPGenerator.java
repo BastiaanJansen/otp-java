@@ -2,7 +2,6 @@ package com.bastiaanjansen.otp;
 
 import com.bastiaanjansen.otp.helpers.URIHelper;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -96,18 +95,22 @@ public class HOTPGenerator extends OTPGenerator {
          *
          * @param uri OTPAuth URI
          * @return HOTPGenerator
-         * @throws UnsupportedEncodingException when URI cannot be decoded
+         * @throws URISyntaxException when URI cannot be parsed
          */
-        public static HOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+        public static HOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
             Map<String, String> query = URIHelper.queryItems(uri);
 
-            String secret = Optional.ofNullable(query.get("secret"))
+            String secret = Optional.ofNullable(query.get(URIHelper.SECRET))
                     .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
             HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret.getBytes());
 
-            Optional.ofNullable(query.get("digits")).map(Integer::parseInt).ifPresent(builder::withPasswordLength);
-            Optional.ofNullable(query.get("algorithm")).map(HMACAlgorithm::valueOf).ifPresent(builder::withAlgorithm);
+            try {
+                Optional.ofNullable(query.get(URIHelper.DIGITS)).map(Integer::parseInt).ifPresent(builder::withPasswordLength);
+                Optional.ofNullable(query.get(URIHelper.ALGORITHM)).map(HMACAlgorithm::valueOf).ifPresent(builder::withAlgorithm);
+            } catch (Exception e) {
+                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+            }
 
             return builder.build();
         }

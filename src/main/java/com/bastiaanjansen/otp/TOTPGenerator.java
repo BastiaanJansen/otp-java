@@ -2,7 +2,6 @@ package com.bastiaanjansen.otp;
 
 import com.bastiaanjansen.otp.helpers.URIHelper;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
@@ -236,22 +235,26 @@ public class TOTPGenerator extends OTPGenerator {
          *
          * @param uri OTPAuth URI
          * @return TOTPGenerator
-         * @throws UnsupportedEncodingException when URI cannot be decoded
+         * @throws URISyntaxException when URI cannot be parsed
          */
-        public static TOTPGenerator fromOTPAuthURI(final URI uri) throws UnsupportedEncodingException {
+        public static TOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
             Map<String, String> query = URIHelper.queryItems(uri);
 
-            String secret = Optional.ofNullable(query.get("secret"))
+            String secret = Optional.ofNullable(query.get(URIHelper.SECRET))
                     .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
             TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret.getBytes());
 
-            Optional.ofNullable(query.get("digits")).map(Integer::valueOf)
-                    .ifPresent(builder::withPasswordLength);
-            Optional.ofNullable(query.get("algorithm")).map(HMACAlgorithm::valueOf)
-                    .ifPresent(builder::withAlgorithm);
-            Optional.ofNullable(query.get("period")).map(Long::parseLong).map(Duration::ofSeconds)
-                    .ifPresent(builder::withPeriod);
+            try {
+                Optional.ofNullable(query.get(URIHelper.DIGITS)).map(Integer::valueOf)
+                        .ifPresent(builder::withPasswordLength);
+                Optional.ofNullable(query.get(URIHelper.ALGORITHM)).map(HMACAlgorithm::valueOf)
+                        .ifPresent(builder::withAlgorithm);
+                Optional.ofNullable(query.get(URIHelper.PERIOD)).map(Long::parseLong).map(Duration::ofSeconds)
+                        .ifPresent(builder::withPeriod);
+            } catch (Exception e) {
+                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+            }
 
             return builder.build();
         }
