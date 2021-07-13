@@ -67,6 +67,7 @@ HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret);
 builder
   .withPasswordLength(8)
   .withAlgorithm(HMACAlgorithm.SHA256);
+
 HOTPGenerator hotp = builder.build();
 ```
 
@@ -123,7 +124,7 @@ TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret);
 builder
     .withPasswordLength(6)
     .withAlgorithm(HMACAlgorithm.SHA1) // SHA256 and SHA512 are also supported
-    .withPeriod(30)
+    .withPeriod(Duration.ofSeconds(30));
     
 TOTPGenerator totp = builder.build();
 ```
