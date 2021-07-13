@@ -20,6 +20,7 @@ public class HOTPGenerator extends OTPGenerator {
     /**
      * Constructs generator with custom password length
      * @param passwordLength number of digits for generated code in range 6...8
+     * @param algorithm HMAC hash algorithm used to hash data
      * @param secret used to generate hash
      */
     public HOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
