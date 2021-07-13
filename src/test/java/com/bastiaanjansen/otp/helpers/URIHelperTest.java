@@ -2,18 +2,20 @@ package com.bastiaanjansen.otp.helpers;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class URIHelperTest {
 
     @Test
-    void queryItems() throws URISyntaxException, UnsupportedEncodingException {
+    void queryItems() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=SHA1&secret=ABC");
         Map<String, String> query = URIHelper.queryItems(uri);
 
