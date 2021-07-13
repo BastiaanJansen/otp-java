@@ -2,6 +2,7 @@
 
 ![](https://github./BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
 ![](https://github.com/BastiaanJansen/OTP-Java/workflows/Test/badge.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df7c6f4a7e5a4692af2f78cf16266fdd)](https://app.codacy.com/gh/BastiaanJansen/OTP-Java?utm_source=github.com&utm_medium=referral&utm_content=BastiaanJansen/OTP-Java&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6eeb888f65db4c168435e739cb7c84e3)](https://www.codacy.com/gh/BastiaanJansen/Toast-Swift/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BastiaanJansen/Toast-Swift&amp;utm_campaign=Badge_Grade)
 ![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
 ![](https://img.shields.io/github/issues/BastiaanJansen/OTP-Java)
