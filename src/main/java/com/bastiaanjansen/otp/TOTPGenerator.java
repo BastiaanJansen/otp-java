@@ -136,7 +136,7 @@ public class TOTPGenerator extends OTPGenerator {
      */
     public URI getURI(final String issuer, final String account) throws URISyntaxException {
         Map<String, String> query = new HashMap<>();
-        query.put("period", String.valueOf(period.getSeconds()));
+        query.put(URIHelper.PERIOD, String.valueOf(period.getSeconds()));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
