@@ -93,7 +93,6 @@ public class TOTPGenerator extends OTPGenerator {
             throw new IllegalArgumentException("Time must be above zero");
 
         long counter = calculateCounter(secondsPast1970, period);
-        System.out.println(counter);
         return super.generateCode(counter);
     }
 
@@ -105,7 +104,6 @@ public class TOTPGenerator extends OTPGenerator {
      */
     public boolean verify(final String code) {
         long counter = calculateCounter(period);
-        System.out.println(counter);
         return super.verify(code, counter);
     }
 
