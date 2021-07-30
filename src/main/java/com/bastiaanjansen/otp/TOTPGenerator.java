@@ -36,7 +36,15 @@ public class TOTPGenerator extends OTPGenerator {
      */
     public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final byte[] secret) {
         super(passwordLength, algorithm, secret);
+
+        if (period.getSeconds() < 1) throw new IllegalArgumentException("Period must be at least 1 second");
+
         this.period = period;
+    }
+
+    private TOTPGenerator(final TOTPGenerator.Builder builder) {
+        super(builder.getPasswordLength(), builder.getAlgorithm(), builder.getSecret());
+        this.period = builder.getPeriod();
     }
 
     /**
@@ -58,7 +66,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @throws IllegalStateException when code could not be generated
      */
     public String generate(final Instant instant) throws IllegalStateException {
-        return generate(instant.toEpochMilli());
+        return generate(TimeUnit.MILLISECONDS.toSeconds(instant.toEpochMilli()));
     }
 
     /**
@@ -81,10 +89,11 @@ public class TOTPGenerator extends OTPGenerator {
      * @throws IllegalArgumentException when code could not be generated
      */
     public String generate(final long secondsPast1970) throws IllegalArgumentException {
-        if (!validateTime(secondsPast1970)) {
+        if (!validateTime(secondsPast1970))
             throw new IllegalArgumentException("Time must be above zero");
-        }
+
         long counter = calculateCounter(secondsPast1970, period);
+        System.out.println(counter);
         return super.generateCode(counter);
     }
 
@@ -96,6 +105,7 @@ public class TOTPGenerator extends OTPGenerator {
      */
     public boolean verify(final String code) {
         long counter = calculateCounter(period);
+        System.out.println(counter);
         return super.verify(code, counter);
     }
 
@@ -161,7 +171,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @return counter based on current time and a specific time interval
      */
     private long calculateCounter(final Duration period) {
-        return System.currentTimeMillis() / TimeUnit.SECONDS.toMillis(period.getSeconds());
+        return System.currentTimeMillis() / period.toMillis();
     }
 
     /**
@@ -207,6 +217,7 @@ public class TOTPGenerator extends OTPGenerator {
          * @return builder
          */
         public Builder withPeriod(Duration period) {
+            if (period.getSeconds() < 1) throw new IllegalArgumentException("Period must be at least 1 second");
             this.period = period;
             return this;
         }
@@ -222,7 +233,7 @@ public class TOTPGenerator extends OTPGenerator {
          */
         @Override
         public TOTPGenerator build() {
-            return new TOTPGenerator(passwordLength, period, algorithm, secret);
+            return new TOTPGenerator(this);
         }
 
         @Override
