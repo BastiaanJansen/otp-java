@@ -10,7 +10,7 @@
 
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1</version>
 
     <name>OTP-Java</name>
     <description>A small and easy-to-use one-time password generator for Java according to RFC 4226 (HOTP) and RFC 6238 (TOTP).</description>
