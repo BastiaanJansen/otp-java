@@ -169,7 +169,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @return counter based on current time and a specific time interval
      */
     private long calculateCounter(final Duration period) {
-        return System.currentTimeMillis() / period.toMillis();
+        return calculateCounter(System.currentTimeMillis(), period);
     }
 
     /**
