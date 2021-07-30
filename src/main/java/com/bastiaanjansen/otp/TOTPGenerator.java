@@ -159,7 +159,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @return counter based on seconds past 1970 and time interval
      */
     private long calculateCounter(final long secondsPast1970, final Duration period) {
-        return TimeUnit.SECONDS.toMillis(secondsPast1970) / TimeUnit.SECONDS.toMillis(period.getSeconds());
+        return TimeUnit.SECONDS.toMillis(secondsPast1970) / period.toMillis();
     }
 
     /**
