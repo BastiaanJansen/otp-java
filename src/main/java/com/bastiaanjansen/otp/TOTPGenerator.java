@@ -66,7 +66,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @throws IllegalStateException when code could not be generated
      */
     public String generate(final Instant instant) throws IllegalStateException {
-        return generate(TimeUnit.MILLISECONDS.toSeconds(instant.toEpochMilli()));
+        return generate(instant.getEpochSecond());
     }
 
     /**
