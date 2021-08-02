@@ -27,6 +27,10 @@ public class HOTPGenerator extends OTPGenerator {
         super(passwordLength, algorithm, secret);
     }
 
+    private HOTPGenerator(final HOTPGenerator.Builder builder) {
+        super(builder.getPasswordLength(), builder.getAlgorithm(), builder.getSecret());
+    }
+
     /**
      * Generate a counter-based one-time password
      * @param counter how many times time interval has passed since 1970
@@ -60,7 +64,7 @@ public class HOTPGenerator extends OTPGenerator {
      */
     public URI getURI(int counter, String issuer, String account) throws URISyntaxException {
         Map<String, String> query = new HashMap<>();
-        query.put("counter", String.valueOf(counter));
+        query.put(URIHelper.COUNTER, String.valueOf(counter));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
@@ -88,7 +92,7 @@ public class HOTPGenerator extends OTPGenerator {
          */
         @Override
         public HOTPGenerator build() {
-            return new HOTPGenerator(passwordLength, algorithm, secret);
+            return new HOTPGenerator(this);
         }
 
         /**

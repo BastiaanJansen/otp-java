@@ -30,23 +30,23 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:1.2.0'
+implementation 'com.github.bastiaanjansen:otp-java:1.2.1'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.2.0"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.2.1"
 ```
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.2.0" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.2.1" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
@@ -154,7 +154,7 @@ try {
     // Handle error
 }
 ```
-The above code will generate a time-based one-time password based on the current time. The API supports, besides the current time, the creation of codes based on `timeSince1970` in milliseconds, `Date`, and `Instant`:
+The above code will generate a time-based one-time password based on the current time. The API supports, besides the current time, the creation of codes based on `timeSince1970` in seconds, `Date`, and `Instant`:
 
 ```java
 try {
@@ -164,7 +164,7 @@ try {
     // Based on specific date
     totp.generate(new Date());
     
-    // Based on milliseconds past 1970
+    // Based on seconds past 1970
     totp.generate(9238346823);
     
     // Based on an instant

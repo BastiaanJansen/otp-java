@@ -18,6 +18,7 @@ public class URIHelper {
     public static final String SECRET = "secret";
     public static final String ALGORITHM = "algorithm";
     public static final String PERIOD = "period";
+    public static final String COUNTER = "counter";
 
     /**
      * Get a map of query items from URI

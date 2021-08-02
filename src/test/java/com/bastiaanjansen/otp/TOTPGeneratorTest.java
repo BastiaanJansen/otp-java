@@ -33,7 +33,7 @@ class TOTPGeneratorTest {
     @Test
     void generateWithInstant() {
         TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret);
-        assertEquals("455216", generator.generate(Instant.ofEpochMilli(1)));
+        assertEquals("455216", generator.generate(Instant.ofEpochSecond(1)));
     }
 
     @Test
@@ -47,6 +47,13 @@ class TOTPGeneratorTest {
     void generateWithCustomTimeInterval() {
         TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
         assertEquals("455216", generator.generate(1));
+    }
+
+    @Test
+    void generateWithPeriodOfZero() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new TOTPGenerator(6, Duration.ofSeconds(0), HMACAlgorithm.SHA1, secret);
+        });
     }
 
     @Test
