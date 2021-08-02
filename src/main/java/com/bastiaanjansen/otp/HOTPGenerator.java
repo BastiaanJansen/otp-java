@@ -64,7 +64,7 @@ public class HOTPGenerator extends OTPGenerator {
      */
     public URI getURI(int counter, String issuer, String account) throws URISyntaxException {
         Map<String, String> query = new HashMap<>();
-        query.put("counter", String.valueOf(counter));
+        query.put(URIHelper.COUNTER, String.valueOf(counter));
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
