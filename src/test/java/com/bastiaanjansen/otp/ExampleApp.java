@@ -18,7 +18,7 @@ public class ExampleApp {
             System.out.println("Generated code: " + code);
 
             // To verify a codes
-            System.out.println(totp.verify(code)); // true
+            totp.verify(code); // true
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
