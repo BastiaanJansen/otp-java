@@ -36,7 +36,7 @@ The following features are supported:
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:1.2.1'
+implementation 'com.github.bastiaanjansen:otp-java:1.2.2'
 ```
 
 ### Scala SBT
