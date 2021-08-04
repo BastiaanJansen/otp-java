@@ -63,6 +63,14 @@ class TOTPGeneratorTest {
     }
 
     @Test
+    void verifyOlderCode() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret).build();
+        String code = generator.generate(Instant.now().minusSeconds(30));
+        assertFalse(generator.verify(code));
+        assertTrue(generator.verify(code, 1));
+    }
+
+    @Test
     void generateWithPeriodOfZero() {
         assertThrows(IllegalArgumentException.class, () -> {
             new TOTPGenerator(6, Duration.ofSeconds(0), HMACAlgorithm.SHA1, secret);
