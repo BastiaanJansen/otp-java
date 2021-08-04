@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,6 +46,20 @@ class TOTPGeneratorTest {
     void generateWithCustomTimeInterval() {
         TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(60), HMACAlgorithm.SHA1, secret);
         assertEquals("455216", generator.generate(1));
+    }
+
+    @Test
+    void generateFromCurrentTime() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret).build();
+        long secondsPast1970 = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+        assertEquals(generator.generate(secondsPast1970), generator.generate());
+        assertTrue(generator.verify(generator.generate()));
+    }
+
+    @Test
+    void verify() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret).build();
+        assertTrue(generator.verify(generator.generate()));
     }
 
     @Test
