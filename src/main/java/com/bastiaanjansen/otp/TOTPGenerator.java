@@ -124,7 +124,7 @@ public class TOTPGenerator extends OTPGenerator {
     }
 
     /**
-     * Create a OTPAuth URI for easy onboarding with only an issuer
+     * Create a OTPAuth URI for easy on-boarding with only an issuer
      *
      * @param issuer name
      * @return generated OTPAuth URI
@@ -169,7 +169,7 @@ public class TOTPGenerator extends OTPGenerator {
      * @return counter based on current time and a specific time interval
      */
     private long calculateCounter(final Duration period) {
-        return calculateCounter(System.currentTimeMillis(), period);
+        return System.currentTimeMillis() / period.toMillis();
     }
 
     /**
