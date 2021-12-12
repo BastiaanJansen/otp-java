@@ -255,11 +255,14 @@ public class TOTPGenerator extends OTPGenerator {
             TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret.getBytes());
 
             try {
-                Optional.ofNullable(query.get(URIHelper.DIGITS)).map(Integer::valueOf)
+                Optional.ofNullable(query.get(URIHelper.DIGITS))
+                        .map(Integer::valueOf)
                         .ifPresent(builder::withPasswordLength);
-                Optional.ofNullable(query.get(URIHelper.ALGORITHM)).map(HMACAlgorithm::valueOf)
+                Optional.ofNullable(query.get(URIHelper.ALGORITHM))
+                        .map(String::toUpperCase).map(HMACAlgorithm::valueOf)
                         .ifPresent(builder::withAlgorithm);
-                Optional.ofNullable(query.get(URIHelper.PERIOD)).map(Long::parseLong).map(Duration::ofSeconds)
+                Optional.ofNullable(query.get(URIHelper.PERIOD))
+                        .map(Long::parseLong).map(Duration::ofSeconds)
                         .ifPresent(builder::withPeriod);
             } catch (Exception e) {
                 throw new URISyntaxException(uri.toString(), "URI could not be parsed");
