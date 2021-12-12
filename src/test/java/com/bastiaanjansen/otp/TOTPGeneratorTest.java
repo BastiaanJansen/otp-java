@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +97,42 @@ class TOTPGeneratorTest {
         int expected = 6;
 
         assertThat(generator.getPasswordLength(), is(expected));
+    }
+
+    @Test
+    void generateFromCurrentTime() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        long secondsPast1970 = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+        String expected = generator.generate(secondsPast1970);
+
+        assertThat(generator.generate(), is(expected));
+    }
+
+    @Test
+    void verifyCurrentCode_true() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate();
+        boolean expected = true;
+
+        assertThat(generator.verify(code), is(expected));
+    }
+
+    @Test
+    void verifyOlderCodeWithDelayWindowIs0_false() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate(Instant.now().minusSeconds(30));
+        boolean expected = false;
+
+        assertThat(generator.verify(code), is(expected));
+    }
+
+    @Test
+    void verifyOlderCodeWithDelayWindowIs1_true() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate(Instant.now().minusSeconds(30));
+        boolean expected = true;
+
+        assertThat(generator.verify(code, 1), is(expected));
     }
 
     @Test

@@ -1,7 +1,5 @@
 package com.bastiaanjansen.otp;
 
-import java.nio.charset.StandardCharsets;
-
 public class ExampleApp {
     public static void main(String[] args) {
 
