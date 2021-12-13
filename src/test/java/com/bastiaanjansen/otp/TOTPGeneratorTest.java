@@ -64,14 +64,31 @@ class TOTPGeneratorTest {
     }
 
     @Test
+    void generateWithSeconds() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        String expected = "650012";
+
+        String code = generator.generate(100);
+
+        assertThat(code, is(expected));
+    }
+
+    @Test
     void generateWithDate() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        Date date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
-        String expected = "019287";
+        Date date = new Date(Long.parseLong("100") * 1000);
+        String expected = "650012";
 
         String code = generator.generate(date);
 
         assertThat(code, is(expected));
+    }
+
+    @Test
+    void generateWithInvalidSeconds_throwsIllegalArgumentException() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(-1));
     }
 
     @Test
