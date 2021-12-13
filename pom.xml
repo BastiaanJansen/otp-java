@@ -40,8 +40,9 @@
     </properties>
 
     <scm>
-        <url>https://github.com/BastiaanJansen/OTP-Java</url>
+        <url>http://github.com/BastiaanJansen/OTP-Java</url>
         <connection>scm:git:https://github.com/BastiaanJansen/OTP-Java.git</connection>
+        <developerConnection>scm:git:https://github.com/BastiaanJansen/OTP-Java.git</developerConnection>
     </scm>
 
     <dependencies>
