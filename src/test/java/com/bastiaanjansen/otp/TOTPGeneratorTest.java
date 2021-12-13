@@ -12,7 +12,8 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
@@ -29,9 +30,7 @@ class TOTPGeneratorTest {
 
     @Test
     void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new TOTPGenerator(5, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes());
-        });
+        assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator(5, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes()));
     }
 
     @Test
@@ -77,9 +76,7 @@ class TOTPGeneratorTest {
 
     @Test
     void generateWithPeriodOfZero() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new TOTPGenerator.Builder(secret.getBytes()).withPeriod(Duration.ofSeconds(0)).build();
-        });
+        assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator.Builder(secret.getBytes()).withPeriod(Duration.ofSeconds(0)).build());
     }
 
     @Test
@@ -221,27 +218,21 @@ class TOTPGeneratorTest {
     void fromURIWithInvalidPeriod_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?period=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> {
-            TOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(URISyntaxException.class, () -> TOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 
     @Test
     void fromURIWithDigitsIs5_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=5&secret=" + secret);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            TOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 
     @Test
     void fromURIWithDigitsIs9_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=9&secret=" + secret);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            TOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 
     @Test
@@ -275,8 +266,6 @@ class TOTPGeneratorTest {
     void fromURIWithInvalidAlgorithm_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> {
-            TOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(URISyntaxException.class, () -> TOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 }

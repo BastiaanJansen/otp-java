@@ -1,16 +1,13 @@
 package com.bastiaanjansen.otp;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,9 +24,7 @@ class HOTPGeneratorTest {
 
     @Test
     void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new HOTPGenerator(5, HMACAlgorithm.SHA1, secret.getBytes());
-        });
+        assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator(5, HMACAlgorithm.SHA1, secret.getBytes()));
     }
 
     @Test
@@ -154,26 +149,20 @@ class HOTPGeneratorTest {
     void fromURIWithInvalidDigits_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?digits=invalid&counter=10&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> {
-            HOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(URISyntaxException.class, () -> HOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 
     @Test
     void fromURIWithInvalidAlgorithm_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10&algorithm=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> {
-            HOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(URISyntaxException.class, () -> HOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 
     @Test
     void fromURIWithInvalidSecret_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10");
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            HOTPGenerator.Builder.fromOTPAuthURI(uri);
-        });
+        assertThrows(IllegalArgumentException.class, () -> HOTPGenerator.Builder.fromOTPAuthURI(uri));
     }
 }
