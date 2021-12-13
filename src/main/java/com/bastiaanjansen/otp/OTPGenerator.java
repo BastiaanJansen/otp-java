@@ -45,9 +45,11 @@ public class OTPGenerator {
      * @param secret         used to generate hash
      */
     protected OTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
-        if (!validatePasswordLength(passwordLength)) {
+        if (!validatePasswordLength(passwordLength))
             throw new IllegalArgumentException("Password length must be between 6 and 8 digits");
-        }
+
+        if (secret.length <= 0)
+            throw new IllegalArgumentException("Secret must not be empty");
 
         this.passwordLength = passwordLength;
         this.algorithm = algorithm;
@@ -104,6 +106,9 @@ public class OTPGenerator {
      * @throws IllegalStateException when hashing algorithm throws an error
      */
     protected String generateCode(final long counter) throws IllegalStateException {
+        if (counter < 0)
+            throw new IllegalArgumentException("Counter must be greater than or equal to 0");
+
         byte[] secretBytes = decodeBase32(secret);
         byte[] counterBytes = longToBytes(counter);
 
@@ -234,7 +239,7 @@ public class OTPGenerator {
      * @author Bastiaan Jansen
      * @param <B> concrete builder class
      */
-    public abstract static class Builder<B, G> {
+    protected abstract static class Builder<B, G> {
         /**
          * Number of digits for generated code in range 6...8, defaults to 6
          */

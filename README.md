@@ -15,6 +15,7 @@ A small and easy-to-use one-time password generator for Java according to [RFC 4
 * [Usage](#usage)
     * [HOTP (Counter-based one-time passwords)](#hotp-counter-based-one-time-passwords)
     * [TOTP (Time-based one-time passwords)](#totp-time-based-one-time-passwords)
+    * [Recovery codes](#recovery-codes)
 
 ## Features
 The following features are supported:
@@ -30,23 +31,23 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:1.2.2'
+implementation 'com.github.bastiaanjansen:otp-java:1.2.3'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.2.2"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.2.3"
 ```
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.2.2" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.2.3" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
@@ -182,6 +183,11 @@ TOTPGenerator totp = new TOTPGenerator.Builder(secret).build();
 URI uri = totp.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
 
 ```
+
+## Recovery Codes
+Often, services provide "backup codes" or "recovery codes" which can be used when the user cannot access the 2FA device anymore. Often because 2FA device is a mobile phone, which can be lost or stolen. 
+
+Because recovery code generation is not part of the specifications of OTP, it is not possible to generate recovery codes with this library and should be implemented seperately.
 
 ## Licence
 OTP-Java is available under the MIT licence. See the LICENCE for more info.

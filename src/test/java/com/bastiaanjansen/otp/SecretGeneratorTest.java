@@ -1,24 +1,21 @@
 package com.bastiaanjansen.otp;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class SecretGeneratorTest {
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
+    @Test
+    void generate_defaultLengthIs32() {
+        int expected = 32;
+        assertThat(SecretGenerator.generate().length, is(expected));
     }
 
     @Test
-    void generate() {
-        assertEquals(32, SecretGenerator.generate().length);
-        assertEquals(56, SecretGenerator.generate(256).length);
+    void generate_lengthIs56() {
+        int expected = 56;
+        assertThat(SecretGenerator.generate(256).length, is(expected));
     }
 }
