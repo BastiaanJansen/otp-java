@@ -76,7 +76,8 @@ class TOTPGeneratorTest {
     @Test
     void generateWithDate() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        Date date = new Date(Long.parseLong("100") * 1000);
+        int secondsSince1970 = 100;
+        Date date = new Date(secondsSince1970 * 1000);
         String expected = "650012";
 
         String code = generator.generate(date);
