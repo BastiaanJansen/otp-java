@@ -111,8 +111,13 @@ public class HOTPGenerator extends OTPGenerator {
             HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret.getBytes());
 
             try {
-                Optional.ofNullable(query.get(URIHelper.DIGITS)).map(Integer::parseInt).ifPresent(builder::withPasswordLength);
-                Optional.ofNullable(query.get(URIHelper.ALGORITHM)).map(HMACAlgorithm::valueOf).ifPresent(builder::withAlgorithm);
+                Optional.ofNullable(query.get(URIHelper.DIGITS))
+                        .map(Integer::parseInt)
+                        .ifPresent(builder::withPasswordLength);
+                Optional.ofNullable(query.get(URIHelper.ALGORITHM))
+                        .map(String::toUpperCase)
+                        .map(HMACAlgorithm::valueOf)
+                        .ifPresent(builder::withAlgorithm);
             } catch (Exception e) {
                 throw new URISyntaxException(uri.toString(), "URI could not be parsed");
             }

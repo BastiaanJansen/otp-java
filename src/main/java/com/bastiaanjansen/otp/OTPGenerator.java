@@ -234,7 +234,7 @@ public class OTPGenerator {
      * @author Bastiaan Jansen
      * @param <B> concrete builder class
      */
-    public abstract static class Builder<B, G> {
+    protected abstract static class Builder<B, G> {
         /**
          * Number of digits for generated code in range 6...8, defaults to 6
          */

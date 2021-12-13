@@ -22,9 +22,16 @@ class TOTPGeneratorTest {
 
     @Test
     void constructor_instanceOfTOTPGenerator() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes());
 
         assertThat(generator, instanceOf(TOTPGenerator.class));
+    }
+
+    @Test
+    void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new TOTPGenerator(5, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes());
+        });
     }
 
     @Test
@@ -40,11 +47,11 @@ class TOTPGeneratorTest {
     @Test
     void generateWithEightDigits() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(8).build();
-        String expected = "17455216";
+        int expected = 8;
 
         String code = generator.generate(1);
 
-        assertThat(code, is(expected));
+        assertThat(code.length(), is(expected));
     }
 
     @Test
