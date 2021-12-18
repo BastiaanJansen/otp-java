@@ -1,0 +1,86 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Java ${{ matrix.java }} build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 1.8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-package: jdk
+          java-version: ${{ matrix.java }}
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+      - run: mkdir artifacts && cp target/*.jar artifacts
+      - name: Upload Maven build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-java-${{ matrix.java }}.jar
+          path: artifacts
+
+  test:
+    name: Java ${{ matrix.java }} test
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 1.8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Run tests with Maven
+        run: mvn -B test --file pom.xml
+
+  codeql:
+    name: CodeQL Analyze
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java' ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
+#  lint:
+#    name: Linter
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout source code
+#        uses: actions/checkout@v2
+#      - name: Lint Codebase
+#        uses: github/super-linter/slim@v4
+#        env:
+#          VALIDATE_ALL_CODEBASE: false
+#          DEFAULT_BRANCH: main
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,88 @@
+name: Maven Package
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 1.8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+    name: Java ${{ matrix.java }} build
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-package: jdk
+          java-version: ${{ matrix.java }}
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+      - run: mkdir artifacts && cp target/*.jar artifacts
+      - name: Upload Maven build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-java-${{ matrix.java }}.jar
+          path: artifacts
+
+  test:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 1.8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+    name: Java ${{ matrix.java }} test
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Run tests with Maven
+        run: mvn -B test --file pom.xml
+
+  publish-maven-central:
+    name: Publish to Maven Central Repository
+    needs: [ build, test ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Publish package
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          nexus_username: ${{ secrets.NEXUS_USERNAME }}
+          nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+          maven_profiles: "deploy-maven-central"
+
+  publish-github-registry:
+    name: Publish to GitHub Registry
+    needs: [ build, test ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          server-id: github
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Publish package
+        run: mvn --batch-mode --activate-profiles "deploy-github-registry" deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
