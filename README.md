@@ -1,7 +1,6 @@
 # OTP-Java
 
-![](https://github./BastiaanJansen/OTP-Java/workflows/Build/badge.svg)
-![](https://github.com/BastiaanJansen/OTP-Java/workflows/Test/badge.svg)
+[![Build & Test](https://github.com/BastiaanJansen/otp-java/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/BastiaanJansen/otp-java/actions/workflows/build.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/91d3addee9e94a0cad9436601d4a4e1e)](https://www.codacy.com/gh/BastiaanJansen/OTP-Java/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BastiaanJansen/OTP-Java&amp;utm_campaign=Badge_Grade)
 ![](https://img.shields.io/github/license/BastiaanJansen/OTP-Java)
 ![](https://img.shields.io/github/issues/BastiaanJansen/OTP-Java)
