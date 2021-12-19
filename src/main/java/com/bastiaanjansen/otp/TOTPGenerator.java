@@ -146,9 +146,7 @@ public class TOTPGenerator extends OTPGenerator {
         Map<String, String> query = new HashMap<>();
         query.put(URIHelper.PERIOD, String.valueOf(period.getSeconds()));
 
-        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
-
-        return getURI(OTP_TYPE, path, query);
+        return getURI(OTP_TYPE, issuer, account, query);
     }
 
     /**
@@ -208,6 +206,20 @@ public class TOTPGenerator extends OTPGenerator {
             this.period = DEFAULT_PERIOD;
         }
 
+        private Builder(final URI uri) throws URISyntaxException {
+            super(uri);
+
+            Map<String, String> query = URIHelper.queryItems(uri);
+
+            try {
+                this.period = Optional.ofNullable(query.get(URIHelper.PERIOD))
+                        .map(Long::parseLong).map(Duration::ofSeconds)
+                        .orElse(DEFAULT_PERIOD);
+            } catch (Exception e) {
+                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+            }
+        }
+
         /**
          * Change period
          *
@@ -247,28 +259,7 @@ public class TOTPGenerator extends OTPGenerator {
          * @throws URISyntaxException when URI cannot be parsed
          */
         public static TOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
-            Map<String, String> query = URIHelper.queryItems(uri);
-
-            String secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
-
-            TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret.getBytes());
-
-            try {
-                Optional.ofNullable(query.get(URIHelper.DIGITS))
-                        .map(Integer::valueOf)
-                        .ifPresent(builder::withPasswordLength);
-                Optional.ofNullable(query.get(URIHelper.ALGORITHM))
-                        .map(String::toUpperCase).map(HMACAlgorithm::valueOf)
-                        .ifPresent(builder::withAlgorithm);
-                Optional.ofNullable(query.get(URIHelper.PERIOD))
-                        .map(Long::parseLong).map(Duration::ofSeconds)
-                        .ifPresent(builder::withPeriod);
-            } catch (Exception e) {
-                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
-            }
-
-            return builder.build();
+            return new TOTPGenerator.Builder(uri).build();
         }
 
         /**

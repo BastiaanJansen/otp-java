@@ -4,6 +4,7 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class HOTPGenerator extends OTPGenerator {
      * @return OTPAuth URI
      * @throws URISyntaxException when URI cannot be created
      */
-    public URI getURI(int counter, String issuer) throws URISyntaxException {
+    public URI getURI(final int counter, final String issuer) throws URISyntaxException {
         return getURI(counter, issuer, "");
     }
 
@@ -62,13 +63,11 @@ public class HOTPGenerator extends OTPGenerator {
      * @return OTPAuth URI
      * @throws URISyntaxException when URI cannot be created
      */
-    public URI getURI(int counter, String issuer, String account) throws URISyntaxException {
+    public URI getURI(final int counter, final String issuer, final String account) throws URISyntaxException {
         Map<String, String> query = new HashMap<>();
         query.put(URIHelper.COUNTER, String.valueOf(counter));
 
-        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
-
-        return getURI(OTP_TYPE, path, query);
+        return getURI(OTP_TYPE, issuer, account, query);
     }
 
     /**
@@ -78,6 +77,10 @@ public class HOTPGenerator extends OTPGenerator {
     public static class Builder extends OTPGenerator.Builder<Builder, HOTPGenerator> {
         public Builder(final byte[] secret) {
             super(secret);
+        }
+
+        private Builder(final URI uri) throws URISyntaxException {
+            super(uri);
         }
 
         @Override
@@ -103,26 +106,7 @@ public class HOTPGenerator extends OTPGenerator {
          * @throws URISyntaxException when URI cannot be parsed
          */
         public static HOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
-            Map<String, String> query = URIHelper.queryItems(uri);
-
-            String secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
-
-            HOTPGenerator.Builder builder = new HOTPGenerator.Builder(secret.getBytes());
-
-            try {
-                Optional.ofNullable(query.get(URIHelper.DIGITS))
-                        .map(Integer::parseInt)
-                        .ifPresent(builder::withPasswordLength);
-                Optional.ofNullable(query.get(URIHelper.ALGORITHM))
-                        .map(String::toUpperCase)
-                        .map(HMACAlgorithm::valueOf)
-                        .ifPresent(builder::withAlgorithm);
-            } catch (Exception e) {
-                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
-            }
-
-            return builder.build();
+            return new HOTPGenerator.Builder(uri).build();
         }
 
         /**

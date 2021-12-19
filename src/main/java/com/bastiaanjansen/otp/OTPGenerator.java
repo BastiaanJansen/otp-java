@@ -10,7 +10,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base32;
 
@@ -127,15 +129,19 @@ public class OTPGenerator {
      * Generate an OTPAuth URI
      *
      * @param type of OTPAuth URI: totp or hotp
-     * @param path contains issuer and account name
+     * @param issuer name for URI
+     * @param account name for URI
      * @param query items of URI
      * @return created OTPAuth URI
      * @throws URISyntaxException when URI cannot be created
      */
-    protected URI getURI(final String type, final String path, final Map<String, String> query) throws URISyntaxException {
+    protected URI getURI(final String type, final String issuer, final String account, final Map<String, String> query) throws URISyntaxException {
         query.put(URIHelper.DIGITS, String.valueOf(passwordLength));
         query.put(URIHelper.ALGORITHM, algorithm.name());
         query.put(URIHelper.SECRET, new String(secret, StandardCharsets.UTF_8));
+
+        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
+
         return URIHelper.createURI(URL_SCHEME, type, path, query);
     }
 
@@ -269,6 +275,26 @@ public class OTPGenerator {
             this.secret = secret;
             this.passwordLength = DEFAULT_PASSWORD_LENGTH;
             this.algorithm = DEFAULT_HMAC_ALGORITHM;
+        }
+
+        public Builder(final URI uri) throws URISyntaxException {
+            Map<String, String> query = URIHelper.queryItems(uri);
+
+            this.secret = Optional.ofNullable(query.get(URIHelper.SECRET))
+                    .map(String::getBytes)
+                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
+
+            try {
+                this.passwordLength = Optional.ofNullable(query.get(URIHelper.DIGITS))
+                        .map(Integer::valueOf)
+                        .orElse(DEFAULT_PASSWORD_LENGTH);
+                this.algorithm = Optional.ofNullable(query.get(URIHelper.ALGORITHM))
+                        .map(String::toUpperCase)
+                        .map(HMACAlgorithm::valueOf)
+                        .orElse(DEFAULT_HMAC_ALGORITHM);
+            } catch (Exception e) {
+                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+            }
         }
 
         /**
