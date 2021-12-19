@@ -4,10 +4,8 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Generates counter-based one-time passwords
