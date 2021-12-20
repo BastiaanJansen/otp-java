@@ -15,17 +15,17 @@ class HOTPGeneratorTest {
 
     private final String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
 
-    @Test
-    void constructor_instanceOfHOTPGenerator() {
-        HOTPGenerator generator = new HOTPGenerator(6, HMACAlgorithm.SHA1, secret.getBytes());
-
-        assertThat(generator, instanceOf(HOTPGenerator.class));
-    }
-
-    @Test
-    void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator(5, HMACAlgorithm.SHA1, secret.getBytes()));
-    }
+//    @Test
+//    void constructor_instanceOfHOTPGenerator() {
+//        HOTPGenerator generator = new HOTPGenerator(6, HMACAlgorithm.SHA1, secret.getBytes());
+//
+//        assertThat(generator, instanceOf(HOTPGenerator.class));
+//    }
+//
+//    @Test
+//    void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
+//        assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator(5, HMACAlgorithm.SHA1, secret.getBytes()));
+//    }
 
     @Test
     void generateWithSixDigits() {

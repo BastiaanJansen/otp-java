@@ -13,21 +13,11 @@ import java.util.Map;
  * @author Bastiaan Jansen
  * @see OTPGenerator
  */
-public class HOTPGenerator extends OTPGenerator {
+public final class HOTPGenerator extends OTPGenerator {
     private final static String OTP_TYPE = "hotp";
 
-    /**
-     * Constructs generator with custom password length
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     */
-    public HOTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
-        super(passwordLength, algorithm, secret);
-    }
-
     private HOTPGenerator(final HOTPGenerator.Builder builder) {
-        super(builder.getPasswordLength(), builder.getAlgorithm(), builder.getSecret());
+        super(builder);
     }
 
     /**

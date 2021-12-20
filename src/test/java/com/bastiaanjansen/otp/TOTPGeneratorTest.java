@@ -20,15 +20,24 @@ class TOTPGeneratorTest {
     private final String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
 
     @Test
-    void constructor_instanceOfTOTPGenerator() {
-        TOTPGenerator generator = new TOTPGenerator(6, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes());
-
-        assertThat(generator, instanceOf(TOTPGenerator.class));
+    void builderWithInvalidPasswordLength_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build());
     }
 
     @Test
-    void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator(5, Duration.ofSeconds(30), HMACAlgorithm.SHA1, secret.getBytes()));
+    void builderWithoutPeriod_defaultPeriod() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        Duration expected = Duration.ofSeconds(30);
+
+        assertThat(generator.getPeriod(), is(expected));
+    }
+
+    @Test
+    void builderWithoutAlgorithm_defaultAlgorithm() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+        HMACAlgorithm expected = HMACAlgorithm.SHA1;
+
+        assertThat(generator.getAlgorithm(), is(expected));
     }
 
     @Test

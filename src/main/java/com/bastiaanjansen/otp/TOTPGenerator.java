@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @author Bastiaan Jansen
  * @see OTPGenerator
  */
-public class TOTPGenerator extends OTPGenerator {
+public final class TOTPGenerator extends OTPGenerator {
     private final static String OTP_TYPE = "totp";
 
     /**
@@ -26,24 +26,8 @@ public class TOTPGenerator extends OTPGenerator {
      */
     private final Duration period;
 
-    /**
-     * Constructs generator with custom password length, time interval and hashing algorithm
-     *
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param period time interval between new codes
-     * @param algorithm HMAC hash algorithm used to hash data
-     * @param secret used to generate hash
-     */
-    public TOTPGenerator(final int passwordLength, final Duration period, final HMACAlgorithm algorithm, final byte[] secret) {
-        super(passwordLength, algorithm, secret);
-
-        if (period.getSeconds() < 1) throw new IllegalArgumentException("Period must be at least 1 second");
-
-        this.period = period;
-    }
-
     private TOTPGenerator(final TOTPGenerator.Builder builder) {
-        super(builder.getPasswordLength(), builder.getAlgorithm(), builder.getSecret());
+        super(builder);
         this.period = builder.getPeriod();
     }
 
@@ -194,7 +178,7 @@ public class TOTPGenerator extends OTPGenerator {
         /**
          * Default time interval for a time-based one-time password
          */
-        public static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
+        private static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
 
         /**
          * Constructs a TOTPGenerator builder

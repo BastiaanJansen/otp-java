@@ -20,7 +20,7 @@ import org.apache.commons.codec.binary.Base32;
  *
  * @author Bastiaan Jansen
  */
-public class OTPGenerator {
+class OTPGenerator {
     private final static String URL_SCHEME = "otpauth";
 
     /**
@@ -55,6 +55,10 @@ public class OTPGenerator {
         this.passwordLength = passwordLength;
         this.algorithm = algorithm;
         this.secret = secret;
+    }
+
+    protected OTPGenerator(final Builder<?, ?> builder) {
+        this(builder.getPasswordLength(), builder.getAlgorithm(), builder.getSecret());
     }
 
     public int getPasswordLength() {
@@ -248,27 +252,27 @@ public class OTPGenerator {
         /**
          * Number of digits for generated code in range 6...8, defaults to 6
          */
-        protected int passwordLength;
+        private int passwordLength;
 
         /**
          * Hashing algorithm used to generate code, defaults to SHA1
          */
-        protected HMACAlgorithm algorithm;
+        private HMACAlgorithm algorithm;
 
         /**
          * Secret key used to generate the code, this should be a base32 string
          */
-        protected byte[] secret;
+        private final byte[] secret;
 
         /**
          * Default value for password length
          */
-        public static final int DEFAULT_PASSWORD_LENGTH = 6;
+        private static final int DEFAULT_PASSWORD_LENGTH = 6;
 
         /**
          * Default value for HMAC Algorithm
          */
-        public static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
+        private static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
 
         public Builder(final byte[] secret) {
             this.secret = secret;
