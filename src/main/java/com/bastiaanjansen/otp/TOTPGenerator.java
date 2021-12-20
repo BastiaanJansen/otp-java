@@ -258,7 +258,7 @@ public class TOTPGenerator extends OTPGenerator {
          * @return TOTPGenerator
          * @throws URISyntaxException when URI cannot be parsed
          */
-        public static TOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
+        public static TOTPGenerator fromURI(final URI uri) throws URISyntaxException {
             return new TOTPGenerator.Builder(uri).build();
         }
 

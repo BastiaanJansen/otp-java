@@ -83,7 +83,7 @@ byte[] secret = SecretGenerator.generate(512);
 It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
 ```java
 URI uri = new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
-HOTPGenerator hotp = HOTPGenerator.Builder.fromOTPAuthURI(uri);
+HOTPGenerator hotp = HOTPGenerator.Builder.fromURI(uri);
 ```
 
 Get information about the generator:
@@ -131,7 +131,7 @@ TOTPGenerator totp = builder.build();
 Or create a `TOTPGenerator` instance from an OTPAuth URI:
 ```java
 URI uri = new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
-TOTPGenerator totp = TOTPGenerator.Builder.fromOTPAuthURI(uri);
+TOTPGenerator totp = TOTPGenerator.Builder.fromURI(uri);
 ```
 
 Get information about the generator:

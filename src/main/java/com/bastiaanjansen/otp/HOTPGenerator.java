@@ -103,7 +103,7 @@ public class HOTPGenerator extends OTPGenerator {
          * @return HOTPGenerator
          * @throws URISyntaxException when URI cannot be parsed
          */
-        public static HOTPGenerator fromOTPAuthURI(final URI uri) throws URISyntaxException {
+        public static HOTPGenerator fromURI(final URI uri) throws URISyntaxException {
             return new HOTPGenerator.Builder(uri).build();
         }
 
