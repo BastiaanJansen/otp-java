@@ -203,7 +203,7 @@ class TOTPGeneratorTest {
     void fromURIWithPeriod() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?period=60&secret=" + secret);
 
-        TOTPGenerator generator = TOTPGenerator.Builder.fromURI(uri);
+        TOTPGenerator generator = TOTPGenerator.fromURI(uri);
         Duration expected = Duration.ofSeconds(60);
 
         assertThat(generator.getPeriod(), is(expected));
@@ -213,7 +213,7 @@ class TOTPGeneratorTest {
     void fromURIWithAlgorithmUppercase() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=SHA1&secret=" + secret);
 
-        TOTPGenerator generator = TOTPGenerator.Builder.fromURI(uri);
+        TOTPGenerator generator = TOTPGenerator.fromURI(uri);
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -223,7 +223,7 @@ class TOTPGeneratorTest {
     void fromURIWithAlgorithmLowercase() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=sha1&secret=" + secret);
 
-        TOTPGenerator generator = TOTPGenerator.Builder.fromURI(uri);
+        TOTPGenerator generator = TOTPGenerator.fromURI(uri);
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -233,7 +233,7 @@ class TOTPGeneratorTest {
     void fromURIWithDigits() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=6&secret=" + secret);
 
-        TOTPGenerator generator = TOTPGenerator.Builder.fromURI(uri);
+        TOTPGenerator generator = TOTPGenerator.fromURI(uri);
         int expected = 6;
 
         assertThat(generator.getPasswordLength(), is(expected));
@@ -243,21 +243,21 @@ class TOTPGeneratorTest {
     void fromURIWithInvalidPeriod_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?period=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> TOTPGenerator.Builder.fromURI(uri));
+        assertThrows(URISyntaxException.class, () -> TOTPGenerator.fromURI(uri));
     }
 
     @Test
     void fromURIWithDigitsIs5_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=5&secret=" + secret);
 
-        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.Builder.fromURI(uri));
+        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.fromURI(uri));
     }
 
     @Test
     void fromURIWithDigitsIs9_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=9&secret=" + secret);
 
-        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.Builder.fromURI(uri));
+        assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.fromURI(uri));
     }
 
     @Test
@@ -265,7 +265,7 @@ class TOTPGeneratorTest {
         URI uri = new URI("otpauth://totp/issuer:account?digits=6&secret=" + secret);
 
         assertDoesNotThrow(() -> {
-            TOTPGenerator.Builder.fromURI(uri);
+            TOTPGenerator.fromURI(uri);
         });
     }
 
@@ -274,7 +274,7 @@ class TOTPGeneratorTest {
         URI uri = new URI("otpauth://totp/issuer:account?digits=8&secret=" + secret);
 
         assertDoesNotThrow(() -> {
-            TOTPGenerator.Builder.fromURI(uri);
+            TOTPGenerator.fromURI(uri);
         });
     }
 
@@ -283,7 +283,7 @@ class TOTPGeneratorTest {
         URI uri = new URI("otpauth://totp/issuer:account?digits=7&secret=" + secret);
 
         assertDoesNotThrow(() -> {
-            TOTPGenerator.Builder.fromURI(uri);
+            TOTPGenerator.fromURI(uri);
         });
     }
 
@@ -291,6 +291,6 @@ class TOTPGeneratorTest {
     void fromURIWithInvalidAlgorithm_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> TOTPGenerator.Builder.fromURI(uri));
+        assertThrows(URISyntaxException.class, () -> TOTPGenerator.fromURI(uri));
     }
 }

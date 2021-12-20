@@ -22,13 +22,36 @@ public final class TOTPGenerator extends OTPGenerator {
     private final static String OTP_TYPE = "totp";
 
     /**
+     * Default time interval for a time-based one-time password
+     */
+    private static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
+
+    /**
      * Time interval between new codes
      */
     private final Duration period;
 
     private TOTPGenerator(final TOTPGenerator.Builder builder) {
         super(builder);
-        this.period = builder.getPeriod();
+        this.period = builder.period;
+    }
+
+    private TOTPGenerator(final URI uri) throws URISyntaxException {
+        super(uri);
+        Map<String, String> query = URIHelper.queryItems(uri);
+
+        try {
+            this.period = Optional.ofNullable(query.get(URIHelper.PERIOD))
+                    .map(Long::parseLong).map(Duration::ofSeconds)
+                    .orElse(DEFAULT_PERIOD);
+
+        } catch (Exception e) {
+            throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+        }
+    }
+
+    public static TOTPGenerator fromURI(URI uri) throws URISyntaxException {
+        return new TOTPGenerator(uri);
     }
 
     /**
@@ -176,11 +199,6 @@ public final class TOTPGenerator extends OTPGenerator {
         private Duration period;
 
         /**
-         * Default time interval for a time-based one-time password
-         */
-        private static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
-
-        /**
          * Constructs a TOTPGenerator builder
          *
          * @param secret used to generate hash
@@ -188,20 +206,6 @@ public final class TOTPGenerator extends OTPGenerator {
         public Builder(byte[] secret) {
             super(secret);
             this.period = DEFAULT_PERIOD;
-        }
-
-        private Builder(final URI uri) throws URISyntaxException {
-            super(uri);
-
-            Map<String, String> query = URIHelper.queryItems(uri);
-
-            try {
-                this.period = Optional.ofNullable(query.get(URIHelper.PERIOD))
-                        .map(Long::parseLong).map(Duration::ofSeconds)
-                        .orElse(DEFAULT_PERIOD);
-            } catch (Exception e) {
-                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
-            }
         }
 
         /**
@@ -216,10 +220,6 @@ public final class TOTPGenerator extends OTPGenerator {
             return this;
         }
 
-        public Duration getPeriod() {
-            return period;
-        }
-
         /**
          * Build the generator with specified options
          *
@@ -231,7 +231,7 @@ public final class TOTPGenerator extends OTPGenerator {
         }
 
         @Override
-        public Builder getBuilder() {
+        protected Builder getBuilder() {
             return this;
         }
 
@@ -242,9 +242,9 @@ public final class TOTPGenerator extends OTPGenerator {
          * @return TOTPGenerator
          * @throws URISyntaxException when URI cannot be parsed
          */
-        public static TOTPGenerator fromURI(final URI uri) throws URISyntaxException {
-            return new TOTPGenerator.Builder(uri).build();
-        }
+//        public static TOTPGenerator fromURI(final URI uri) throws URISyntaxException {
+//            return new TOTPGenerator.Builder(uri).build();
+//        }
 
         /**
          * Create a TOTPGenerator with default values

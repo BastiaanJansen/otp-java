@@ -72,7 +72,7 @@ public final class HOTPGenerator extends OTPGenerator {
         }
 
         @Override
-        public Builder getBuilder() {
+        protected Builder getBuilder() {
             return this;
         }
 
