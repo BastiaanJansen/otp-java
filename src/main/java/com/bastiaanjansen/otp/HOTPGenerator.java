@@ -4,7 +4,6 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +69,7 @@ public final class HOTPGenerator extends OTPGenerator {
      * @throws IllegalArgumentException when code could not be generated
      */
     public String generate(long counter) throws IllegalArgumentException {
-        return super.generateCode(counter);
+        return super.generate(counter);
     }
 
     /**

@@ -87,9 +87,9 @@ public final class TOTPGenerator extends OTPGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    public String generate() throws IllegalStateException {
+    public String now() throws IllegalStateException {
         long counter = calculateCounter(period);
-        return super.generateCode(counter);
+        return super.generate(counter);
     }
 
     /**
@@ -99,8 +99,8 @@ public final class TOTPGenerator extends OTPGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    public String generate(final Instant instant) throws IllegalStateException {
-        return generate(instant.getEpochSecond());
+    public String at(final Instant instant) throws IllegalStateException {
+        return at(instant.getEpochSecond());
     }
 
     /**
@@ -110,9 +110,9 @@ public final class TOTPGenerator extends OTPGenerator {
      * @return generated TOTP code
      * @throws IllegalStateException when code could not be generated
      */
-    public String generate(final Date date) throws IllegalStateException {
+    public String at(final Date date) throws IllegalStateException {
         long secondsSince1970 = TimeUnit.MILLISECONDS.toSeconds(date.getTime());
-        return generate(secondsSince1970);
+        return at(secondsSince1970);
     }
 
     /**
@@ -122,12 +122,12 @@ public final class TOTPGenerator extends OTPGenerator {
      * @return generated TOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
-    public String generate(final long secondsPast1970) throws IllegalArgumentException {
+    public String at(final long secondsPast1970) throws IllegalArgumentException {
         if (!validateTime(secondsPast1970))
             throw new IllegalArgumentException("Time must be above zero");
 
         long counter = calculateCounter(secondsPast1970, period);
-        return super.generateCode(counter);
+        return super.generate(counter);
     }
 
     /**

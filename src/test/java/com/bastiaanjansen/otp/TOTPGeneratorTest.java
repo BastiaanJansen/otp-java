@@ -1,5 +1,7 @@
 package com.bastiaanjansen.otp;
 
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -13,31 +15,57 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
 
 class TOTPGeneratorTest {
 
-    private final String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
+    private final static String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
 
     @Test
-    void builderWithInvalidPasswordLength_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build());
+    void generateWithPasswordLengthIs6() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(6).build();
+        int expected = 6;
+
+        assertThat(generator.generate(1).length(), is(expected));
     }
 
     @Test
-    void builderWithoutPeriod_defaultPeriod() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        Duration expected = Duration.ofSeconds(30);
+    void generateWithPasswordLengthIs7() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(7).build();
+        int expected = 7;
 
-        assertThat(generator.getPeriod(), is(expected));
+        assertThat(generator.generate(1).length(), is(expected));
     }
 
     @Test
-    void builderWithoutAlgorithm_defaultAlgorithm() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        HMACAlgorithm expected = HMACAlgorithm.SHA1;
+    void generateWithPasswordLengthIs8() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(8).build();
+        int expected = 8;
 
-        assertThat(generator.getAlgorithm(), is(expected));
+        assertThat(generator.generate(1).length(), is(expected));
+    }
+
+    @Test
+    void generateWithSHA1() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA1).build();
+        String expected = "560287";
+
+        assertThat(generator.generate(1), is(expected));
+    }
+
+    @Test
+    void generateWithSHA256() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA256).build();
+        String expected = "361406";
+
+        assertThat(generator.generate(1), is(expected));
+    }
+
+    @Test
+    void generateWithSHA512() {
+        OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA512).build();
+        String expected = "016738";
+
+        assertThat(generator.generate(1), is(expected));
     }
 
     @Test
@@ -45,19 +73,9 @@ class TOTPGeneratorTest {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
         String expected = "455216";
 
-        String code = generator.generate(1);
+        String code = generator.at(1);
 
         assertThat(code, is(expected));
-    }
-
-    @Test
-    void generateWithEightDigits() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(8).build();
-        int expected = 8;
-
-        String code = generator.generate(1);
-
-        assertThat(code.length(), is(expected));
     }
 
     @Test
@@ -65,7 +83,7 @@ class TOTPGeneratorTest {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
         String expected = "455216";
 
-        String code = generator.generate(Instant.ofEpochSecond(1));
+        String code = generator.at(Instant.ofEpochSecond(1));
 
         assertThat(code, is(expected));
     }
@@ -75,7 +93,7 @@ class TOTPGeneratorTest {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
         String expected = "650012";
 
-        String code = generator.generate(100);
+        String code = generator.at(100);
 
         assertThat(code, is(expected));
     }
@@ -87,7 +105,7 @@ class TOTPGeneratorTest {
         Date date = new Date(secondsSince1970 * 1000);
         String expected = "650012";
 
-        String code = generator.generate(date);
+        String code = generator.at(date);
 
         assertThat(code, is(expected));
     }
@@ -96,7 +114,7 @@ class TOTPGeneratorTest {
     void generateWithInvalidSeconds_throwsIllegalArgumentException() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
 
-        assertThrows(IllegalArgumentException.class, () -> generator.generate(-1));
+        assertThrows(IllegalArgumentException.class, () -> generator.at(-1));
     }
 
     @Test
@@ -105,7 +123,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void builderDefaultValues_period() {
+    void withDefaultValues_algorithm_period() {
         TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         Duration expected = Duration.ofSeconds(30);
 
@@ -113,7 +131,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void builderDefaultValues_algorithm() {
+    void withDefaultValues_algorithm() {
         TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
@@ -121,7 +139,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void builderDefaultValues_passwordLength() {
+    void withDefaultValues_passwordLength() {
         TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         int expected = 6;
 
@@ -132,15 +150,15 @@ class TOTPGeneratorTest {
     void generateFromCurrentTime() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
         long secondsPast1970 = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-        String expected = generator.generate(secondsPast1970);
+        String expected = generator.at(secondsPast1970);
 
-        assertThat(generator.generate(), is(expected));
+        assertThat(generator.now(), is(expected));
     }
 
     @Test
     void verifyCurrentCode_true() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate();
+        String code = generator.now();
 
         assertThat(generator.verify(code), is(true));
     }
@@ -148,19 +166,17 @@ class TOTPGeneratorTest {
     @Test
     void verifyOlderCodeWithDelayWindowIs0_false() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate(Instant.now().minusSeconds(30));
-        boolean expected = false;
+        String code = generator.at(Instant.now().minusSeconds(30));
 
-        assertThat(generator.verify(code), is(expected));
+        assertThat(generator.verify(code), is(false));
     }
 
     @Test
     void verifyOlderCodeWithDelayWindowIs1_true() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate(Instant.now().minusSeconds(30));
-        boolean expected = true;
+        String code = generator.at(Instant.now().minusSeconds(30));
 
-        assertThat(generator.verify(code, 1), is(expected));
+        assertThat(generator.verify(code, 1), is(true));
     }
 
     @Test
@@ -291,5 +307,80 @@ class TOTPGeneratorTest {
         URI uri = new URI("otpauth://totp/issuer:account?algorithm=invalid&secret=" + secret);
 
         assertThrows(URISyntaxException.class, () -> TOTPGenerator.fromURI(uri));
+    }
+
+    @Nested
+    class BuilderTest {
+        @Test
+        void builderWithEmptySecret_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator.Builder(new byte[]{}).build());
+        }
+
+        @Test
+        void builderWithPasswordLengthIs5_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build();
+            });
+        }
+
+        @Test
+        void builderWithPasswordLengthIs9_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(9).build();
+            });
+        }
+
+        @Test
+        void builderWithPasswordLengthIs6() {
+            OTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(6).build();
+            int expected = 6;
+
+            assertThat(generator.getPasswordLength(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA1() {
+            TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA1).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA1;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA256() {
+            TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA256).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA256;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA512() {
+            TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA512).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA512;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithInvalidPasswordLength_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> new TOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build());
+        }
+
+        @Test
+        void builderWithoutPeriod_defaultPeriod() {
+            TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+            Duration expected = Duration.ofSeconds(30);
+
+            assertThat(generator.getPeriod(), is(expected));
+        }
+
+        @Test
+        void builderWithoutAlgorithm_defaultAlgorithm() {
+            TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA1;
+
+            assertThat(generator.getAlgorithm(), is(expected));
+        }
     }
 }

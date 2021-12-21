@@ -10,9 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base32;
 
@@ -49,27 +47,16 @@ class OTPGenerator {
      */
     protected final byte[] secret;
 
-    /**
-     * Constructs the generator with custom password length and hashing algorithm
-     *
-     * @param passwordLength number of digits for generated code in range 6...8
-     * @param algorithm      HMAC hash algorithm used to hash data
-     * @param secret         used to generate hash
-     */
-    protected OTPGenerator(final int passwordLength, final HMACAlgorithm algorithm, final byte[] secret) {
-        if (!validatePasswordLength(passwordLength))
+    protected OTPGenerator(final Builder<?, ?> builder) {
+        if (!validatePasswordLength(builder.passwordLength))
             throw new IllegalArgumentException("Password length must be between 6 and 8 digits");
 
-        if (secret.length <= 0)
+        if (builder.secret.length <= 0)
             throw new IllegalArgumentException("Secret must not be empty");
 
-        this.passwordLength = passwordLength;
-        this.algorithm = algorithm;
-        this.secret = secret;
-    }
-
-    protected OTPGenerator(final Builder<?, ?> builder) {
-        this(builder.passwordLength, builder.algorithm, builder.secret);
+        this.passwordLength = builder.passwordLength;
+        this.algorithm = builder.algorithm;
+        this.secret = builder.secret;
     }
 
     public int getPasswordLength() {
@@ -107,7 +94,7 @@ class OTPGenerator {
         if (code.length() != passwordLength) return false;
 
         for (int i = -delayWindow; i <= delayWindow; i++) {
-            String currentCode = generateCode(counter + i);
+            String currentCode = generate(counter + i);
             if (code.equals(currentCode)) return true;
         }
 
@@ -121,7 +108,7 @@ class OTPGenerator {
      * @return generated OTP code
      * @throws IllegalStateException when hashing algorithm throws an error
      */
-    protected String generateCode(final long counter) throws IllegalStateException {
+    protected String generate(final long counter) throws IllegalStateException {
         if (counter < 0)
             throw new IllegalArgumentException("Counter must be greater than or equal to 0");
 

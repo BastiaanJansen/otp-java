@@ -1,11 +1,13 @@
 package com.bastiaanjansen.otp;
 
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -15,24 +17,12 @@ class HOTPGeneratorTest {
 
     private final String secret = "vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q";
 
-//    @Test
-//    void constructor_instanceOfHOTPGenerator() {
-//        HOTPGenerator generator = new HOTPGenerator(6, HMACAlgorithm.SHA1, secret.getBytes());
-//
-//        assertThat(generator, instanceOf(HOTPGenerator.class));
-//    }
-//
-//    @Test
-//    void constructorWithInvalidPasswordLength_throwsIllegalArgumentException() {
-//        assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator(5, HMACAlgorithm.SHA1, secret.getBytes()));
-//    }
-
     @Test
     void generateWithSixDigits() {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
-        String expected = "560287";
+        int expected = 6;
 
-        assertThat(generator.generateCode(1), is(expected));
+        assertThat(generator.generate(1).length(), is(expected));
     }
 
     @Test
@@ -40,7 +30,7 @@ class HOTPGeneratorTest {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(7).build();
         int expected = 7;
 
-        assertThat(generator.generateCode(1).length(), is(expected));
+        assertThat(generator.generate(1).length(), is(expected));
     }
 
     @Test
@@ -48,27 +38,66 @@ class HOTPGeneratorTest {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(8).build();
         int expected = 8;
 
-        assertThat(generator.generateCode(1).length(), is(expected));
+        assertThat(generator.generate(1).length(), is(expected));
     }
 
     @Test
-    void builderWithAlgorithm_isSHA256() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA256).build();
-        HMACAlgorithm expected = HMACAlgorithm.SHA256;
+    void generateWithCounter1() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String expected = "560287";
 
-        assertThat(generator.getAlgorithm(), is(expected));
+        assertThat(generator.generate(1), is(expected));
     }
 
     @Test
-    void builderWithDigits_is7() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(7).build();
-        int expected = 7;
+    void generateWithCounter100() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String expected = "239543";
 
-        assertThat(generator.getPasswordLength(), is(expected));
+        assertThat(generator.generate(100), is(expected));
     }
 
     @Test
-    void builderDefaultValues_algorithm() {
+    void generateWithCounter0() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String expected = "455216";
+
+        assertThat(generator.generate(0), is(expected));
+    }
+
+    @Test
+    void generateWithNegativeCounter_throwsIllegalArgumentException() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(-1));
+    }
+
+    @Test
+    void verifyCurrentCode_true() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate(1);
+
+        assertThat(generator.verify(code, 1), is(true));
+    }
+
+    @Test
+    void verifyOlderCodeWithDelayWindowIs0_false() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate(1);
+
+        assertThat(generator.verify(code, 2), is(false));
+    }
+
+    @Test
+    void verifyOlderCodeWithDelayWindowIs1_true() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        String code = generator.generate(1);
+
+        assertThat(generator.verify(code, 2, 1), is(true));
+    }
+
+    @Test
+    void withDefaultValues_algorithm() {
         HOTPGenerator generator = HOTPGenerator.withDefaultValues(secret.getBytes());
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
@@ -76,7 +105,7 @@ class HOTPGeneratorTest {
     }
 
     @Test
-    void builderDefaultValues_passwordLength() {
+    void withDefaultValues_passwordLength() {
         HOTPGenerator generator = HOTPGenerator.withDefaultValues(secret.getBytes());
         int expected = 6;
 
@@ -164,5 +193,72 @@ class HOTPGeneratorTest {
         URI uri = new URI("otpauth://hotp/issuer?counter=10");
 
         assertThrows(IllegalArgumentException.class, () -> HOTPGenerator.fromURI(uri));
+    }
+
+    @Nested
+    class BuilderTest {
+        @Test
+        void builderWithEmptySecret_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator.Builder(new byte[]{}).build());
+        }
+
+        @Test
+        void builderWithPasswordLengthIs5_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build();
+            });
+        }
+
+        @Test
+        void builderWithPasswordLengthIs9_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(9).build();
+            });
+        }
+
+        @Test
+        void builderWithPasswordLengthIs6() {
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(6).build();
+            int expected = 6;
+
+            assertThat(generator.getPasswordLength(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA1() {
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA1).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA1;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA256() {
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA256).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA256;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithAlgorithmSHA512() {
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA512).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA512;
+
+            assertThat(generator.getAlgorithm(), Matchers.is(expected));
+        }
+
+        @Test
+        void builderWithInvalidPasswordLength_throwsIllegalArgumentException() {
+            assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build());
+        }
+
+        @Test
+        void builderWithoutAlgorithm_defaultAlgorithm() {
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+            HMACAlgorithm expected = HMACAlgorithm.SHA1;
+
+            assertThat(generator.getAlgorithm(), is(expected));
+        }
     }
 }

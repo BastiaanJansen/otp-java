@@ -14,7 +14,7 @@ public class ExampleApp {
                 .build();
 
         try {
-            String code = totp.generate();
+            String code = totp.now();
             System.out.println("Generated code: " + code);
 
             // To verify a codes
