@@ -106,7 +106,7 @@ class TOTPGeneratorTest {
 
     @Test
     void builderDefaultValues_period() {
-        TOTPGenerator generator = TOTPGenerator.Builder.withDefaultValues(secret.getBytes());
+        TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         Duration expected = Duration.ofSeconds(30);
 
         assertThat(generator.getPeriod(), is(expected));
@@ -114,7 +114,7 @@ class TOTPGeneratorTest {
 
     @Test
     void builderDefaultValues_algorithm() {
-        TOTPGenerator generator = TOTPGenerator.Builder.withDefaultValues(secret.getBytes());
+        TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -122,7 +122,7 @@ class TOTPGeneratorTest {
 
     @Test
     void builderDefaultValues_passwordLength() {
-        TOTPGenerator generator = TOTPGenerator.Builder.withDefaultValues(secret.getBytes());
+        TOTPGenerator generator = TOTPGenerator.withDefaultValues(secret.getBytes());
         int expected = 6;
 
         assertThat(generator.getPasswordLength(), is(expected));
@@ -141,9 +141,8 @@ class TOTPGeneratorTest {
     void verifyCurrentCode_true() {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
         String code = generator.generate();
-        boolean expected = true;
 
-        assertThat(generator.verify(code), is(expected));
+        assertThat(generator.verify(code), is(true));
     }
 
     @Test
@@ -230,7 +229,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void fromURIWithDigits() throws URISyntaxException {
+    void fromURIWithPasswordLength() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=6&secret=" + secret);
 
         TOTPGenerator generator = TOTPGenerator.fromURI(uri);
@@ -247,21 +246,21 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void fromURIWithDigitsIs5_throwsIllegalArgumentException() throws URISyntaxException {
+    void fromURIWithPasswordLengthIs5_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=5&secret=" + secret);
 
         assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.fromURI(uri));
     }
 
     @Test
-    void fromURIWithDigitsIs9_throwsIllegalArgumentException() throws URISyntaxException {
+    void fromURIWithPasswordLengthIs9_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=9&secret=" + secret);
 
         assertThrows(IllegalArgumentException.class, () -> TOTPGenerator.fromURI(uri));
     }
 
     @Test
-    void fromURIWithDigitsIs6_doesNotThrow() throws URISyntaxException {
+    void fromURIWithPasswordLengthIs6_doesNotThrow() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=6&secret=" + secret);
 
         assertDoesNotThrow(() -> {
@@ -270,7 +269,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void fromURIWithDigitsIs8_doesNotThrow() throws URISyntaxException {
+    void fromURIWithPasswordLengthIs8_doesNotThrow() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=8&secret=" + secret);
 
         assertDoesNotThrow(() -> {
@@ -279,7 +278,7 @@ class TOTPGeneratorTest {
     }
 
     @Test
-    void fromURIWithDigitsIs7_doesNotThrow() throws URISyntaxException {
+    void fromURIWithPasswordLengthIs7_doesNotThrow() throws URISyntaxException {
         URI uri = new URI("otpauth://totp/issuer:account?digits=7&secret=" + secret);
 
         assertDoesNotThrow(() -> {

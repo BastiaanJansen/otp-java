@@ -31,27 +31,54 @@ public final class TOTPGenerator extends OTPGenerator {
      */
     private final Duration period;
 
-    private TOTPGenerator(final TOTPGenerator.Builder builder) {
+    private TOTPGenerator(final Builder builder) {
         super(builder);
         this.period = builder.period;
     }
 
-    private TOTPGenerator(final URI uri) throws URISyntaxException {
-        super(uri);
+    /**
+     * Build a TOTPGenerator from an OTPAuth URI
+     *
+     * @param uri OTPAuth URI
+     * @return TOTPGenerator
+     * @throws URISyntaxException when URI cannot be parsed
+     */
+    public static TOTPGenerator fromURI(URI uri) throws URISyntaxException {
         Map<String, String> query = URIHelper.queryItems(uri);
 
-        try {
-            this.period = Optional.ofNullable(query.get(URIHelper.PERIOD))
-                    .map(Long::parseLong).map(Duration::ofSeconds)
-                    .orElse(DEFAULT_PERIOD);
+        byte[] secret = Optional.ofNullable(query.get(URIHelper.SECRET))
+                .map(String::getBytes)
+                .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
+        Builder builder = new Builder(secret);
+
+        try {
+            Optional.ofNullable(query.get(URIHelper.PERIOD))
+                    .map(Long::parseLong)
+                    .map(Duration::ofSeconds)
+                    .ifPresent(builder::withPeriod);
+            Optional.ofNullable(query.get(URIHelper.DIGITS))
+                    .map(Integer::valueOf)
+                    .ifPresent(builder::withPasswordLength);
+            Optional.ofNullable(query.get(URIHelper.ALGORITHM))
+                    .map(String::toUpperCase)
+                    .map(HMACAlgorithm::valueOf)
+                    .ifPresent(builder::withAlgorithm);
         } catch (Exception e) {
             throw new URISyntaxException(uri.toString(), "URI could not be parsed");
         }
+
+        return builder.build();
     }
 
-    public static TOTPGenerator fromURI(URI uri) throws URISyntaxException {
-        return new TOTPGenerator(uri);
+    /**
+     * Create a TOTPGenerator with default values
+     *
+     * @param secret used to generate hash
+     * @return a TOTPGenerator with default values
+     */
+    public static TOTPGenerator withDefaultValues(final byte[] secret) {
+        return new TOTPGenerator.Builder(secret).build();
     }
 
     /**
@@ -192,7 +219,7 @@ public final class TOTPGenerator extends OTPGenerator {
      * @author Bastiaan Jansen
      * @see TOTPGenerator
      */
-    public static class Builder extends OTPGenerator.Builder<Builder, TOTPGenerator>  {
+    public static class Builder extends OTPGenerator.Builder<TOTPGenerator, Builder>  {
         /**
          * Time interval between new codes
          */
@@ -233,27 +260,6 @@ public final class TOTPGenerator extends OTPGenerator {
         @Override
         protected Builder getBuilder() {
             return this;
-        }
-
-        /**
-         * Build a TOTPGenerator from an OTPAuth URI
-         *
-         * @param uri OTPAuth URI
-         * @return TOTPGenerator
-         * @throws URISyntaxException when URI cannot be parsed
-         */
-//        public static TOTPGenerator fromURI(final URI uri) throws URISyntaxException {
-//            return new TOTPGenerator.Builder(uri).build();
-//        }
-
-        /**
-         * Create a TOTPGenerator with default values
-         *
-         * @param secret used to generate hash
-         * @return a TOTPGenerator with default values
-         */
-        public static TOTPGenerator withDefaultValues(final byte[] secret) {
-            return new TOTPGenerator.Builder(secret).build();
         }
     }
 }

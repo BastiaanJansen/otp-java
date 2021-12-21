@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
@@ -69,26 +70,6 @@ class OTPGenerator {
 
     protected OTPGenerator(final Builder<?, ?> builder) {
         this(builder.passwordLength, builder.algorithm, builder.secret);
-    }
-
-    protected OTPGenerator(final URI uri) throws URISyntaxException {
-        Map<String, String> query = URIHelper.queryItems(uri);
-
-        this.secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                .map(String::getBytes)
-                .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
-
-        try {
-            this.passwordLength = Optional.ofNullable(query.get(URIHelper.DIGITS))
-                    .map(Integer::valueOf)
-                    .orElse(DEFAULT_PASSWORD_LENGTH);
-            this.algorithm = Optional.ofNullable(query.get(URIHelper.ALGORITHM))
-                    .map(String::toUpperCase)
-                    .map(HMACAlgorithm::valueOf)
-                    .orElse(DEFAULT_HMAC_ALGORITHM);
-        } catch (Exception e) {
-            throw new URISyntaxException(uri.toString(), "URI could not be parsed");
-        }
     }
 
     public int getPasswordLength() {
@@ -278,7 +259,7 @@ class OTPGenerator {
      * @author Bastiaan Jansen
      * @param <B> concrete builder class
      */
-    protected abstract static class Builder<B, G> {
+    protected abstract static class Builder<T extends OTPGenerator, B extends Builder<T, B>> {
         /**
          * Number of digits for generated code in range 6...8, defaults to 6
          */
@@ -298,26 +279,6 @@ class OTPGenerator {
             this.secret = secret;
             this.passwordLength = DEFAULT_PASSWORD_LENGTH;
             this.algorithm = DEFAULT_HMAC_ALGORITHM;
-        }
-
-        public Builder(final URI uri) throws URISyntaxException {
-            Map<String, String> query = URIHelper.queryItems(uri);
-
-            this.secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                    .map(String::getBytes)
-                    .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
-
-            try {
-                this.passwordLength = Optional.ofNullable(query.get(URIHelper.DIGITS))
-                        .map(Integer::valueOf)
-                        .orElse(DEFAULT_PASSWORD_LENGTH);
-                this.algorithm = Optional.ofNullable(query.get(URIHelper.ALGORITHM))
-                        .map(String::toUpperCase)
-                        .map(HMACAlgorithm::valueOf)
-                        .orElse(DEFAULT_HMAC_ALGORITHM);
-            } catch (Exception e) {
-                throw new URISyntaxException(uri.toString(), "URI could not be parsed");
-            }
         }
 
         /**
@@ -344,6 +305,6 @@ class OTPGenerator {
 
         protected abstract B getBuilder();
 
-        public abstract G build();
+        public abstract T build();
     }
 }

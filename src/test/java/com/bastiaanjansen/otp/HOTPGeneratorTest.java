@@ -69,7 +69,7 @@ class HOTPGeneratorTest {
 
     @Test
     void builderDefaultValues_algorithm() {
-        HOTPGenerator generator = HOTPGenerator.Builder.withDefaultValues(secret.getBytes());
+        HOTPGenerator generator = HOTPGenerator.withDefaultValues(secret.getBytes());
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -77,7 +77,7 @@ class HOTPGeneratorTest {
 
     @Test
     void builderDefaultValues_passwordLength() {
-        HOTPGenerator generator = HOTPGenerator.Builder.withDefaultValues(secret.getBytes());
+        HOTPGenerator generator = HOTPGenerator.withDefaultValues(secret.getBytes());
         int expected = 6;
 
         assertThat(generator.getPasswordLength(), is(expected));
@@ -121,7 +121,7 @@ class HOTPGeneratorTest {
     void fromURIWithAlgorithmUppercase() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10&algorithm=SHA256&secret=" + secret);
 
-        HOTPGenerator generator = HOTPGenerator.Builder.fromURI(uri);
+        HOTPGenerator generator = HOTPGenerator.fromURI(uri);
         HMACAlgorithm expected = HMACAlgorithm.SHA256;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -130,7 +130,7 @@ class HOTPGeneratorTest {
     @Test
     void fromURIWithAlgorithmLowercase() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10&algorithm=sha256&secret=" + secret);
-        HOTPGenerator generator = HOTPGenerator.Builder.fromURI(uri);
+        HOTPGenerator generator = HOTPGenerator.fromURI(uri);
         HMACAlgorithm expected = HMACAlgorithm.SHA256;
 
         assertThat(generator.getAlgorithm(), is(expected));
@@ -139,7 +139,7 @@ class HOTPGeneratorTest {
     @Test
     void fromURIWithDigitsIs7() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?digits=7&counter=10&secret=" + secret);
-        HOTPGenerator generator = HOTPGenerator.Builder.fromURI(uri);
+        HOTPGenerator generator = HOTPGenerator.fromURI(uri);
         int expected = 7;
 
         assertThat(generator.getPasswordLength(), is(expected));
@@ -149,20 +149,20 @@ class HOTPGeneratorTest {
     void fromURIWithInvalidDigits_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?digits=invalid&counter=10&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> HOTPGenerator.Builder.fromURI(uri));
+        assertThrows(URISyntaxException.class, () -> HOTPGenerator.fromURI(uri));
     }
 
     @Test
     void fromURIWithInvalidAlgorithm_throwsURISyntaxException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10&algorithm=invalid&secret=" + secret);
 
-        assertThrows(URISyntaxException.class, () -> HOTPGenerator.Builder.fromURI(uri));
+        assertThrows(URISyntaxException.class, () -> HOTPGenerator.fromURI(uri));
     }
 
     @Test
     void fromURIWithInvalidSecret_throwsIllegalArgumentException() throws URISyntaxException {
         URI uri = new URI("otpauth://hotp/issuer?counter=10");
 
-        assertThrows(IllegalArgumentException.class, () -> HOTPGenerator.Builder.fromURI(uri));
+        assertThrows(IllegalArgumentException.class, () -> HOTPGenerator.fromURI(uri));
     }
 }

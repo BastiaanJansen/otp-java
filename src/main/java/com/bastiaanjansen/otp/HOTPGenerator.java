@@ -4,8 +4,10 @@ import com.bastiaanjansen.otp.helpers.URIHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Generates counter-based one-time passwords
@@ -18,6 +20,47 @@ public final class HOTPGenerator extends OTPGenerator {
 
     private HOTPGenerator(final HOTPGenerator.Builder builder) {
         super(builder);
+    }
+
+    /**
+     * Build a TOTPGenerator from an OTPAuth URI
+     *
+     * @param uri OTPAuth URI
+     * @return HOTPGenerator
+     * @throws URISyntaxException when URI cannot be parsed
+     */
+    public static HOTPGenerator fromURI(final URI uri) throws URISyntaxException {
+        Map<String, String> query = URIHelper.queryItems(uri);
+
+        byte[] secret = Optional.ofNullable(query.get(URIHelper.SECRET))
+                .map(String::getBytes)
+                .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
+
+        Builder builder = new Builder(secret);
+
+        try {
+            Optional.ofNullable(query.get(URIHelper.DIGITS))
+                    .map(Integer::valueOf)
+                    .ifPresent(builder::withPasswordLength);
+            Optional.ofNullable(query.get(URIHelper.ALGORITHM))
+                    .map(String::toUpperCase)
+                    .map(HMACAlgorithm::valueOf)
+                    .ifPresent(builder::withAlgorithm);
+        } catch (Exception e) {
+            throw new URISyntaxException(uri.toString(), "URI could not be parsed");
+        }
+
+        return builder.build();
+    }
+
+    /**
+     * Create a HOTPGenerator with default values
+     *
+     * @param secret used to generate hash
+     * @return a HOTPGenerator with default values
+     */
+    public static HOTPGenerator withDefaultValues(final byte[] secret) {
+        return new HOTPGenerator.Builder(secret).build();
     }
 
     /**
@@ -62,13 +105,9 @@ public final class HOTPGenerator extends OTPGenerator {
      * @author Bastiaan Jansen
      * @see HOTPGenerator
      */
-    public static class Builder extends OTPGenerator.Builder<Builder, HOTPGenerator> {
+    public static class Builder extends OTPGenerator.Builder<HOTPGenerator, Builder> {
         public Builder(final byte[] secret) {
             super(secret);
-        }
-
-        private Builder(final URI uri) throws URISyntaxException {
-            super(uri);
         }
 
         @Override
@@ -84,27 +123,6 @@ public final class HOTPGenerator extends OTPGenerator {
         @Override
         public HOTPGenerator build() {
             return new HOTPGenerator(this);
-        }
-
-        /**
-         * Build a TOTPGenerator from an OTPAuth URI
-         *
-         * @param uri OTPAuth URI
-         * @return HOTPGenerator
-         * @throws URISyntaxException when URI cannot be parsed
-         */
-        public static HOTPGenerator fromURI(final URI uri) throws URISyntaxException {
-            return new HOTPGenerator.Builder(uri).build();
-        }
-
-        /**
-         * Create a HOTPGenerator with default values
-         *
-         * @param secret used to generate hash
-         * @return a HOTPGenerator with default values
-         */
-        public static HOTPGenerator withDefaultValues(final byte[] secret) {
-            return new HOTPGenerator.Builder(secret).build();
         }
     }
 }

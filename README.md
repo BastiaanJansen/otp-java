@@ -30,23 +30,23 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.2.4</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:1.2.4'
+implementation 'com.github.bastiaanjansen:otp-java:1.3.0'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.2.4"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.3.0"
 ```
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.2.4" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.3.0" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
@@ -83,7 +83,7 @@ byte[] secret = SecretGenerator.generate(512);
 It is also possible to create a HOTPGenerator instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
 ```java
 URI uri = new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
-HOTPGenerator hotp = HOTPGenerator.Builder.fromURI(uri);
+HOTPGenerator hotp = HOTPGenerator.fromURI(uri);
 ```
 
 Get information about the generator:
@@ -131,7 +131,7 @@ TOTPGenerator totp = builder.build();
 Or create a `TOTPGenerator` instance from an OTPAuth URI:
 ```java
 URI uri = new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
-TOTPGenerator totp = TOTPGenerator.Builder.fromURI(uri);
+TOTPGenerator totp = TOTPGenerator.fromURI(uri);
 ```
 
 Get information about the generator:
