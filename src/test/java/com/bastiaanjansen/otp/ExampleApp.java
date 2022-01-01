@@ -7,14 +7,14 @@ public class ExampleApp {
         byte[] secret = SecretGenerator.generate();
 
         // Create a TOTPGenerate instance
-        TOTPGenerator.Builder builder = new TOTPGenerator.Builder(secret);
-        TOTPGenerator totp = builder
+        TOTP.Builder builder = new TOTP.Builder(secret);
+        TOTP totp = builder
                 .withPasswordLength(6)
                 .withAlgorithm(HMACAlgorithm.SHA1)
                 .build();
 
         try {
-            String code = totp.generate();
+            String code = totp.now();
             System.out.println("Generated code: " + code);
 
             // To verify a codes

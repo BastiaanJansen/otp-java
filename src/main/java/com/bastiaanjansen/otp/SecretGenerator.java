@@ -28,7 +28,7 @@ public class SecretGenerator {
     /**
      * Generate an OTP base32 secret
      *
-     * @param bits length, this should match the length of the HMAC algorithm type:
+     * @param bits length, this should be greater than or equal to the length of the HMAC algorithm type:
      *             SHA1: 160 bits
      *             SHA256: 256 bits
      *             SHA512: 512 bits
@@ -36,9 +36,9 @@ public class SecretGenerator {
      */
     public static byte[] generate(final int bits) {
         if (bits <= 0)
-            throw new IllegalArgumentException("Bits must be higher than 0");
+            throw new IllegalArgumentException("Bits must be greater than or equal to 0");
 
-        byte[] bytes = new byte[bits / 8];
+        byte[] bytes = new byte[bits / Byte.SIZE];
         SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
 
