@@ -15,7 +15,7 @@ import java.util.Optional;
  * @see OTP
  */
 public final class HOTP extends OTP implements HOTPGenerator, HOTPVerifier {
-    private final static String OTP_TYPE = "hotp";
+    private static final String OTP_TYPE = "hotp";
 
     private HOTP(final Builder builder) {
         super(builder);
@@ -68,6 +68,7 @@ public final class HOTP extends OTP implements HOTPGenerator, HOTPVerifier {
      * @return generated HOTP code
      * @throws IllegalArgumentException when code could not be generated
      */
+    @Override
     public String generate(long counter) throws IllegalArgumentException {
         return super.generate(counter);
     }

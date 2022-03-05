@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @see OTP
  */
 public final class TOTP extends OTP implements TOTPGenerator, TOTPVerifier {
-    private final static String OTP_TYPE = "totp";
+    private static final String OTP_TYPE = "totp";
 
     /**
      * Default time interval for a time-based one-time password

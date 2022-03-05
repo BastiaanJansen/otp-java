@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class URIHelper {
 
+    private URIHelper() {}
+
     public static final String DIGITS = "digits";
     public static final String SECRET = "secret";
     public static final String ALGORITHM = "algorithm";

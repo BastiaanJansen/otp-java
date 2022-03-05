@@ -20,7 +20,7 @@ import org.apache.commons.codec.binary.Base32;
  * @author Bastiaan Jansen
  */
 class OTP {
-    private final static String URL_SCHEME = "otpauth";
+    private static final String URL_SCHEME = "otpauth";
 
     /**
      * Default value for password length
@@ -262,7 +262,7 @@ class OTP {
          */
         private final byte[] secret;
 
-        public Builder(final byte[] secret) {
+        protected Builder(final byte[] secret) {
             this.secret = secret;
             this.passwordLength = DEFAULT_PASSWORD_LENGTH;
             this.algorithm = DEFAULT_HMAC_ALGORITHM;
