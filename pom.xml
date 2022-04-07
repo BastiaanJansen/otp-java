@@ -10,7 +10,7 @@
 
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
 
     <name>OTP-Java</name>
     <description>A small and easy-to-use one-time password generator for Java according to RFC 4226 (HOTP) and RFC 6238 (TOTP).</description>
@@ -49,19 +49,19 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.1</version>
+            <version>3.10.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.0</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.11</version>
+            <version>1.15</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

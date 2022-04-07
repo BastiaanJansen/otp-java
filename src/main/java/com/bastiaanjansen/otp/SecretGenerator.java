@@ -11,10 +11,12 @@ import java.security.SecureRandom;
  */
 public class SecretGenerator {
 
+    private SecretGenerator() {}
+
     /**
      * Default amount of bits for secret generation
      */
-    public final static int DEFAULT_BITS = 160;
+    public static final int DEFAULT_BITS = 160;
 
     /**
      * Generate an OTP base32 secret with default amount of bits
