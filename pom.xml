@@ -28,7 +28,7 @@
 
     <licenses>
         <license>
-            <name>MIT Licence</name>
+            <name>MIT License</name>
             <url>https://github.com/BastiaanJansen/otp-java/blob/main/LICENSE</url>
             <distribution>repo</distribution>
         </license>

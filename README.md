@@ -189,6 +189,6 @@ Often, services provide "backup codes" or "recovery codes" which can be used whe
 Because recovery code generation is not part of the specifications of OTP, it is not possible to generate recovery codes with this library and should be implemented seperately.
 
 ## Licence
-OTP-Java is available under the MIT licence. See the LICENCE for more info.
+OTP-Java is available under the MIT License. See the LICENCE for more info.
 
 [![Stargazers repo roster for @BastiaanJansen/otp-java](https://reporoster.com/stars/BastiaanJansen/otp-java)](https://github.com/BastiaanJansen/otp-java/stargazers)
