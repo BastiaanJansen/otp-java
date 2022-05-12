@@ -18,6 +18,8 @@ public class SecretGenerator {
      */
     public static final int DEFAULT_BITS = 160;
 
+    private static final SecureRandom random = new SecureRandom();
+
     /**
      * Generate an OTP base32 secret with default amount of bits
      *
@@ -41,7 +43,6 @@ public class SecretGenerator {
             throw new IllegalArgumentException("Bits must be greater than or equal to 0");
 
         byte[] bytes = new byte[bits / Byte.SIZE];
-        SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
 
         Base32 encoder = new Base32();
