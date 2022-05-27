@@ -193,7 +193,7 @@ class TOTPTest {
         TOTP generator = new TOTP.Builder(secret.getBytes()).build();
 
         URI uri = generator.getURI("issuer");
-        assertThat(uri.toString(), is("otpauth://totp/issuer?period=30&digits=6&secret=" + secret + "&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://totp/issuer?period=30&digits=6&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
     }
 
     @Test
@@ -211,7 +211,7 @@ class TOTPTest {
 
 
         URI uri = generator.getURI("issuer", "account");
-        assertThat(uri.toString(), is("otpauth://totp/issuer:account?period=30&digits=6&secret=" + secret + "&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://totp/issuer:account?period=30&digits=6&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
     }
 
     @Test

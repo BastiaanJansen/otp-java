@@ -21,6 +21,7 @@ public class URIHelper {
     public static final String ALGORITHM = "algorithm";
     public static final String PERIOD = "period";
     public static final String COUNTER = "counter";
+    public static final String ISSUER = "issuer";
 
     /**
      * Get a map of query items from URI

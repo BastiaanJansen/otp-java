@@ -125,7 +125,7 @@ class HOTPTest {
         HOTP generator = new HOTP.Builder(secret.getBytes()).build();
         URI uri = generator.getURI(10, "issuer");
 
-        assertThat( uri.toString(), is("otpauth://hotp/issuer?digits=6&counter=10&secret=" + secret + "&algorithm=SHA1"));
+        assertThat( uri.toString(), is("otpauth://hotp/issuer?digits=6&counter=10&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
     }
 
     @Test
@@ -142,7 +142,7 @@ class HOTPTest {
         HOTP generator = new HOTP.Builder(secret.getBytes()).build();
 
         URI uri = generator.getURI(100, "issuer", "account");
-        assertThat(uri.toString(), is("otpauth://hotp/issuer:account?digits=6&counter=100&secret=" + secret + "&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://hotp/issuer:account?digits=6&counter=100&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
     }
 
     @Test
