@@ -140,6 +140,7 @@ class OTP {
         query.put(URIHelper.DIGITS, String.valueOf(passwordLength));
         query.put(URIHelper.ALGORITHM, algorithm.name());
         query.put(URIHelper.SECRET, new String(secret, StandardCharsets.UTF_8));
+        query.put(URIHelper.ISSUER, issuer);
 
         String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
 
