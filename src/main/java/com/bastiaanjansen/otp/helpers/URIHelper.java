@@ -14,15 +14,15 @@ import java.util.Map;
  * @author Bastiaan Jansen
  */
 public class URIHelper {
-
-    private URIHelper() {}
-
+    
     public static final String DIGITS = "digits";
     public static final String SECRET = "secret";
     public static final String ALGORITHM = "algorithm";
     public static final String PERIOD = "period";
     public static final String COUNTER = "counter";
     public static final String ISSUER = "issuer";
+
+    private URIHelper() {}
 
     /**
      * Get a map of query items from URI
@@ -67,7 +67,7 @@ public class URIHelper {
             for (int i = 0; i < queryKeys.length; i++) {
                 String sign = i == 0 ? "?" : "&";
                 String key = queryKeys[i];
-                    uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), "UTF-8")));
+                uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), "UTF-8")));
             }
         } catch (UnsupportedEncodingException e) {
             // Highly unlikely
