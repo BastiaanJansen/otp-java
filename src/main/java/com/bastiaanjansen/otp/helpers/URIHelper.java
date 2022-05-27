@@ -39,8 +39,8 @@ public class URIHelper {
             int index = pair.indexOf("=");
             try {
                 items.put(
-                        URLDecoder.decode(pair.substring(0, index), "UTF-8"),
-                        URLDecoder.decode(pair.substring(index + 1), "UTF-8")
+                        URLDecoder.decode(pair.substring(0, index), StandardCharsets.UTF_8.toString()),
+                        URLDecoder.decode(pair.substring(index + 1), StandardCharsets.UTF_8.toString())
                 );
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalStateException("Encoding should be supported");
@@ -67,7 +67,7 @@ public class URIHelper {
             for (int i = 0; i < queryKeys.length; i++) {
                 String sign = i == 0 ? "?" : "&";
                 String key = queryKeys[i];
-                uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), "UTF-8")));
+                uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), StandardCharsets.UTF_8.toString())));
             }
         } catch (UnsupportedEncodingException e) {
             // Highly unlikely
