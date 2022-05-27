@@ -197,6 +197,14 @@ class TOTPTest {
     }
 
     @Test
+    void getURIWithIssuerWithUrlUnsafeCharacters() throws URISyntaxException {
+        TOTP generator = new TOTP.Builder(secret.getBytes()).build();
+
+        URI uri = generator.getURI("mac&cheese");
+        assertThat(uri.toString(), is("otpauth://totp/mac&cheese?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+    }
+
+    @Test
     void getURIWithIssuerAndAccount_doesNotThrow() {
         TOTP generator = new TOTP.Builder(secret.getBytes()).build();
 
@@ -212,6 +220,15 @@ class TOTPTest {
 
         URI uri = generator.getURI("issuer", "account");
         assertThat(uri.toString(), is("otpauth://totp/issuer:account?period=30&digits=6&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
+    }
+
+    @Test
+    void getURIWithIssuerAndAccountWithUrlUnsafeCharacters() throws URISyntaxException {
+        TOTP generator = new TOTP.Builder(secret.getBytes()).build();
+
+
+        URI uri = generator.getURI("mac&cheese", "ac@cou.nt");
+        assertThat(uri.toString(), is("otpauth://totp/mac&cheese:ac@cou.nt?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
     @Test

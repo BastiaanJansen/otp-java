@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,10 +63,15 @@ public class URIHelper {
         StringBuilder uriString = new StringBuilder(String.format("%s://%s/%s", scheme, host, path));
         String[] queryKeys = query.keySet().toArray(new String[0]);
 
-        for (int i = 0; i < queryKeys.length; i++) {
-            String sign = i == 0 ? "?" : "&";
-            String key = queryKeys[i];
-            uriString.append(String.format("%s%s=%s", sign, key, query.get(key)));
+        try {
+            for (int i = 0; i < queryKeys.length; i++) {
+                String sign = i == 0 ? "?" : "&";
+                String key = queryKeys[i];
+                    uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), "UTF-8")));
+            }
+        } catch (UnsupportedEncodingException e) {
+            // Highly unlikely
+            throw new IllegalArgumentException(e);
         }
 
         return new URI(uriString.toString());

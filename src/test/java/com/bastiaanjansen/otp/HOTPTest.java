@@ -129,6 +129,15 @@ class HOTPTest {
     }
 
     @Test
+    void getURIWithIssuerWithUrlUnsafeCharacters() throws URISyntaxException {
+        HOTP generator = new HOTP.Builder(secret.getBytes()).build();
+        URI uri = generator.getURI(10, "mac&cheese");
+
+        assertThat( uri.toString(), is("otpauth://hotp/mac&cheese?digits=6&counter=10&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+    }
+
+
+    @Test
     void getURIWithIssuerAndAccount_doesNotThrow() {
         HOTP generator = new HOTP.Builder(secret.getBytes()).build();
 
@@ -143,6 +152,14 @@ class HOTPTest {
 
         URI uri = generator.getURI(100, "issuer", "account");
         assertThat(uri.toString(), is("otpauth://hotp/issuer:account?digits=6&counter=100&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
+    }
+
+    @Test
+    void getURIWithIssuerAndAccountWithUrlUnsafeCharacters() throws URISyntaxException {
+        HOTP generator = new HOTP.Builder(secret.getBytes()).build();
+
+        URI uri = generator.getURI(100, "mac&cheese", "ac@cou.nt");
+        assertThat(uri.toString(), is("otpauth://hotp/mac&cheese:ac@cou.nt?digits=6&counter=100&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
     @Test

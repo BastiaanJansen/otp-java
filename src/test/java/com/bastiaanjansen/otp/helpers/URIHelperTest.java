@@ -58,4 +58,15 @@ class URIHelperTest {
 
         assertThat(uri.toString(), is(expected));
     }
+
+    @Test
+    void createURIWithUrlUnsafeCharacters() throws URISyntaxException {
+        Map<String, String> query = new HashMap<>();
+        query.put("test", "value 1");
+        query.put("test2", "value?&2");
+        URI uri = URIHelper.createURI("scheme", "host", "path", query);
+        String expected = "scheme://host/path?test2=value%3F%262&test=value+1";
+
+        assertThat(uri.toString(), is(expected));
+    }
 }
