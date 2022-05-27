@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,14 +14,15 @@ import java.util.Map;
  * @author Bastiaan Jansen
  */
 public class URIHelper {
-
-    private URIHelper() {}
-
+    
     public static final String DIGITS = "digits";
     public static final String SECRET = "secret";
     public static final String ALGORITHM = "algorithm";
     public static final String PERIOD = "period";
     public static final String COUNTER = "counter";
+    public static final String ISSUER = "issuer";
+
+    private URIHelper() {}
 
     /**
      * Get a map of query items from URI
@@ -37,8 +39,8 @@ public class URIHelper {
             int index = pair.indexOf("=");
             try {
                 items.put(
-                        URLDecoder.decode(pair.substring(0, index), "UTF-8"),
-                        URLDecoder.decode(pair.substring(index + 1), "UTF-8")
+                        URLDecoder.decode(pair.substring(0, index), StandardCharsets.UTF_8.toString()),
+                        URLDecoder.decode(pair.substring(index + 1), StandardCharsets.UTF_8.toString())
                 );
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalStateException("Encoding should be supported");
@@ -61,10 +63,15 @@ public class URIHelper {
         StringBuilder uriString = new StringBuilder(String.format("%s://%s/%s", scheme, host, path));
         String[] queryKeys = query.keySet().toArray(new String[0]);
 
-        for (int i = 0; i < queryKeys.length; i++) {
-            String sign = i == 0 ? "?" : "&";
-            String key = queryKeys[i];
-            uriString.append(String.format("%s%s=%s", sign, key, query.get(key)));
+        try {
+            for (int i = 0; i < queryKeys.length; i++) {
+                String sign = i == 0 ? "?" : "&";
+                String key = queryKeys[i];
+                uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), StandardCharsets.UTF_8.toString())));
+            }
+        } catch (UnsupportedEncodingException e) {
+            // Highly unlikely
+            throw new IllegalArgumentException(e);
         }
 
         return new URI(uriString.toString());
