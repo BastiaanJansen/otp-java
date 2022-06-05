@@ -184,6 +184,16 @@ public final class TOTP extends OTP implements TOTPGenerator, TOTPVerifier {
     }
 
     /**
+     * Calculates time until next time window will be reached and a new totp should be generated
+     *
+     * @return a duration object with duration until next time window
+     */
+    public Duration durationUntilNextTimeWindow() {
+        long timeInterval = period.toMillis();
+        return Duration.ofMillis(timeInterval - System.currentTimeMillis() % timeInterval);
+    }
+
+    /**
      * Calculate counter for a specific time in seconds past 1970 and time interval
      *
      * @param secondsPast1970 seconds past 1970

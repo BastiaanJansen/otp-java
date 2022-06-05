@@ -3,6 +3,8 @@ package com.bastiaanjansen.otp;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -292,27 +294,14 @@ class TOTPTest {
         assertThrows(IllegalArgumentException.class, () -> TOTP.fromURI(uri));
     }
 
-    @Test
-    void fromURIWithPasswordLengthIs6_doesNotThrow() throws URISyntaxException {
-        URI uri = new URI("otpauth://totp/issuer:account?digits=6&secret=" + secret);
-
-        assertDoesNotThrow(() -> {
-            TOTP.fromURI(uri);
-        });
-    }
-
-    @Test
-    void fromURIWithPasswordLengthIs8_doesNotThrow() throws URISyntaxException {
-        URI uri = new URI("otpauth://totp/issuer:account?digits=8&secret=" + secret);
-
-        assertDoesNotThrow(() -> {
-            TOTP.fromURI(uri);
-        });
-    }
-
-    @Test
-    void fromURIWithPasswordLengthIs7_doesNotThrow() throws URISyntaxException {
-        URI uri = new URI("otpauth://totp/issuer:account?digits=7&secret=" + secret);
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "otpauth://totp/issuer:account?digits=6&secret=",
+            "otpauth://totp/issuer:account?digits=8&secret=",
+            "otpauth://totp/issuer:account?digits=7&secret="
+    })
+    void fromURI_doesNotThrow(String url) throws URISyntaxException {
+        URI uri = new URI(url + secret);
 
         assertDoesNotThrow(() -> {
             TOTP.fromURI(uri);
