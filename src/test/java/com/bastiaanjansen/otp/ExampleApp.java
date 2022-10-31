@@ -1,5 +1,7 @@
 package com.bastiaanjansen.otp;
 
+import java.time.Duration;
+
 public class ExampleApp {
     public static void main(String[] args) {
 
@@ -11,6 +13,7 @@ public class ExampleApp {
         TOTP totp = builder
                 .withPasswordLength(6)
                 .withAlgorithm(HMACAlgorithm.SHA1)
+                .withPeriod(Duration.ofMinutes(15))
                 .build();
 
         try {
