@@ -12,8 +12,8 @@ A small and easy-to-use one-time password generator for Java implementing [RFC 4
 * [Features](#features)
 * [Installation](#installation)
 * [Usage](#usage)
-    * [HOTP (Counter-based one-time passwords)](#hotp-counter-based-one-time-passwords)
-    * [TOTP (Time-based one-time passwords)](#totpGenerator-time-based-one-time-passwords)
+    * [HOTP (Counter-based one-time passwords)](#counter-based-one-time-passwords)
+    * [TOTP (Time-based one-time passwords)](#time-based-one-time-passwords)
     * [Recovery codes](#recovery-codes)
 
 ## Features
