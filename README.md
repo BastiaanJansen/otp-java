@@ -36,17 +36,17 @@ The following features are supported:
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:1.3.2'
+implementation 'com.github.bastiaanjansen:otp-java:2.0.0'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "1.3.2"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.0.0"
 ```
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="1.3.2" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="2.0.0" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
