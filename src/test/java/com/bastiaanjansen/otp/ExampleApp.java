@@ -24,7 +24,7 @@ public class ExampleApp {
             String code = totpGenerator.now();
             System.out.println("Generated code: " + code);
 
-            // To verify a codes
+            // To verify a code
             totpGenerator.verify(code); // true
         } catch (IllegalStateException e) {
             e.printStackTrace();
