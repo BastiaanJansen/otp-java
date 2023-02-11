@@ -125,7 +125,7 @@ TOTPGenerator totp = new TOTPGenerator.Builder(secret)
 ```
 Or create a `TOTP` instance from an OTPAuth URI:
 ```java
-URI uri = new URI("otpauth://totpGenerator/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
+URI uri = new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
 TOTPGenerator totpGenerator = TOTPGenerator.fromURI(uri);
 ```
 
@@ -174,7 +174,7 @@ To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method
 ```java
 TOTPGenerator totpGenerator = new TOTPGenerator.Builder(secret).build();
 
-URI uri = totpGenerator.getURI("issuer", "account"); // otpauth://totpGenerator/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
+URI uri = totpGenerator.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
 
 ```
 
