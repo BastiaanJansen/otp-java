@@ -54,7 +54,7 @@ Or you can download the source from the [GitHub releases page](https://github.co
 ## Usage
 ### HOTP (Counter-based one-time passwords)
 #### Initialization HOTP instance
-To create a `HOTP` instance, use the `HOTP.Builder` class as follows:
+To create a `HOTP` instance, use the `HOTPGenerator.Builder` class as follows:
 
 ```java
 byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
