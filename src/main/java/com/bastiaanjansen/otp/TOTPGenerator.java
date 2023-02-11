@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public final class TOTPGenerator {
 
     private static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
 
-    private static final Clock DEFAULT_CLOCK = Clock.systemDefaultZone();
+    private static final Clock DEFAULT_CLOCK = Clock.system(ZoneId.systemDefault());
 
     /**
      * Time interval between new codes
