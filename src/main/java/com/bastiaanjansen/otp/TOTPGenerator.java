@@ -77,12 +77,6 @@ public final class TOTPGenerator {
         return builder.build();
     }
 
-    /**
-     * Create a TOTPGenerator with default values
-     *
-     * @param secret used to generate hash
-     * @return a TOTPGenerator with default values
-     */
     public static TOTPGenerator withDefaultValues(final byte[] secret) {
         return new TOTPGenerator.Builder(secret).build();
     }
