@@ -159,6 +159,9 @@ try {
     // Based on specific date
     totpGenerator.at(new Date());
     
+    // Based on specific local date
+    totpGenerator.at(LocalDate.of(2023, 3, 2));
+    
     // Based on seconds past 1970
     totpGenerator.at(9238346823);
     
