@@ -54,7 +54,7 @@ Or you can download the source from the [GitHub releases page](https://github.co
 ## Usage
 ### HOTP (Counter-based one-time passwords)
 #### Initialization HOTP instance
-To create a `HOTP` instance, use the `HOTPGenerator.Builder` class as follows:
+To create a `HOTPGenerator` instance, use the `HOTPGenerator.Builder` class as follows:
 
 ```java
 byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
@@ -80,7 +80,7 @@ byte[] secret = SecretGenerator.generate(512);
 It is also possible to create a HOTP instance based on an OTPAuth URI. When algorithm or digits are not specified, the default values will be used.
 ```java
 URI uri = new URI("otpauth://hotp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&counter=8237");
-HOTP hotp = HOTP.fromURI(uri);
+HOTPGenerator hotp = HOTPGenerator.fromURI(uri);
 ```
 
 Get information about the generator:
@@ -125,7 +125,7 @@ TOTPGenerator totp = new TOTPGenerator.Builder(secret)
 ```
 Or create a `TOTP` instance from an OTPAuth URI:
 ```java
-URI uri = new URI("otpauth://totpGenerator/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
+URI uri = new URI("otpauth://totp/issuer?secret=ABCDEFGHIJKLMNOP&algorithm=SHA1&digits=6&period=30");
 TOTPGenerator totpGenerator = TOTPGenerator.fromURI(uri);
 ```
 
@@ -159,6 +159,9 @@ try {
     // Based on specific date
     totpGenerator.at(new Date());
     
+    // Based on specific local date
+    totpGenerator.at(LocalDate.of(2023, 3, 2));
+    
     // Based on seconds past 1970
     totpGenerator.at(9238346823);
     
@@ -174,7 +177,7 @@ To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method
 ```java
 TOTPGenerator totpGenerator = new TOTPGenerator.Builder(secret).build();
 
-URI uri = totpGenerator.getURI("issuer", "account"); // otpauth://totpGenerator/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
+URI uri = totpGenerator.getURI("issuer", "account"); // otpauth://totp/issuer:account?period=30&digits=6&secret=SECRET&algorithm=SHA1
 
 ```
 
