@@ -32,7 +32,9 @@ class HOTPGeneratorTest {
                 Arguments.of(6, 82764924, HMACAlgorithm.SHA1, "022826"),
 
                 Arguments.of(6, 1, HMACAlgorithm.SHA256, "361406"),
-                Arguments.of(6, 1, HMACAlgorithm.SHA512, "016738")
+                Arguments.of(6, 1, HMACAlgorithm.SHA512, "016738"),
+                Arguments.of(6, 1, HMACAlgorithm.SHA224, "422784"),
+                Arguments.of(6, 1, HMACAlgorithm.SHA384, "466320")
         );
     }
 

@@ -5,10 +5,13 @@ package com.bastiaanjansen.otp;
  * @author Bastiaan Jansen
  */
 public enum HMACAlgorithm {
-    /**
-     * HMAC hashing algorithm options
-     */
-    SHA1("HmacSHA1"), SHA256("HmacSHA256"), SHA512("HmacSHA512");
+
+    @Deprecated
+    SHA1("HmacSHA1"),
+    SHA224("HmacSHA224"),
+    SHA256("HmacSHA256"),
+    SHA384("HmacSHA384"),
+    SHA512("HmacSHA512");
 
     private final String name;
 
