@@ -120,7 +120,7 @@ public final class HOTPGenerator {
         query.put(URIHelper.SECRET, new String(secret, StandardCharsets.UTF_8));
         query.put(URIHelper.ISSUER, issuer);
 
-        String path = account.isEmpty() ? issuer : String.format("%s:%s", issuer, account);
+        String path = account.isEmpty() ? URIHelper.encode(issuer) : String.format("%s:%s", URIHelper.encode(issuer), URIHelper.encode(account));
 
         return URIHelper.createURI(URL_SCHEME, type, path, query);
     }

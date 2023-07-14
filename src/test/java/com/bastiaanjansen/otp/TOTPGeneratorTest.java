@@ -165,7 +165,7 @@ class TOTPGeneratorTest {
         TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
 
         URI uri = generator.getURI("mac&cheese");
-        assertThat(uri.toString(), is("otpauth://totp/mac&cheese?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://totp/mac%26cheese?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
     @Test
@@ -192,7 +192,7 @@ class TOTPGeneratorTest {
 
 
         URI uri = generator.getURI("mac&cheese", "ac@cou.nt");
-        assertThat(uri.toString(), is("otpauth://totp/mac&cheese:ac@cou.nt?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://totp/mac%26cheese:ac%40cou.nt?period=30&digits=6&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
     @Test
