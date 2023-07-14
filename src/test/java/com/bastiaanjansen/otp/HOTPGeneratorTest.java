@@ -107,6 +107,22 @@ class HOTPGeneratorTest {
     }
 
     @Test
+    void getURIWithIssuerWithSpace_doesNotThrow() {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+
+        assertDoesNotThrow(() -> generator.getURI(10, "issuer with space"));
+    }
+
+    @Test
+    void getURIWithIssuerWithSpace_doesEscapeIssuer() throws URISyntaxException {
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+
+        String url = generator.getURI(10, "issuer with space").toString();
+
+        assertThat(url, is("otpauth://hotp/issuer+with+space?digits=6&counter=10&secret=vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q&issuer=issuer+with+space&algorithm=SHA1"));
+    }
+
+    @Test
     void getURIWithIssuer() throws URISyntaxException {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
         URI uri = generator.getURI(10, "issuer");
@@ -119,7 +135,7 @@ class HOTPGeneratorTest {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
         URI uri = generator.getURI(10, "mac&cheese");
 
-        assertThat(uri.toString(), is("otpauth://hotp/mac&cheese?digits=6&counter=10&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+        assertThat(uri.toString(), is("otpauth://hotp/mac%26cheese?digits=6&counter=10&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
 
@@ -145,7 +161,8 @@ class HOTPGeneratorTest {
         HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
 
         URI uri = generator.getURI(100, "mac&cheese", "ac@cou.nt");
-        assertThat(uri.toString(), is("otpauth://hotp/mac&cheese:ac@cou.nt?digits=6&counter=100&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
+
+        assertThat(uri.toString(), is("otpauth://hotp/mac%26cheese:ac%40cou.nt?digits=6&counter=100&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
     }
 
     @Test

@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A URI utility class with helper methods
@@ -61,20 +62,20 @@ public class URIHelper {
      * @throws URISyntaxException when URI cannot be created
      */
     public static URI createURI(String scheme, String host, String path, Map<String, String> query) throws URISyntaxException {
-        StringBuilder uriString = new StringBuilder(String.format("%s://%s/%s", scheme, host, path));
-        String[] queryKeys = query.keySet().toArray(new String[0]);
+        String uriString = String.format("%s://%s/%s?", scheme, host, path);
 
+        String uri = query.keySet().stream()
+                .map(key -> String.format("%s=%s", key, encode(query.get(key))))
+                .collect(Collectors.joining("&", uriString, ""));
+
+        return new URI(uri);
+    }
+
+    public static String encode(String value) {
         try {
-            for (int i = 0; i < queryKeys.length; i++) {
-                String sign = i == 0 ? "?" : "&";
-                String key = queryKeys[i];
-                uriString.append(String.format("%s%s=%s", sign, key, URLEncoder.encode(query.get(key), StandardCharsets.UTF_8.toString())));
-            }
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            // Highly unlikely
             throw new IllegalArgumentException(e);
         }
-
-        return new URI(uriString.toString());
     }
 }
