@@ -19,7 +19,7 @@ public final class HOTPGenerator {
 
     private static final String URL_SCHEME = "otpauth";
     private static final int DEFAULT_PASSWORD_LENGTH = 6;
-    private static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA1;
+    private static final HMACAlgorithm DEFAULT_HMAC_ALGORITHM = HMACAlgorithm.SHA512;
     private static final String OTP_TYPE = "hotp";
 
     private final int passwordLength;
@@ -81,19 +81,8 @@ public final class HOTPGenerator {
         return algorithm;
     }
 
-    public boolean verify(final String code, final long counter) {
-        return verify(code, counter, 0);
-    }
-
-    public boolean verify(final String code, final long counter, final int delayWindow) {
-        if (code.length() != passwordLength) return false;
-
-        for (int i = -delayWindow; i <= delayWindow; i++) {
-            String currentCode = generate(counter + i);
-            if (code.equals(currentCode)) return true;
-        }
-
-        return false;
+    public byte[] getSecret() {
+        return secret;
     }
 
     public String generate(final long counter) throws IllegalStateException {

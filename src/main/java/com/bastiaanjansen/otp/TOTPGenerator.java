@@ -93,10 +93,10 @@ public final class TOTPGenerator {
         return hotpGenerator.generate(counter);
     }
 
-    public boolean verify(final String code) {
-        long counter = calculateCounter(clock, period);
-        return hotpGenerator.verify(code, counter);
-    }
+//    public boolean verify(final String code) {
+//        long counter = calculateCounter(clock, period);
+//        return hotpGenerator.verify(code, counter);
+//    }
 
     /**
      * Checks whether a code is valid for a specific counter taking a delay window into account
@@ -105,10 +105,10 @@ public final class TOTPGenerator {
      * @param delayWindow window in which a code can still be deemed valid
      * @return a boolean, true if code is valid, otherwise false
      */
-    public boolean verify(final String code, final int delayWindow) {
-        long counter = calculateCounter(clock, period);
-        return hotpGenerator.verify(code, counter, delayWindow);
-    }
+//    public boolean verify(final String code, final int delayWindow) {
+//        long counter = calculateCounter(clock, period);
+//        return hotpGenerator.verify(code, counter, delayWindow);
+//    }
 
     public URI getURI(final String issuer) throws URISyntaxException {
         return getURI(issuer, "");
@@ -149,6 +149,10 @@ public final class TOTPGenerator {
 
     public int getPasswordLength() {
         return hotpGenerator.getPasswordLength();
+    }
+
+    public HOTPGenerator getHotpGenerator() {
+        return hotpGenerator;
     }
 
     private long calculateCounter(final long secondsPast1970, final Duration period) {

@@ -127,29 +127,29 @@ class TOTPGeneratorTest {
     }
 
 
-    @Test
-    void verifyCurrentCode_true() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.now();
-
-        assertThat(generator.verify(code), is(true));
-    }
-
-    @Test
-    void verifyOlderCodeWithDelayWindowIs0_false() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.at(Instant.now().minusSeconds(30));
-
-        assertThat(generator.verify(code), is(false));
-    }
-
-    @Test
-    void verifyOlderCodeWithDelayWindowIs1_true() {
-        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.at(Instant.now().minusSeconds(30));
-
-        assertThat(generator.verify(code, 1), is(true));
-    }
+//    @Test
+//    void verifyCurrentCode_true() {
+//        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+//        String code = generator.now();
+//
+//        assertThat(generator.verify(code), is(true));
+//    }
+//
+//    @Test
+//    void verifyOlderCodeWithDelayWindowIs0_false() {
+//        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+//        String code = generator.at(Instant.now().minusSeconds(30));
+//
+//        assertThat(generator.verify(code), is(false));
+//    }
+//
+//    @Test
+//    void verifyOlderCodeWithDelayWindowIs1_true() {
+//        TOTPGenerator generator = new TOTPGenerator.Builder(secret.getBytes()).build();
+//        String code = generator.at(Instant.now().minusSeconds(30));
+//
+//        assertThat(generator.verify(code, 1), is(true));
+//    }
 
 
     @Test

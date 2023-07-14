@@ -1,9 +1,9 @@
 package com.bastiaanjansen.otp;
 
-public final interface SingleUseTokenStorageProvider<T> {
+public interface SingleUseTokenStorageProvider {
 
-    void put(T identifier, String otp);
+    void put(SingleUseTokenDetails details);
 
-    boolean contains(T identifier);
+    boolean contains(SingleUseTokenDetails details);
 
 }

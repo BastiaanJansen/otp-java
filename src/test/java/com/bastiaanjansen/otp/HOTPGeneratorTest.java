@@ -58,30 +58,6 @@ class HOTPGeneratorTest {
     }
 
     @Test
-    void verifyCurrentCode_true() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate(1);
-
-        assertThat(generator.verify(code, 1), is(true));
-    }
-
-    @Test
-    void verifyOlderCodeWithDelayWindowIs0_false() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate(1);
-
-        assertThat(generator.verify(code, 2), is(false));
-    }
-
-    @Test
-    void verifyOlderCodeWithDelayWindowIs1_true() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
-        String code = generator.generate(1);
-
-        assertThat(generator.verify(code, 2, 1), is(true));
-    }
-
-    @Test
     void withDefaultValues_algorithm() {
         HOTPGenerator generator = HOTPGenerator.withDefaultValues(secret.getBytes());
         HMACAlgorithm expected = HMACAlgorithm.SHA1;
