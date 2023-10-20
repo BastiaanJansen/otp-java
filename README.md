@@ -30,23 +30,23 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:2.0.2'
+implementation 'com.github.bastiaanjansen:otp-java:2.0.3'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.0.2"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.0.3"
 ```
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="2.0.2" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="2.0.3" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
