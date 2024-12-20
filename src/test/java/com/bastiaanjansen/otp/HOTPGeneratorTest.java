@@ -41,7 +41,7 @@ class HOTPGeneratorTest {
     @ParameterizedTest
     @MethodSource("testData")
     void generateWithCounter(int passwordLength, long counter, HMACAlgorithm algorithm, String otp) {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes())
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret)
                 .withPasswordLength(passwordLength)
                 .withAlgorithm(algorithm)
                 .build();
@@ -52,14 +52,14 @@ class HOTPGeneratorTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, -100})
     void generateWithInvalidCounter_throwsIllegalArgumentException(long counter) {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         assertThrows(IllegalArgumentException.class, () -> generator.generate(counter));
     }
 
     @Test
     void verifyCurrentCode_true() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
         String code = generator.generate(1);
 
         assertThat(generator.verify(code, 1), is(true));
@@ -67,7 +67,7 @@ class HOTPGeneratorTest {
 
     @Test
     void verifyOlderCodeWithDelayWindowIs0_false() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
         String code = generator.generate(1);
 
         assertThat(generator.verify(code, 2), is(false));
@@ -75,7 +75,7 @@ class HOTPGeneratorTest {
 
     @Test
     void verifyOlderCodeWithDelayWindowIs1_true() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
         String code = generator.generate(1);
 
         assertThat(generator.verify(code, 2, 1), is(true));
@@ -99,7 +99,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuer_doesNotThrow() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         assertDoesNotThrow(() -> {
            generator.getURI(10, "issuer");
@@ -108,14 +108,14 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuerWithSpace_doesNotThrow() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         assertDoesNotThrow(() -> generator.getURI(10, "issuer with space"));
     }
 
     @Test
     void getURIWithIssuerWithSpace_doesEscapeIssuer() throws URISyntaxException {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         String url = generator.getURI(10, "issuer with space").toString();
 
@@ -124,7 +124,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuer() throws URISyntaxException {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
         URI uri = generator.getURI(10, "issuer");
 
         assertThat(uri.toString(), is("otpauth://hotp/issuer?digits=6&counter=10&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
@@ -132,7 +132,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuerWithUrlUnsafeCharacters() throws URISyntaxException {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
         URI uri = generator.getURI(10, "mac&cheese");
 
         assertThat(uri.toString(), is("otpauth://hotp/mac%26cheese?digits=6&counter=10&secret=" + secret + "&issuer=mac%26cheese&algorithm=SHA1"));
@@ -141,7 +141,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuerAndAccount_doesNotThrow() {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         assertDoesNotThrow(() -> {
             generator.getURI(100, "issuer", "account");
@@ -150,7 +150,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuerAndAccount() throws URISyntaxException {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         URI uri = generator.getURI(100, "issuer", "account");
         assertThat(uri.toString(), is("otpauth://hotp/issuer:account?digits=6&counter=100&secret=" + secret + "&issuer=issuer&algorithm=SHA1"));
@@ -158,7 +158,7 @@ class HOTPGeneratorTest {
 
     @Test
     void getURIWithIssuerAndAccountWithUrlUnsafeCharacters() throws URISyntaxException {
-        HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+        HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
 
         URI uri = generator.getURI(100, "mac&cheese", "ac@cou.nt");
 
@@ -224,20 +224,20 @@ class HOTPGeneratorTest {
         @Test
         void builderWithPasswordLengthIs5_throwsIllegalArgumentException() {
             assertThrows(IllegalArgumentException.class, () -> {
-                new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(5).build();
+                new HOTPGenerator.Builder(secret).withPasswordLength(5).build();
             });
         }
 
         @Test
         void builderWithPasswordLengthIs9_throwsIllegalArgumentException() {
             assertThrows(IllegalArgumentException.class, () -> {
-                new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(9).build();
+                new HOTPGenerator.Builder(secret).withPasswordLength(9).build();
             });
         }
 
         @Test
         void builderWithPasswordLengthIs6() {
-            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(6).build();
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret).withPasswordLength(6).build();
             int expected = 6;
 
             assertThat(generator.getPasswordLength(), Matchers.is(expected));
@@ -245,7 +245,7 @@ class HOTPGeneratorTest {
 
         @Test
         void builderWithAlgorithmSHA1() {
-            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA1).build();
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret).withAlgorithm(HMACAlgorithm.SHA1).build();
             HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
             assertThat(generator.getAlgorithm(), Matchers.is(expected));
@@ -253,7 +253,7 @@ class HOTPGeneratorTest {
 
         @Test
         void builderWithAlgorithmSHA256() {
-            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA256).build();
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret).withAlgorithm(HMACAlgorithm.SHA256).build();
             HMACAlgorithm expected = HMACAlgorithm.SHA256;
 
             assertThat(generator.getAlgorithm(), Matchers.is(expected));
@@ -261,7 +261,7 @@ class HOTPGeneratorTest {
 
         @Test
         void builderWithAlgorithmSHA512() {
-            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).withAlgorithm(HMACAlgorithm.SHA512).build();
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret).withAlgorithm(HMACAlgorithm.SHA512).build();
             HMACAlgorithm expected = HMACAlgorithm.SHA512;
 
             assertThat(generator.getAlgorithm(), Matchers.is(expected));
@@ -270,12 +270,12 @@ class HOTPGeneratorTest {
         @ParameterizedTest
         @ValueSource(ints = { 1, 2, 3, 4, 5, 9, 10 })
         void builderWithInvalidPasswordLength_throwsIllegalArgumentException(int passwordLength) {
-            assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator.Builder(secret.getBytes()).withPasswordLength(passwordLength).build());
+            assertThrows(IllegalArgumentException.class, () -> new HOTPGenerator.Builder(secret).withPasswordLength(passwordLength).build());
         }
 
         @Test
         void builderWithoutAlgorithm_defaultAlgorithm() {
-            HOTPGenerator generator = new HOTPGenerator.Builder(secret.getBytes()).build();
+            HOTPGenerator generator = new HOTPGenerator.Builder(secret).build();
             HMACAlgorithm expected = HMACAlgorithm.SHA1;
 
             assertThat(generator.getAlgorithm(), is(expected));

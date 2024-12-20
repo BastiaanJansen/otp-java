@@ -57,7 +57,7 @@ Or you can download the source from the [GitHub releases page](https://github.co
 To create a `HOTPGenerator` instance, use the `HOTPGenerator.Builder` class as follows:
 
 ```java
-byte[] secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q".getBytes();
+String secret = "VV3KOX7UQJ4KYAKOHMZPPH3US4CJIMH6F3ZKNB5C2OOBQ6V2KIYHM27Q";
 HOTPGenerator hotp = new HOTPGenerator.Builder(secret).build();
 ```
 The above builder creates a HOTP instance with default values for passwordLength = 6 and algorithm = SHA1. Use the builder to change these defaults:
@@ -68,12 +68,20 @@ HOTPGenerator hotp = new HOTPGenerator.Builder(secret)
         .build();
 ```
 
+If you have a shared secret described in [RFC-4226](https://www.rfc-editor.org/rfc/rfc4226), you need to encode it first:
+
+```java
+byte[] sharedSecret = getMySharedSecret();
+
+byte[] secret = Base32.encode(sharedSecret);
+```
+
 When you don't already have a secret, you can let the library generate it:
 ```java
-// To generate a secret with 160 bits
+// To generate a Base32-encoded secret with 160 bits
 byte[] secret = SecretGenerator.generate();
 
-// To generate a secret with a custom amount of bits
+// To generate a Base32-encoded secret with a custom amount of bits
 byte[] secret = SecretGenerator.generate(512);
 ```
 
@@ -131,7 +139,6 @@ TOTPGenerator totpGenerator = TOTPGenerator.fromURI(uri);
 
 Get information about the generator:
 ```java
-byte[] secret = totpGenerator.getSecret();
 int passwordLength = totpGenerator.getPasswordLength(); // 6
 HMACAlgorithm algorithm = totpGenerator.getAlgorithm(); // HMACAlgorithm.SHA1
 Duration period = totpGenerator.getPeriod(); // Duration.ofSeconds(30)

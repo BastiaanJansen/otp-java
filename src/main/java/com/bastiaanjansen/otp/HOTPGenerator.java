@@ -8,12 +8,13 @@ import javax.crypto.spec.SecretKeySpec;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class HOTPGenerator {
 
@@ -38,7 +39,7 @@ public final class HOTPGenerator {
         Map<String, String> query = URIHelper.queryItems(uri);
 
         byte[] secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                .map(String::getBytes)
+                .map(s -> s.getBytes(UTF_8))
                 .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
         Builder builder = new Builder(secret);
@@ -117,7 +118,7 @@ public final class HOTPGenerator {
     public URI getURI(final String type, final String issuer, final String account, final Map<String, String> query) throws URISyntaxException {
         query.put(URIHelper.DIGITS, String.valueOf(passwordLength));
         query.put(URIHelper.ALGORITHM, algorithm.name());
-        query.put(URIHelper.SECRET, new String(secret, StandardCharsets.UTF_8));
+        query.put(URIHelper.SECRET, new String(secret, UTF_8));
         query.put(URIHelper.ISSUER, issuer);
 
         String path = account.isEmpty() ? URIHelper.encode(issuer) : String.format("%s:%s", URIHelper.encode(issuer), URIHelper.encode(account));
@@ -194,8 +195,21 @@ public final class HOTPGenerator {
 
         private HMACAlgorithm algorithm;
 
+        /**
+         * Base32 encoded secret
+         */
         private final byte[] secret;
 
+        /**
+         * Creates a new builder.
+         * <p>
+         * Use {@link SecretGenerator#generate()} to create a secret.
+         * <p>
+         * If you are using a shared secret from another generator, you would likely need to encode it using
+         * {@link org.apache.commons.codec.binary.Base32#encode(byte[])}}
+         *
+         * @param secret Base32 encoded secret
+         */
         public Builder(final byte[] secret) {
             if (secret.length == 0)
                 throw new IllegalArgumentException("Secret must not be empty");
@@ -203,6 +217,13 @@ public final class HOTPGenerator {
             this.secret = secret;
             this.passwordLength = DEFAULT_PASSWORD_LENGTH;
             this.algorithm = DEFAULT_HMAC_ALGORITHM;
+        }
+
+        /**
+         * @param secret Base32 encoded secret
+         */
+        public Builder(String secret) {
+            this(secret.getBytes(UTF_8));
         }
 
         public Builder withPasswordLength(final int passwordLength) {
