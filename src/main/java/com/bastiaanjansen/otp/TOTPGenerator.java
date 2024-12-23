@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public final class TOTPGenerator {
     private static final String OTP_TYPE = "totp";
     private static final Duration DEFAULT_PERIOD = Duration.ofSeconds(30);
@@ -32,8 +34,7 @@ public final class TOTPGenerator {
     public static TOTPGenerator fromURI(URI uri) throws URISyntaxException {
         Map<String, String> query = URIHelper.queryItems(uri);
 
-        byte[] secret = Optional.ofNullable(query.get(URIHelper.SECRET))
-                .map(String::getBytes)
+        String secret = Optional.ofNullable(query.get(URIHelper.SECRET))
                 .orElseThrow(() -> new IllegalArgumentException("Secret query parameter must be set"));
 
         Builder builder = new Builder(secret);
@@ -171,10 +172,27 @@ public final class TOTPGenerator {
 
         private final HOTPGenerator.Builder hotpBuilder;
 
+        /**
+         * Creates a new builder.
+         * <p>
+         * Use {@link SecretGenerator#generate()} to create a secret.
+         * <p>
+         * If you are using a shared secret from another generator, you would likely need to encode it using
+         * {@link org.apache.commons.codec.binary.Base32#encode(byte[])}}
+         *
+         * @param secret Base32 encoded secret
+         */
         public Builder(byte[] secret) {
             this.period = DEFAULT_PERIOD;
             this.clock = DEFAULT_CLOCK;
             this.hotpBuilder = new HOTPGenerator.Builder(secret);
+        }
+
+        /**
+         * @param secret Base32 encoded secret
+         */
+        public Builder(String secret) {
+            this(secret.getBytes(UTF_8));
         }
 
         public Builder withHOTPGenerator(Consumer<HOTPGenerator.Builder> builder) {
