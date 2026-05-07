@@ -73,9 +73,12 @@ public class URIHelper {
 
     public static String encode(String value) {
         try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+            // Standard URLEncoder uses + for spaces (application/x-www-form-urlencoded)
+            // We replace it with %20 to comply with URI spec (RFC 3986)
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.name())
+                    .replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }
