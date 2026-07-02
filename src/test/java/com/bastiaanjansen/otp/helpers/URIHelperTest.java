@@ -65,7 +65,7 @@ class URIHelperTest {
         query.put("test", "value 1");
         query.put("test2", "value?&2");
         URI uri = URIHelper.createURI("scheme", "host", "path", query);
-        String expected = "scheme://host/path?test2=value%3F%262&test=value+1";
+        String expected = "scheme://host/path?test2=value%3F%262&test=value%201";
 
         assertThat(uri.toString(), is(expected));
     }

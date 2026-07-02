@@ -119,7 +119,7 @@ class HOTPGeneratorTest {
 
         String url = generator.getURI(10, "issuer with space").toString();
 
-        assertThat(url, is("otpauth://hotp/issuer+with+space?digits=6&counter=10&secret=vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q&issuer=issuer+with+space&algorithm=SHA1"));
+        assertThat(url, is("otpauth://hotp/issuer%20with%20space?digits=6&counter=10&secret=vv3kox7uqj4kyakohmzpph3us4cjimh6f3zknb5c2oobq6v2kiyhm27q&issuer=issuer%20with%20space&algorithm=SHA1"));
     }
 
     @Test
