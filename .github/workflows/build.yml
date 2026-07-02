@@ -26,7 +26,7 @@ jobs:
         run: mvn -B package --file pom.xml
       - run: mkdir artifacts && cp target/*.jar artifacts
       - name: Upload Maven build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-java-${{ matrix.java }}.jar
           path: artifacts
