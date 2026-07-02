@@ -116,8 +116,9 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <!-- Prevent `gpg` from using pinentry programs -->
                                     <gpgArguments>
+                                        <arg>--batch</arg>
+                                        <arg>--yes</arg>
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>
                                     </gpgArguments>

@@ -26,9 +26,13 @@ jobs:
       - name: Configure GPG for CI
         run: |
           mkdir -p ~/.gnupg
+
+          echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           echo "use-agent" >> ~/.gnupg/gpg.conf
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+      
+          chmod 600 ~/.gnupg/* || true
+      
           gpgconf --kill gpg-agent
           gpgconf --launch gpg-agent
 
@@ -64,7 +68,6 @@ jobs:
         run: mvn -B clean deploy -P deploy-maven-central
         env:
           GPG_TTY: ""
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
   publish-github-registry:
     name: Publish to GitHub Registry
