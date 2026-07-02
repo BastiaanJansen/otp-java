@@ -151,6 +151,74 @@ class TOTPGeneratorTest {
         assertThat(generator.verify(code, 1), is(true));
     }
 
+    @Test
+    void verifyCodeWithCounterStorage_true() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(new InMemoryCounterStorage().forIdentifier("identifier"))
+                .build();
+        String code = generator.now();
+
+        assertThat(generator.verify(code), is(true));
+    }
+
+    @Test
+    void verifyCodeTwiceWithCounterStorage_false() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(new InMemoryCounterStorage().forIdentifier("identifier"))
+                .build();
+        String code = generator.now();
+        generator.verify(code);
+
+        assertThat(generator.verify(code), is(false));
+    }
+
+    @Test
+    void verifyCodeTwiceWithCounterStorageWithDifferentIdentifier_true() {
+        InMemoryCounterStorage counterStorage = new InMemoryCounterStorage();
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(counterStorage.forIdentifier("identifier"))
+                .build();
+        TOTPGenerator otherGenerator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(counterStorage.forIdentifier("another-identifier"))
+                .build();
+        String code = generator.now();
+        generator.verify(code);
+
+        assertThat(otherGenerator.verify(code), is(true));
+    }
+
+    @Test
+    void verifyInvalidCodeWithCounterStorage_false() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(new InMemoryCounterStorage().forIdentifier("identifier"))
+                .build();
+
+        assertThat(generator.verify("000000"), is(false));
+    }
+
+    @Test
+    void verifyOlderCodeTwiceWithCounterStorageWithDelayWindowIs1_false() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(new InMemoryCounterStorage().forIdentifier("identifier"))
+                .build();
+        String code = generator.at(Instant.now().minusSeconds(30));
+        generator.verify(code, 1);
+
+        assertThat(generator.verify(code, 1), is(false));
+    }
+
+    @Test
+    void verifyCurrentCodeAfterOlderCodeWithCounterStorage_true() {
+        TOTPGenerator generator = new TOTPGenerator.Builder(secret)
+                .withCounterStorage(new InMemoryCounterStorage().forIdentifier("identifier"))
+                .build();
+        String olderCode = generator.at(Instant.now().minusSeconds(30));
+        String currentCode = generator.now();
+        generator.verify(olderCode, 1);
+
+        assertThat(generator.verify(currentCode, 1), is(true));
+    }
+
 
     @Test
     void getURIWithIssuer() throws URISyntaxException {
