@@ -11,13 +11,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: maven
 
       # -----------------------------
@@ -58,18 +58,17 @@ jobs:
 
   publish-github-registry:
     name: Publish to GitHub Registry
-    needs: [ build, test ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           server-id: github
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: 21
+          distribution: temurin
       - name: Publish package
         run: mvn --batch-mode --activate-profiles "deploy-github-registry" deploy
         env:
