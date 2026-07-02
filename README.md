@@ -30,18 +30,18 @@ The following features are supported:
 <dependency>
     <groupId>com.github.bastiaanjansen</groupId>
     <artifactId>otp-java</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.github.bastiaanjansen:otp-java:2.1.0'
+implementation 'com.github.bastiaanjansen:otp-java:2.2.0'
 ```
 
 ### Scala SBT
 ```scala
-libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.1.0"
+libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.2.0"
 ```
 
 ### Apache Ivy
