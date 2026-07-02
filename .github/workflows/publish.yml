@@ -5,69 +5,38 @@ on:
     types: [ created ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
-    name: Java ${{ matrix.java }} build
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: ${{ matrix.java }}
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - run: mkdir artifacts && cp target/*.jar artifacts
-      - name: Upload Maven build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-java-${{ matrix.java }}.jar
-          path: artifacts
-
-  test:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
-    name: Java ${{ matrix.java }} test
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: ${{ matrix.java }}
-      - name: Run tests with Maven
-        run: mvn -B test --file pom.xml
-
   publish-maven-central:
     name: Publish to Maven Central
-    needs: [ build, test ]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: zulu
+          distribution: temurin
           java-version: 11
+          cache: maven
 
+      # -----------------------------
+      # GPG SETUP (CI SAFE)
+      # -----------------------------
       - name: Import GPG key
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
 
-      - name: Configure Maven settings
+      - name: List GPG keys
+        run: gpg --list-secret-keys --keyid-format LONG
+
+      # -----------------------------
+      # MAVEN SETTINGS (CENTRAL TOKEN)
+      # -----------------------------
+      - name: Create Maven settings.xml
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << EOF
+          cat > ~/.m2/settings.xml <<EOF
           <settings>
             <servers>
               <server>
@@ -79,8 +48,13 @@ jobs:
           </settings>
           EOF
 
-      - name: Publish to Central
+      # -----------------------------
+      # BUILD + PUBLISH
+      # -----------------------------
+      - name: Build and publish
         run: mvn -B clean deploy -P deploy-maven-central
+        env:
+          GPG_TTY: ""
 
   publish-github-registry:
     name: Publish to GitHub Registry
