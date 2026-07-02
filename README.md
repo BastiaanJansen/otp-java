@@ -179,6 +179,36 @@ try {
 }
 ```
 
+#### Ensuring a code is only used once
+By default, `verify()` is stateless: a valid code is accepted every time it is verified within its time window. To make codes truly one-time, configure a counter storage, which keeps track of the last used counter. With a counter storage configured, `verify()` accepts a valid code only once.
+
+A counter storage is bound to a single identity, just like the secret. The built-in `InMemoryCounterStorage` is a shared backend which binds to an identifier (for example a user id) with `forIdentifier()`. Keep one instance for the whole application; `TOTPGenerator` instances are cheap and can be created per request:
+
+```java
+// One shared backend for the whole application
+private final InMemoryCounterStorage counterStorage = new InMemoryCounterStorage();
+
+boolean checkSecondFactor(User user, String code) {
+    TOTPGenerator totpGenerator = new TOTPGenerator.Builder(user.getTotpSecret())
+            .withCounterStorage(counterStorage.forIdentifier(user.getId()))
+            .build();
+
+    return totpGenerator.verify(code);
+}
+```
+
+The first call with a valid code returns true; verifying the same code again for the same identity returns false. Counters are monotonic: consuming a code also invalidates older, not yet used codes within the delay window.
+
+`InMemoryCounterStorage` keeps the last used counters in the memory of a single JVM. For distributed systems, where a code consumed on one node should not be accepted on another, implement the `CounterStorage` interface with a shared store such as Redis or Hazelcast, bound to the identity it verifies, for example `new RedisCounterStorage(pool, user.getId())`:
+
+```java
+public interface CounterStorage {
+    boolean markAsUsed(long counter);
+}
+```
+
+`markAsUsed` must atomically check whether the given counter is greater than the last used counter and, if so, store it as the new last used counter. Entries may safely expire after the delay window has passed.
+
 ### Generation of OTPAuth URI's
 To easily generate a OTPAuth URI for easy on-boarding, use the `getURI()` method for both `HOTP` and `TOTP`. Example for `TOTP`:
 ```java

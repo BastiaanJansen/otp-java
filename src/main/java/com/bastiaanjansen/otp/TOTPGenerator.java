@@ -23,11 +23,14 @@ public final class TOTPGenerator {
 
     private final Clock clock;
 
+    private final CounterStorage counterStorage;
+
     private final HOTPGenerator hotpGenerator;
 
     private TOTPGenerator(final Builder builder) {
         this.period = builder.period;
         this.clock = builder.clock;
+        this.counterStorage = builder.counterStorage;
         this.hotpGenerator = builder.hotpBuilder.build();
     }
 
@@ -95,12 +98,12 @@ public final class TOTPGenerator {
     }
 
     public boolean verify(final String code) {
-        long counter = calculateCounter(clock, period);
-        return hotpGenerator.verify(code, counter);
+        return verify(code, 0);
     }
 
     /**
-     * Checks whether a code is valid for a specific counter taking a delay window into account
+     * Checks whether a code is valid for a specific counter taking a delay window into account. When a
+     * {@link CounterStorage} is configured, a valid code is only accepted once
      *
      * @param code an OTP code
      * @param delayWindow window in which a code can still be deemed valid
@@ -108,7 +111,18 @@ public final class TOTPGenerator {
      */
     public boolean verify(final String code, final int delayWindow) {
         long counter = calculateCounter(clock, period);
-        return hotpGenerator.verify(code, counter, delayWindow);
+
+        if (counterStorage == null) {
+            return hotpGenerator.verify(code, counter, delayWindow);
+        }
+
+        for (int i = -delayWindow; i <= delayWindow; i++) {
+            if (hotpGenerator.verify(code, counter + i)) {
+                return counterStorage.markAsUsed(counter + i);
+            }
+        }
+
+        return false;
     }
 
     public URI getURI(final String issuer) throws URISyntaxException {
@@ -170,6 +184,8 @@ public final class TOTPGenerator {
 
         private Clock clock;
 
+        private CounterStorage counterStorage;
+
         private final HOTPGenerator.Builder hotpBuilder;
 
         /**
@@ -202,6 +218,19 @@ public final class TOTPGenerator {
 
         public Builder withClock(Clock clock) {
             this.clock = clock;
+            return this;
+        }
+
+        /**
+         * Configures a counter storage which keeps track of the last used counter, so a valid code is only
+         * accepted once by {@link TOTPGenerator#verify(String)}. The storage is bound to a single identity
+         * (for example a user): use {@link InMemoryCounterStorage#forIdentifier(String)} or a custom
+         * implementation backed by a shared store for distributed systems.
+         *
+         * @param counterStorage counter storage to use
+         */
+        public Builder withCounterStorage(CounterStorage counterStorage) {
+            this.counterStorage = counterStorage;
             return this;
         }
 
