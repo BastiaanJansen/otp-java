@@ -47,27 +47,40 @@ jobs:
         run: mvn -B test --file pom.xml
 
   publish-maven-central:
-    name: Publish to Maven Central Repository
+    name: Publish to Maven Central
     needs: [ build, test ]
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Publish package
-        uses: samuelmeuli/action-maven-publish@v1
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          nexus_username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          nexus_password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          maven_profiles: "deploy-maven-central"
+          distribution: zulu
+          java-version: 11
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+
+      - name: Configure Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml << EOF
+          <settings>
+            <servers>
+              <server>
+                <id>central</id>
+                <username>${{ secrets.MAVEN_CENTRAL_USERNAME }}</username>
+                <password>${{ secrets.MAVEN_CENTRAL_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Publish to Central
+        run: mvn -B clean deploy -P deploy-maven-central
 
   publish-github-registry:
     name: Publish to GitHub Registry
