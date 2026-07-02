@@ -8,6 +8,15 @@
 
     <name>OTP-Java</name>
     <description>A small and easy-to-use one-time password generator for Java according to RFC 4226 (HOTP) and RFC 6238 (TOTP).</description>
+    <url>https://github.com/BastiaanJansen/otp-java</url>
+
+    <developers>
+        <developer>
+            <id>bastiaanjansen</id>
+            <name>Bas Jansen</name>
+            <url>https://github.com/BastiaanJansen</url>
+        </developer>
+    </developers>
 
     <licenses>
         <license>
@@ -24,7 +33,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/BastiaanJansen/otp-java.git</connection>
-        <url>http://github.com/BastiaanJansen/otp-java</url>
+        <url>https://github.com/BastiaanJansen/otp-java</url>
         <developerConnection>scm:git:https://github.com/BastiaanJansen/otp-java.git</developerConnection>
     </scm>
 
@@ -108,7 +117,6 @@
                                 </goals>
                                 <configuration>
                                     <!-- Prevent `gpg` from using pinentry programs -->
-                                    <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                                     <gpgArguments>
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>
