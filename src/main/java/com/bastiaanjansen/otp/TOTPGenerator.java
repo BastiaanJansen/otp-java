@@ -112,12 +112,14 @@ public final class TOTPGenerator {
     public boolean verify(final String code, final int delayWindow) {
         long counter = calculateCounter(clock, period);
 
-        if (counterStorage == null)
+        if (counterStorage == null) {
             return hotpGenerator.verify(code, counter, delayWindow);
+        }
 
         for (int i = -delayWindow; i <= delayWindow; i++) {
-            if (hotpGenerator.verify(code, counter + i))
+            if (hotpGenerator.verify(code, counter + i)) {
                 return counterStorage.markAsUsed(counter + i);
+            }
         }
 
         return false;
