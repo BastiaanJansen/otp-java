@@ -108,6 +108,7 @@
                                 </goals>
                                 <configuration>
                                     <!-- Prevent `gpg` from using pinentry programs -->
+                                    <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                                     <gpgArguments>
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>

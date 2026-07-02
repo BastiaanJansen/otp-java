@@ -55,6 +55,7 @@ jobs:
         run: mvn -B clean deploy -P deploy-maven-central
         env:
           GPG_TTY: ""
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
   publish-github-registry:
     name: Publish to GitHub Registry
