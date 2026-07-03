@@ -33,7 +33,6 @@ jobs:
         run: >
           mvn -B
           -Pdeploy-maven-central
-#          -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
           deploy
         env:
           CENTRAL_TOKEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
