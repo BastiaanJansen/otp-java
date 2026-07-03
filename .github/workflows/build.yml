@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build
 
 on:
   push:
@@ -26,25 +26,7 @@ jobs:
         run: mvn -B package --file pom.xml
       - run: mkdir artifacts && cp target/*.jar artifacts
       - name: Upload Maven build artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: build-java-${{ matrix.java }}.jar
           path: artifacts
-
-  test:
-    name: Java ${{ matrix.java }} test
-    needs: [build]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 17, 18, 19, 20 ]
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v5
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: ${{ matrix.java }}
-      - name: Run tests with Maven
-        run: mvn -B test --file pom.xml
