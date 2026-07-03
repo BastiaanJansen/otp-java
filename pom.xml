@@ -71,6 +71,7 @@
 
                         <configuration>
                             <tokenAuth>true</tokenAuth>
+                            <autoPublish>true</autoPublish>
                         </configuration>
                     </plugin>
                     <!-- Source plugin -->
