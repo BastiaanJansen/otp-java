@@ -20,6 +20,8 @@ jobs:
           java-version: 21
           cache: maven
           server-id: central
+          server-username: CENTRAL_TOKEN_USERNAME
+          server-password: CENTRAL_TOKEN_PASSWORD
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6

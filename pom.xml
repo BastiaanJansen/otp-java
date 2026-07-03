@@ -72,6 +72,7 @@
                         <configuration>
                             <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
+                            <publishingServerId>central</publishingServerId>
                         </configuration>
                     </plugin>
                     <!-- Source plugin -->
