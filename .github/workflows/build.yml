@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+        java: [ 17, 18, 19, 20 ]
     steps:
       - name: Checkout source code
         uses: actions/checkout@v5
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
+          distribution: zulu
           java-package: jdk
           java-version: ${{ matrix.java }}
       - name: Build with Maven
@@ -37,14 +37,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+        java: [ 17, 18, 19, 20 ]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v5
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
+          distribution: zulu
           java-version: ${{ matrix.java }}
       - name: Run tests with Maven
         run: mvn -B test --file pom.xml
