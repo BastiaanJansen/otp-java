@@ -46,7 +46,7 @@ libraryDependencies += "com.github.bastiaanjansen" % "otp-java" % "2.2.0"
 
 ### Apache Ivy
 ```xml
-<dependency org="com.github.bastiaanjansen" name="otp-java" rev="2.1.0" />
+<dependency org="com.github.bastiaanjansen" name="otp-java" rev="2.2.0" />
 ```
 
 Or you can download the source from the [GitHub releases page](https://github.com/BastiaanJansen/OTP-Java/releases).
